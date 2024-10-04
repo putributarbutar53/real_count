@@ -7,3 +7,4 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
+$routes->get('hasil/data', 'Hasil::getHasilSuara');

@@ -22,12 +22,12 @@
     <div class="card-header">
         <div class="row flex-between-center">
             <div class="col">
-                <form action="<?= base_url('suara/save') ?>" method="post">
+                <form id="formInput" action="<?= base_url('suara/save') ?>" method="post">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="kecamatan">Pilih Kecamatan</label>
-                                <select class="form-control" id="kecamatan" name="id_kec">
+                                <select class="form-control selectpicker" id="kecamatan" name="id_kec">
                                     <option value="">-- Pilih Kecamatan --</option>
                                     <?php foreach ($kecamatan as $kec) : ?>
                                         <option value="<?= $kec['id'] ?>"><?= $kec['nama_kec'] ?></option>
@@ -37,16 +37,16 @@
 
                             <div class="form-group">
                                 <label for="desa">Pilih Desa</label>
-                                <select class="form-control" id="desa" name="id_desa" disabled>
+                                <select class="form-control selectpicker" id="desa" name="id_desa" disabled>
                                     <option value="">-- Pilih Desa --</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="kode_konfirmasi">Kode Konfirmasi</label>
                                 <input type="text" class="form-control" id="kode_konfirmasi" name="kode_konfirmasi" placeholder="Masukkan Kode Konfirmasi">
+                                <small>Masukkan kode konfirmasi yang telah diberikan admin</small>
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="paslon">Pilih Paslon</label>
@@ -60,7 +60,8 @@
 
                             <div class="form-group">
                                 <label for="tps">Nama TPS</label>
-                                <input type="text" class="form-control" id="tps" name="tps" placeholder="Masukkan Nama TPS">
+                                <input type="number" class="form-control" id="tps" name="tps" placeholder="Masukkan Nama TPS" min="1" max="99" oninput="limitDigits(this)">
+                                <small>Masukkan hanya angka saja (mis: 1,2,3)</small>
                             </div>
                         </div>
 
@@ -84,12 +85,61 @@
 
                     <button type="submit" class="btn btn-danger">Submit</button>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>
+<script>
+    document.getElementById("formInput").addEventListener("submit", function(event) {
+        event.preventDefault(); // Mencegah pengiriman form langsung
+
+        var paslon = document.getElementById("paslon").options[document.getElementById("paslon").selectedIndex].text;
+        var suaraSah = document.getElementById("suara_sah").value;
+        var suaraTidakSah = document.getElementById("tidak_sah").value;
+        var tps = document.getElementById("tps").value;
+        var desa = document.getElementById("desa").options[document.getElementById("desa").selectedIndex].text;
+        var kecamatan = document.getElementById("kecamatan").options[document.getElementById("kecamatan").selectedIndex].text;
+
+        var confirmMessage =
+            "APAKAH ANDA YAKIN INGIN MENGINPUT DATA Untuk Paslon : " + paslon + "<br>" +
+            "Dengan Suara Sah : " + suaraSah + "<br>" +
+            "Suara Tidak Sah : " + suaraTidakSah + "<br>" +
+            "Di TPS : " + tps + " Desa : " + desa + " Kecamatan : " + kecamatan + "<br><br>" +
+            "DATA TIDAK BISA DIUBAH, PASTIKAN DATA YANG ANDA ENTRY BENAR";
+
+        Swal.fire({
+            title: 'Konfirmasi Penginputan Data',
+            html: confirmMessage,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Input Data!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submit();
+            }
+        });
+    });
+
+    function limitDigits(input) {
+        if (input.value > 99) {
+            input.value = 99;
+        } else if (input.value < 1 && input.value !== "") {
+            input.value = 1;
+        }
+    }
+
+    function calculateTotal() {
+        var suaraSah = parseInt(document.getElementById("suara_sah").value) || 0;
+        var tidakSah = parseInt(document.getElementById("tidak_sah").value) || 0;
+        document.getElementById("jlh_suara").value = suaraSah + tidakSah;
+    }
+</script>
+
+
 <script>
     $(document).ready(function() {
         // Saat kecamatan dipilih
@@ -119,16 +169,6 @@
             }
         });
     });
-</script>
-<script>
-    function calculateTotal() {
-        const suaraSah = parseInt(document.getElementById('suara_sah').value) || 0;
-        const tidakSah = parseInt(document.getElementById('tidak_sah').value) || 0;
-
-        const totalSuara = suaraSah + tidakSah;
-
-        document.getElementById('jlh_suara').value = totalSuara;
-    }
 </script>
 <script>
     <?php if (session()->get('error')) : ?>

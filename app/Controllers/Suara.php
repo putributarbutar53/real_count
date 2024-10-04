@@ -23,7 +23,7 @@ class Suara extends BaseController
     public function index(): string
     {
         $data['kecamatan'] = $this->kec->findAll();
-        $data['paslon'] = $this->paslon->findAll();
+        $data['paslon'] = $this->paslon->orderBy('id', 'ASC')->findAll();
 
         return view('web/input', $data);
     }
