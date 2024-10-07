@@ -60,7 +60,7 @@
                         data: {
                             labels: response.labels,
                             datasets: [{
-                                label: 'Total Suara Sah',
+                                label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
                                 backgroundColor: warna,
                                 borderColor: '#ffffff',
                                 data: response.total_suara // Menampilkan total suara sah
@@ -74,6 +74,11 @@
                                 x: { // 'xAxes' diubah menjadi 'x'
                                     beginAtZero: true
                                 }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false // Sembunyikan legend
                             }
                         }
                     });
