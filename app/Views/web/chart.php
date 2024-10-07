@@ -34,10 +34,24 @@
             method: 'GET',
             dataType: 'json',
             success: function(response) {
+                var warna = [];
+
+                response.labels.forEach(function(label) {
+                    if (label === 'Efendi & Audimurphi') {
+                        warna.push('#006BFF');
+                    } else if (label === 'Robertson Tonny') {
+                        warna.push('#08C2FF');
+                    } else if (label === 'Poltak & Anugerah') {
+                        warna.push('#E72929');
+                    } else {
+                        warna.push('#4BC0C0');
+                    }
+                });
                 // Jika bar chart sudah ada, update datanya
                 if (barChart) {
                     barChart.data.labels = response.labels;
-                    barChart.data.datasets[0].data = response.total_suara; // Menampilkan total suara sah
+                    barChart.data.datasets[0].data = response.total_suara;
+                    barChart.data.datasets[0].backgroundColor = warna;
                     barChart.update();
                 } else {
                     // Membuat bar chart baru
@@ -47,18 +61,19 @@
                             labels: response.labels,
                             datasets: [{
                                 label: 'Total Suara Sah',
-                                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+                                backgroundColor: warna,
                                 borderColor: '#ffffff',
                                 data: response.total_suara // Menampilkan total suara sah
                             }]
                         },
                         options: {
                             scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
+                                y: { // 'yAxes' diubah menjadi 'y'
+                                    beginAtZero: true
+                                },
+                                x: { // 'xAxes' diubah menjadi 'x'
+                                    beginAtZero: true
+                                }
                             }
                         }
                     });
@@ -77,7 +92,7 @@
                             labels: response.labels,
                             datasets: [{
                                 label: 'Persentase Suara Sah',
-                                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+                                backgroundColor: warna,
                                 borderColor: '#ffffff',
                                 data: response.persentase_suara // Menampilkan persentase suara sah
                             }]
