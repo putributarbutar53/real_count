@@ -18,6 +18,4 @@ class HasilModel extends Model
             ->join('desa', 'hasil.id_desa = desa.id')
             ->findAll();
     }
-
-    
 }

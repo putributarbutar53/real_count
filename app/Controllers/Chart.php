@@ -41,33 +41,32 @@ class Chart extends BaseController
     // Fungsi untuk mendapatkan data chart
     public function getchart()
     {
-        // Ambil data suara sah berdasarkan id_paslon
-        $data = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
-            ->groupBy('id_paslon')
+        // Join tabel hasil dengan paslon untuk mendapatkan nama_paslon
+        $data = $this->hasil
+            ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
+            ->join('paslon', 'paslon.id = hasil.id_paslon') // Join dengan tabel paslon
+            ->groupBy('hasil.id_paslon')
             ->findAll();
 
-        // Hitung total suara sah keseluruhan
         $totalSemuaSuara = 0;
         foreach ($data as $row) {
             $totalSemuaSuara += $row['total_suara'];
         }
 
-        // Format data untuk chart
         $labels = [];
-        $totalSuara = []; // Untuk Bar Chart
-        $persentaseSuara = []; // Untuk Pie Chart
+        $totalSuara = [];
+        $persentaseSuara = [];
 
         foreach ($data as $row) {
-            $labels[] = "Paslon " . $row['id_paslon'];
+            // Menggunakan nama_paslon sebagai label
+            $labels[] = $row['nama_paslon'];
             $totalSuara[] = $row['total_suara'];
 
-            // Hitung persentase suara sah untuk pie chart
             $persentaseSuara[] = ($row['total_suara'] / $totalSemuaSuara) * 100;
         }
 
-        // Kirim respon sebagai JSON
         return $this->respond([
-            'labels' => $labels,
+            'labels' => $labels, // Nama paslon akan tampil di chart
             'total_suara' => $totalSuara, // Untuk bar chart
             'persentase_suara' => $persentaseSuara // Untuk pie chart
         ]);
