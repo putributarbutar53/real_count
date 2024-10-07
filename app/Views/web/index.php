@@ -44,7 +44,6 @@
             <?php endforeach; ?>
         </div>
     </div>
-
 </div>
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>

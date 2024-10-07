@@ -21,7 +21,24 @@ class Chart extends BaseController
 
         return view('web/chart');
     }
+    public function getSuara()
+    {
+        $hasilModel = new HasilModel();
 
+        // Menghitung total suara sah
+        $totalSuaraSah = $hasilModel->selectSum('suara_sah')->first();
+
+        // Menghitung suara untuk setiap paslon
+        $suaraPaslon = [
+            'total_suara' => $totalSuaraSah['suara_sah'],
+            'suara_poltak' => $hasilModel->where('id_paslon', 1)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
+            'suara_robinson' => $hasilModel->where('id_paslon', 2)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
+            'suara_effendi' => $hasilModel->where('id_paslon', 3)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
+        ];
+
+        return $this->response->setJSON($suaraPaslon);
+    }
+    // Fungsi untuk mendapatkan data chart
     public function getchart()
     {
         // Join tabel hasil dengan paslon untuk mendapatkan nama_paslon

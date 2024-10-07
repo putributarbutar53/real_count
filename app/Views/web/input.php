@@ -59,7 +59,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="tps">Nama TPS</label>
+                                <label for="tps">Nomor TPS</label>
                                 <input type="number" class="form-control" id="tps" name="tps" placeholder="Masukkan Nama TPS" min="1" max="99" oninput="limitDigits(this)">
                                 <small>Masukkan hanya angka saja (mis: 1,2,3)</small>
                             </div>
@@ -107,7 +107,7 @@
             "APAKAH ANDA YAKIN INGIN MENGINPUT DATA Untuk Paslon : " + paslon + "<br>" +
             "Dengan Suara Sah : " + suaraSah + "<br>" +
             "Suara Tidak Sah : " + suaraTidakSah + "<br>" +
-            "Di TPS : " + tps + " Desa : " + desa + " Kecamatan : " + kecamatan + "<br><br>" +
+            "Di TPS : " + tps + "<br>" + " Desa : " + desa + "<br>" + " Kecamatan : " + kecamatan + "<br><br>" +
             "DATA TIDAK BISA DIUBAH, PASTIKAN DATA YANG ANDA ENTRY BENAR";
 
         Swal.fire({
