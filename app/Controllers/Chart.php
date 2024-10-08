@@ -41,7 +41,6 @@ class Chart extends BaseController
     // Fungsi untuk mendapatkan data chart
     public function getchart()
     {
-        // Join tabel hasil dengan paslon untuk mendapatkan nama_paslon
         $data = $this->hasil
             ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon') // Join dengan tabel paslon
@@ -67,6 +66,37 @@ class Chart extends BaseController
 
         return $this->respond([
             'labels' => $labels, // Nama paslon akan tampil di chart
+            'total_suara' => $totalSuara, // Untuk bar chart
+            'persentase_suara' => $persentaseSuara // Untuk pie chart
+        ]);
+    }
+    public function getDataPerKecamatanDanPaslon()
+    {
+        $data = $this->hasil
+            ->select('kecamatan.nama_kec, paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
+            ->join('kecamatan', 'kecamatan.id = hasil.id_kec') 
+            ->join('paslon', 'paslon.id = hasil.id_paslon') 
+            ->groupBy('hasil.id_kec, hasil.id_paslon')
+            ->findAll();
+
+        $totalSemuaSuara = 0;
+        foreach ($data as $row) {
+            $totalSemuaSuara += $row['total_suara'];
+        }
+
+        $labels = [];
+        $totalSuara = [];
+        $persentaseSuara = [];
+
+        foreach ($data as $row) {
+            $labels[] = $row['nama_kec'] . ' - ' . $row['nama_paslon'];
+            $totalSuara[] = $row['total_suara'];
+
+            $persentaseSuara[] = ($row['total_suara'] / $totalSemuaSuara) * 100;
+        }
+
+        return $this->respond([
+            'labels' => $labels, // Nama kecamatan dan paslon akan tampil di chart
             'total_suara' => $totalSuara, // Untuk bar chart
             'persentase_suara' => $persentaseSuara // Untuk pie chart
         ]);

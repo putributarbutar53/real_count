@@ -40,19 +40,55 @@
 </div>
 <div class="row no-gutters">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
-        <div class="card">
+        <div class="card text-center h-100"> <!-- Tambahkan kelas text-center dari Bootstrap -->
+            <h4>Grafik perolehan suara</h4>
             <canvas class="max-w-100" id="bar" width="1618" height="1000"></canvas>
         </div>
     </div>
+
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
-        <div class="card h-100">
+        <div class="card text-center">
+            <h5>Persentase perolehan suara</h5>
             <canvas id="pie" width="700" height="350"></canvas>
         </div>
     </div>
-    <div class="col-xxl-6 px-xxl-2">
-        <div class="card h-100">
+
+</div>
+<div class="card bg-light mb-3">
+    <div class="card-body p-3">
+        <p class="fs--1 mb-0"> Dummy <strong></strong></p>
+    </div>
+</div>
+<div class="row no-gutters">
+    <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
+        <div class="card">
+            
+                        <h4 class="">Pilih Kecamatan untuk Menampilkan Pie Chart</h4>
+
+                        <!-- Dropdown Pilihan Kecamatan -->
+                        <div class="form-group">
+                            <label for="kecamatan">Kecamatan</label>
+                            <select class="form-control" id="kecamatan" onchange="updateChart()">
+                                <option value="">-- Pilih Kecamatan --</option>
+                                <option value="1">Kecamatan A</option>
+                                <option value="2">Kecamatan B</option>
+                                <option value="3">Kecamatan C</option>
+                                <option value="4">Kecamatan D</option>
+                            </select>
+                        </div>
+
+                        <!-- Tempat Pie Chart -->
+                        <canvas id="chartPie" width="400" height="400"></canvas>
+                   
         </div>
     </div>
+    <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
+        <div class="card text-center h-100">
+            <h4>Grafik Kecamatan</h4>
+        </div>
+    </div>
+</div>
+
 </div>
 <?php $this->endSection() ?>
 
@@ -84,23 +120,24 @@
         });
     }
 
-    // Memanggil fungsi refreshData setiap 5 detik
     setInterval(refreshData, 5000);
 
-    // Panggil sekali untuk load data pertama kali
     $(document).ready(function() {
         refreshData();
     });
 </script>
 
+
+
 <script>
     var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
+
     var barChart, pieChart;
 
     function loadChart() {
         $.ajax({
-            url: '<?= site_url() ?>chart/getchart', // Endpoint untuk mengambil data chart dari controller
+            url: '<?= site_url('chart/getchart') ?>', // Endpoint untuk mengambil data chart dari controller
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -210,4 +247,7 @@
 
     loadChart();
 </script>
+
+
+
 <?php $this->endSection() ?>
