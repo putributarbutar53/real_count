@@ -4,20 +4,7 @@
 <?php $this->section('content') ?>
 <!-- Page content goes here -->
 
-<div class="card mb-3">
-    <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?= base_url() ?>/assets/img/illustrations/corner-4.png);">
-    </div>
-    <!--/.bg-holder-->
-    <div class="card-body">
-        <div class="row">
-            <div class="col-lg-8">
-                <h4 class="mb-0">Rekap Perolehan Suara Sah Pemilihan Bupati Toba/Wakil Bupati Toba Tahun 2024
-                    Rabu, 27 Nopember 2024
-                </h4>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
@@ -65,119 +52,7 @@
     </div>
 
 </div>
-
-<div class="card mb-3">
-    <div class="card-header">
-        <div class="row flex-between-center">
-            <div class="col">
-                <table id="hasilSuaraTable" class="table table-sm table-dashboard no-wrap mb-0 fs--1 w-100">
-                    <thead class="bg-200">
-                        <tr>
-                            <th class="sort">No</th>
-                            <th class="sort">Paslon</th>
-                            <th class="sort">Kec</th>
-                            <th class="sort">Desa</th>
-                            <th class="sort">TPS</th>
-                            <th class="sort">Suara Sah</th>
-                            <th class="sort">Suara Tidak Sah</th>
-                            <th class="sort">Jumlah Suara</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white">
-                        <!-- Data akan diisi oleh AJAX -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="card-body bg-light">
-        <div class="row">
-
-        </div>
-    </div>
-</div>
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function refreshSuara() {
-        $.ajax({
-            url: '<?= base_url("hasil/getget") ?>', // Ganti dengan nama controller Anda
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // Update suara di tabel
-                for (const kec_id in data) {
-                    for (const paslon in data[kec_id].suara) {
-                        const suara_sah = data[kec_id].suara[paslon].suara_sah;
-                        const elementId = `suara-${kec_id}-${paslon}`;
-                        const $element = $(`#${elementId} .countup`);
-                        $element.attr('data-countup', `{"count":${suara_sah}}`);
-                        $element.text(0); // Reset angka sebelum animasi
-                        countUp($element); // Panggil fungsi untuk menghitung angka
-                    }
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Error fetching data: ", textStatus, errorThrown);
-            }
-        });
-    }
-
-    function countUp(element) {
-        const count = JSON.parse(element.attr('data-countup')).count;
-        $(element).text(count);
-        // Jika menggunakan animasi, tambahkan logika di sini
-    }
-
-    setInterval(refreshSuara, 180000); // Setiap 3 menit
-</script>
-<script>
-    function fetchHasilSuara() {
-        $.ajax({
-            url: '<?= base_url('hasil/data') ?>',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                var tbody = $('#hasilSuaraTable tbody');
-                tbody.empty();
-
-                if (data.length > 0) {
-                    $.each(data, function(index, hasil) {
-                        var jumlahSuara = hasil.suara_sah + hasil.tidak_sah;
-                        tbody.append('<tr>' +
-                            '<td>' + (index + 1) + '</td>' +
-                            '<td>' + hasil.nama_paslon + '</td>' +
-                            '<td>' + hasil.nama_kec + '</td>' +
-                            '<td>' + hasil.nama_desa + '</td>' +
-                            '<td>' + hasil.tps + '</td>' +
-                            '<td>' + hasil.suara_sah + '</td>' +
-                            '<td>' + hasil.tidak_sah + '</td>' +
-                            '<td>' + jumlahSuara + '</td>' +
-                            '</tr>');
-                    });
-
-                    // Inisialisasi DataTables
-                    $('#hasilSuaraTable').DataTable({
-                        "destroy": true, // Hapus instansi sebelumnya
-                        "paging": true,
-                        "searching": true,
-                        "ordering": true
-                    });
-                } else {
-                    tbody.append('<tr><td colspan="8" class="text-center">Tidak ada data tersedia</td></tr>');
-                }
-            },
-            error: function() {
-                console.error('Error fetching data');
-            }
-        });
-    }
-
-    setInterval(fetchHasilSuara, 500);
-    $(document).ready(function() {
-        fetchHasilSuara();
-    });
-</script>
-
 <?php $this->endsection() ?>

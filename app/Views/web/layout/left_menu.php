@@ -13,7 +13,7 @@
             <ul class="navbar-nav flex-column">
                 <li class="nav-item<?php if (current_url() === site_url('chart')) { ?> active<?php } ?>">
                     <a class="nav-link" href="<?php echo site_url('chart') ?>">
-                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text">Chart</span>
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text">Dashboard</span>
                         </div>
                     </a>
                 </li>
@@ -36,6 +36,17 @@
                 <li class="nav-item<?php if (current_url() === site_url('hasil')) { ?> active<?php } ?>">
                     <a class="nav-link" href="<?php echo site_url('hasil') ?>">
                         <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-line"></span></span><span class="nav-link-text">Hasil</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <div class="navbar-vertical-divider">
+                <hr class="navbar-vertical-hr my-2" />
+            </div>
+            <ul class="navbar-nav flex-column">
+                <li class="nav-item<?php if (current_url() === site_url('coba')) { ?> active<?php } ?>">
+                    <a class="nav-link" href="<?php echo site_url('coba') ?>">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-bar"></span></span><span class="nav-link-text">coba chart</span>
                         </div>
                     </a>
                 </li>

@@ -60,7 +60,7 @@
 
                             <div class="form-group">
                                 <label for="tps">Nomor TPS</label>
-                                <input type="number" class="form-control" id="tps" name="tps" placeholder="Masukkan Nama TPS" min="1" max="99" oninput="limitDigits(this)">
+                                <input type="number" class="form-control" id="tps" name="tps" placeholder="Masukkan Nomor TPS" min="1" max="99" oninput="limitDigits(this)">
                                 <small>Masukkan hanya angka saja (mis: 1,2,3)</small>
                             </div>
                         </div>

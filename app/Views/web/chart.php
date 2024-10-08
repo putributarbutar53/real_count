@@ -13,7 +13,6 @@
 
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/polga2p.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div>
-
         <div class="card-body position-relative">
             <h6>1. Poltak - Anugerah<span id="badge-poltak" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
             <div id="suara-poltak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
@@ -54,6 +53,82 @@
         </div>
     </div>
 </div>
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="row flex-between-center">
+            <div class="col">
+            </div>
+        </div>
+    </div>
+    <div class="card-body bg-light">
+        <div class="row">
+            <?php foreach ($paslon as $item): ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card" style="width: 100%; min-height: 350px;">
+                        <div class="d-flex justify-content-center mt-3">
+                            <img class="img-fluid" style="width: 100%; height: 250px;" src="<?= base_url() . getenv('dir.uploads.paslon') . $item['img'] ?>">
+                        </div>
+                        <div class="card-body text-center">
+                            <h1><?= esc($item['id']) ?></h1>
+                            <h5 class="card-title"><?= esc($item['nama_paslon']) ?></h5>
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <?php foreach ($kecamatan as $kec): ?>
+                                        <tr class="align-middle" style="line-height: 1;">
+                                            <td class="text-left" style="padding: 0.2rem;"><?= esc($kec['nama_kec']) ?></td>
+                                            <td style="padding: 0.2rem;" id="suara-<?= $kec['id'] ?>-<?= $item['nama_paslon'] ?>">
+                                                <?php if (isset($suara_per_kecamatan[$kec['id']])) : ?>
+                                                    <?php
+                                                    $suara_sah = isset($suara_per_kecamatan[$kec['id']]['suara'][$item['nama_paslon']]['suara_sah']) ? $suara_per_kecamatan[$kec['id']]['suara'][$item['nama_paslon']]['suara_sah'] : 0;
+                                                    ?>
+                                                    <small class="countup" data-countup='{"count":<?= esc($suara_sah) ?>}'>0</small> /
+                                                    <small><?= esc(array_sum(array_column($suara_per_kecamatan[$kec['id']]['suara'], 'suara_sah'))) ?></small>
+                                                <?php else: ?>
+                                                    <small class="countup" data-countup='{"count":0}'>0</small> /
+                                                    <small>0</small>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+</div>
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="kecamatanSelect">Pilih Kecamatan :</label>
+                    <div id="kecamatanSelect" class="row">
+                        <?php if (isset($kecamatan) && count($kecamatan) > 0): ?>
+                            <?php foreach ($kecamatan as $index => $kec): ?>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input kecamatan-checkbox" type="checkbox" id="kec_<?= $kec['id'] ?>" name="kecamatan[]" value="<?= $kec['id'] ?>">
+                                        <label class="form-check-label" for="kec_<?= $kec['id'] ?>">
+                                            <?= $kec['nama_kec'] ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>Tidak ada kecamatan tersedia</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="grafikContainer" class="row no-gutters"></div>
 <?php $this->endSection() ?>
 
 <?php $this->section('script') ?>
@@ -107,11 +182,11 @@
                 var warna = [];
 
                 response.labels.forEach(function(label) {
-                    if (label === 'Efendi & Audimurphi') {
+                    if (label === 'Effendi - Audi') {
                         warna.push('#006BFF');
-                    } else if (label === 'Robertson Tonny') {
+                    } else if (label === 'Robinson - Tonny') {
                         warna.push('#08C2FF');
-                    } else if (label === 'Poltak & Anugerah') {
+                    } else if (label === 'Poltak - Anugerah') {
                         warna.push('#E72929');
                     } else {
                         warna.push('#4BC0C0');
@@ -204,5 +279,84 @@
     setInterval(loadChart, 5000);
 
     loadChart();
+</script>
+<script>
+    $('.kecamatan-checkbox').on('change', function() {
+        let selectedKecamatan = [];
+        $('.kecamatan-checkbox:checked').each(function() {
+            selectedKecamatan.push($(this).val());
+        });
+
+        if (selectedKecamatan.length > 0) {
+            $.ajax({
+                url: '<?= base_url('coba/getGrafikByKecamatan') ?>',
+                type: 'POST',
+                data: {
+                    kecamatan: selectedKecamatan
+                },
+                success: function(response) {
+                    $('#grafikContainer').empty();
+
+                    // Menentukan warna berdasarkan nama paslon
+                    var warna = {};
+                    response.labels.forEach(function(label) {
+                        if (label === 'Effendi - Audi') {
+                            warna[label] = '#006BFF';
+                        } else if (label === 'Robinson - Tonny') {
+                            warna[label] = '#08C2FF';
+                        } else if (label === 'Poltak - Anugerah') {
+                            warna[label] = '#E72929';
+                        } else {
+                            warna[label] = '#4BC0C0'; // Warna default
+                        }
+                    });
+
+                    // Membuat grafik untuk setiap kecamatan
+                    response.dataGrafik.forEach(function(grafikData) {
+                        let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
+                        $('#grafikContainer').append(`
+                            <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Grafik Suara Paslon Kecamatan ${grafikData.kecamatan}</h5>
+                                    </div>
+                                    <canvas id="${chartId}" width="1618" height="1000"></canvas>
+                                </div>
+                            </div>
+                        `);
+
+                        // Mengambil label dan data untuk chart
+                        let labels = grafikData.data.map(function(item) {
+                            return response.labels[item.id_paslon - 1]; // Sesuaikan ID dengan index label
+                        });
+                        let data = grafikData.data.map(function(item) {
+                            return item.total_suara;
+                        });
+
+                        // Membuat chart
+                        let ctx = document.getElementById(chartId).getContext('2d');
+                        new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    data: data,
+                                    backgroundColor: labels.map(label => warna[label]) // Ambil warna sesuai label
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: false // Matikan judul di chart karena kita sudah menambahkannya di card-header
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        } else {
+            $('#grafikContainer').empty();
+        }
+    });
 </script>
 <?php $this->endSection() ?>
