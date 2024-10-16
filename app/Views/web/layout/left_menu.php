@@ -22,8 +22,8 @@
                 <hr class="navbar-vertical-hr my-2" />
             </div>
             <ul class="navbar-nav flex-column">
-                <li class="nav-item<?php if (current_url() === site_url('suara')) { ?> active<?php } ?>">
-                    <a class="nav-link" href="<?php echo site_url('suara') ?>">
+                <li class="nav-item<?php if (current_url() === site_url('suara24/suara')) { ?> active<?php } ?>">
+                    <a class="nav-link" href="<?php echo site_url('suara24/suara') ?>">
                         <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-plus-circle"></span></span><span class="nav-link-text">Input Suara</span>
                         </div>
                     </a>

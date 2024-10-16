@@ -74,9 +74,10 @@ class Chart extends BaseController
     // Fungsi untuk mendapatkan data chart
     public function getchart()
     {
+        // $this->output->enable_profiler(true);
         $data = $this->hasil
             ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
-            ->join('paslon', 'paslon.id = hasil.id_paslon') // Join dengan tabel paslon
+            ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->groupBy('hasil.id_paslon')
             ->findAll();
 
@@ -98,9 +99,9 @@ class Chart extends BaseController
         }
 
         return $this->respond([
-            'labels' => $labels, // Nama paslon akan tampil di chart
-            'total_suara' => $totalSuara, // Untuk bar chart
-            'persentase_suara' => $persentaseSuara // Untuk pie chart
+            'labels' => $labels,
+            'total_suara' => $totalSuara, 
+            'persentase_suara' => $persentaseSuara 
         ]);
     }
 
@@ -108,10 +109,11 @@ class Chart extends BaseController
     {
         $selectedKec = $this->request->getPost('kecamatan');
         $data = $this->hasil
-            ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
-            ->join('paslon', 'paslon.id = hasil.id_paslon') // Join dengan tabel paslon
+            ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total suara')
+            ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->groupBy('hasil.id_paslon')
             ->findAll();
+
         $dataGrafik = [];
         $labels = [];
         foreach ($data as $row) {

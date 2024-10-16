@@ -22,7 +22,7 @@
     <div class="card-header">
         <div class="row flex-between-center">
             <div class="col">
-                <form id="formInput" action="<?= base_url('suara/save') ?>" method="post">
+                <form id="formInput" action="<?= base_url('suara24/suara/save') ?>" method="post">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -70,10 +70,9 @@
                                 <label for="suara_sah">Jumlah Suara Sah</label>
                                 <input type="number" class="form-control" id="suara_sah" name="suara_sah" placeholder="Masukkan Jumlah Suara Sah" oninput="calculateTotal()">
                             </div>
-
                             <div class="form-group">
-                                <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
-                                <input type="number" class="form-control" id="tidak_sah" name="tidak_sah" placeholder="Masukkan Jumlah Suara Tidak Sah" oninput="calculateTotal()">
+                                <label for="suara_sah">Jumlah Tidak Sah</label>
+                                <input type="number" class="form-control" id="tidak_sah" name="tidak_sah" placeholder="Masukkan Suara tidak sah" oninput="calculateTotal()">
                             </div>
 
                             <div class="form-group">
@@ -151,7 +150,7 @@
 
             if (kecamatanId) {
                 $.ajax({
-                    url: "<?= base_url('suara/getDesaByKecamatan') ?>" + "/" + kecamatanId,
+                    url: "<?= base_url('suara24/suara/getDesaByKecamatan') ?>" + "/" + kecamatanId,
                     type: "GET",
                     dataType: "json",
                     success: function(data) {

@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\suara24;
 
+use App\Controllers\BaseController;
+use App\Models\AdminModel;
 use App\Models\PaslonModel;
 use App\Models\HasilModel;
 use App\Models\KecamatanModel;
 use App\Models\DesaModel;
+use CodeIgniter\Config\Config;
+use CodeIgniter\Database\Query;
 use CodeIgniter\API\ResponseTrait;
 
 class Suara extends BaseController
@@ -21,6 +25,7 @@ class Suara extends BaseController
         $this->validation = \Config\Services::validation();
     }
     public function index(): string
+
     {
         $data['kecamatan'] = $this->kec->findAll();
         $data['paslon'] = $this->paslon->orderBy('id', 'ASC')->findAll();
@@ -31,8 +36,10 @@ class Suara extends BaseController
     public function getDesaByKecamatan($id_kec)
     {
         $desa = $this->desa->where('id_kec', $id_kec)->findAll();
+
         return $this->respond($desa);
     }
+
     public function save()
     {
         $data = [

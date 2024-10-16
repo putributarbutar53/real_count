@@ -53,42 +53,11 @@
     </div>
 
 </div>
-<div class="card bg-light mb-3">
+<!-- <div class="card bg-light mb-3">
     <div class="card-body p-3">
         <p class="fs--1 mb-0"> Dummy <strong></strong></p>
     </div>
-</div>
-<div class="row no-gutters">
-    <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
-        <div class="card">
-            
-                        <h4 class="">Pilih Kecamatan untuk Menampilkan Pie Chart</h4>
-
-                        <!-- Dropdown Pilihan Kecamatan -->
-                        <div class="form-group">
-                            <label for="kecamatan">Kecamatan</label>
-                            <select class="form-control" id="kecamatan" onchange="updateChart()">
-                                <option value="">-- Pilih Kecamatan --</option>
-                                <option value="1">Kecamatan A</option>
-                                <option value="2">Kecamatan B</option>
-                                <option value="3">Kecamatan C</option>
-                                <option value="4">Kecamatan D</option>
-                            </select>
-                        </div>
-
-                        <!-- Tempat Pie Chart -->
-                        <canvas id="chartPie" width="400" height="400"></canvas>
-                   
-        </div>
-    </div>
-    <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
-        <div class="card text-center h-100">
-            <h4>Grafik Kecamatan</h4>
-        </div>
-    </div>
-</div>
-
-</div>
+</div> -->
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
@@ -219,11 +188,11 @@
                 var warna = [];
 
                 response.labels.forEach(function(label) {
-                    if (label === 'Effendi - Audi') {
+                    if (label === 'Efendi & Audimurphi') {
                         warna.push('#006BFF');
-                    } else if (label === 'Robinson - Tonny') {
+                    } else if (label === 'Robertson Tonny') {
                         warna.push('#08C2FF');
-                    } else if (label === 'Poltak - Anugerah') {
+                    } else if (label === 'Poltak & Anugerah') {
                         warna.push('#E72929');
                     } else {
                         warna.push('#4BC0C0');
@@ -332,7 +301,7 @@
         if (selectedKecamatan.length > 0) {
             $.ajax({
                 url: '<?= base_url('coba/getGrafikByKecamatan') ?>',
-                type: 'POST',
+                type: 'Post',
                 data: {
                     kecamatan: selectedKecamatan
                 },
@@ -342,18 +311,18 @@
                     // Menentukan warna berdasarkan nama paslon
                     var warna = {};
                     response.labels.forEach(function(label) {
-                        if (label === 'Effendi - Audi') {
+                        if (label === 'Efendi & Audimurphi') {
                             warna[label] = '#006BFF';
-                        } else if (label === 'Robinson - Tonny') {
+                        } else if (label === 'Robertson Tonny') {
                             warna[label] = '#08C2FF';
-                        } else if (label === 'Poltak - Anugerah') {
+                        } else if (label === 'Poltak & Anugerah') {
                             warna[label] = '#E72929';
                         } else {
-                            warna[label] = '#4BC0C0'; // Warna default
+                            warna[label] = '#4BC0C0';
                         }
                     });
 
-                    // Membuat grafik untuk setiap kecamatan
+                
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
