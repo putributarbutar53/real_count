@@ -53,6 +53,46 @@
     <link type="text/css" href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
     <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
     <!-- checkbox -->
+    <style>
+        .tps-form {
+            border: 1px solid #ccc;
+            /* Tambahkan border pada TPS form */
+            padding: 20px;
+            /* Tambahkan padding */
+            margin-bottom: 20px;
+            /* Tambahkan jarak antar TPS form */
+            border-radius: 5px;
+            /* Tambahkan sudut melengkung */
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+        }
+
+        .has-error {
+            border: 2px solid #dc3545;
+            padding: 1px;
+            border-radius: 5px;
+            height: 309px;
+            /* Tinggi default untuk tampilan desktop */
+        }
+
+        /* Media query untuk tampilan mobile */
+        @media (max-width: 768px) {
+
+            /* Kamu bisa sesuaikan 768px dengan batas lebar yang diinginkan */
+            .has-error {
+                height: auto;
+                /* Mengubah tinggi menjadi otomatis di tampilan mobile */
+                min-height: 150px;
+                /* Menentukan tinggi minimum agar terlihat lebih baik */
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -86,6 +126,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@latest"></script>
     <script src="<?= base_url() ?>assets/js/popper.min.js"></script>
     <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/@fortawesome/all.min.js"></script>

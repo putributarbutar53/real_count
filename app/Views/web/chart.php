@@ -53,11 +53,13 @@
     </div>
 
 </div>
-<!-- <div class="card bg-light mb-3">
+<div class="card bg-light mb-3">
     <div class="card-body p-3">
-        <p class="fs--1 mb-0"> Dummy <strong></strong></p>
+        <p class="fs--1 mb-0">
+            <strong>Data Suara per Kecamatan</strong>
+        </p>
     </div>
-</div> -->
+</div>
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
@@ -103,7 +105,13 @@
             <?php endforeach; ?>
         </div>
     </div>
-
+</div>
+<div class="card bg-light mb-3">
+    <div class="card-body p-3">
+        <p class="fs--1 mb-0">
+            <strong>Grafik perolehan suara per kecamatan</strong>
+        </p>
+    </div>
 </div>
 <div class="card mb-3">
     <div class="card-body">
@@ -236,14 +244,14 @@
                 }
 
                 if (pieChart) {
-                    pieChart.data.labels = response.labels;
+                    pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
                     pieChart.data.datasets[0].data = response.persentase_suara; // Menampilkan persentase suara sah
                     pieChart.update();
                 } else {
                     pieChart = new Chart(chartPie, {
                         type: 'pie',
                         data: {
-                            labels: response.labels,
+                            labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
                             datasets: [{
                                 label: 'Persentase Suara Sah',
                                 backgroundColor: warna,
@@ -260,26 +268,7 @@
                                 animateScale: true,
                                 animateRotate: true
                             },
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItem, data) {
-                                        var dataset = data.datasets[tooltipItem.datasetIndex];
-                                        var currentValue = dataset.data[tooltipItem.index];
-                                        var label = data.labels[tooltipItem.index];
-                                        // Menampilkan label dengan nilai persentase
-                                        return label + ': ' + currentValue.toFixed(2) + '%'; // Format dengan 2 decimal
-                                    }
-                                }
-                            },
-                            onClick: function(evt, elements) {
-                                if (elements.length > 0) {
-                                    var index = elements[0]._index;
-                                    var label = this.data.labels[index];
-                                    var percentage = this.data.datasets[0].data[index].toFixed(2) + '%';
 
-                                    alert("Paslon: " + label + "\nPersentase Suara Sah: " + percentage);
-                                }
-                            }
                         }
                     });
                 }
@@ -300,8 +289,8 @@
 
         if (selectedKecamatan.length > 0) {
             $.ajax({
-                url: '<?= base_url('coba/getGrafikByKecamatan') ?>',
-                type: 'Post',
+                url: '<?= base_url('chart/getGrafikByKecamatan') ?>',
+                type: 'POST',
                 data: {
                     kecamatan: selectedKecamatan
                 },
@@ -341,7 +330,10 @@
                             return response.labels[item.id_paslon - 1]; // Sesuaikan ID dengan index label
                         });
                         let data = grafikData.data.map(function(item) {
-                            return item.total_suara;
+                            return item.total_suara; // Pastikan ini mengambil total suara yang benar
+                        });
+                        let percentages = grafikData.data.map(function(item) {
+                            return item.persentase; // Ambil persentase dari respons
                         });
 
                         // Membuat chart
@@ -349,7 +341,7 @@
                         new Chart(ctx, {
                             type: 'pie',
                             data: {
-                                labels: labels,
+                                labels: labels.map((label, index) => `${label} (${percentages[index]}%)`), // Menampilkan persentase di label
                                 datasets: [{
                                     data: data,
                                     backgroundColor: labels.map(label => warna[label]) // Ambil warna sesuai label
@@ -358,7 +350,7 @@
                             options: {
                                 responsive: true,
                                 title: {
-                                    display: false // Matikan judul di chart karena kita sudah menambahkannya di card-header
+                                    display: false
                                 }
                             }
                         });
@@ -370,4 +362,5 @@
         }
     });
 </script>
+
 <?php $this->endSection() ?>
