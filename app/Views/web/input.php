@@ -24,6 +24,7 @@
             <div class="col">
                 <form id="formInput" action="<?= base_url('suara/save') ?>" method="post">
                     <div class="row">
+                        <!-- Kecamatan, Desa, Kode Konfirmasi -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="kecamatan">Pilih Kecamatan</label>
@@ -34,56 +35,74 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                        </div>
 
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="desa">Pilih Desa</label>
                                 <select class="form-control selectpicker" id="desa" name="id_desa" disabled>
                                     <option value="">-- Pilih Desa --</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="kode_konfirmasi">Kode Konfirmasi</label>
                                 <input type="text" class="form-control" id="kode_konfirmasi" name="kode_konfirmasi" placeholder="Masukkan Kode Konfirmasi">
                                 <small>Masukkan kode konfirmasi yang telah diberikan admin</small>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="paslon">Pilih Paslon</label>
-                                <select class="form-control" id="paslon" name="id_paslon">
-                                    <option value="">-- Pilih Paslon --</option>
-                                    <?php foreach ($paslon as $p) : ?>
-                                        <option value="<?= $p['id'] ?>"><?= $p['nama_paslon'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                    </div>
+
+                    <!-- Nama Paslon dari Database & TPS Dinamis -->
+                    <div id="tpsContainer">
+                        <!-- Initial TPS form -->
+                        <div class="tps-form" id="tps1">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="tps_number">TPS</label>
+                                        <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="tps">Nomor TPS</label>
-                                <input type="number" class="form-control" id="tps" name="tps" placeholder="Masukkan Nomor TPS" min="1" max="99" oninput="limitDigits(this)">
-                                <small>Masukkan hanya angka saja (mis: 1,2,3)</small>
-                            </div>
-                        </div>
+                            <div class="row">
+                                <?php foreach ($paslon as $key => $p) : ?>
+                                    <!-- Nama Paslon dan Input Suara Sah -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="paslon<?= $key + 1 ?>"><?= $p['nama_paslon'] ?></label>
+                                            <input type="hidden" name="id_paslon[]" value="<?= $p['id'] ?>">
+                                            <input type="number" class="form-control" name="suara_sah[<?= $p['id'] ?>][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="suara_sah">Jumlah Suara Sah</label>
-                                <input type="number" class="form-control" id="suara_sah" name="suara_sah" placeholder="Masukkan Jumlah Suara Sah" oninput="calculateTotal()">
+                                <!-- Jumlah Suara Tidak Sah -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
+                                        <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
-                                <input type="number" class="form-control" id="tidak_sah" name="tidak_sah" placeholder="Masukkan Jumlah Suara Tidak Sah" oninput="calculateTotal()">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="jlh_suara">Total Suara</label>
-                                <input type="number" class="form-control" id="jlh_suara" name="jlh_suara" placeholder="Total Suara" readonly>
-                            </div>
+                            <button type="button" class="btn btn-danger removeTPSButton"><i class="fas fa-trash"></i> </button>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-danger">Submit</button>
+                    <div class="form-group d-flex justify-content-end"> <!-- Menggunakan flexbox untuk mengatur alignment -->
+                        <button type="button" class="btn btn-primary" id="addTPSButton">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-paper-plane"></i> Kirim
+                    </button>
+
                 </form>
 
             </div>
@@ -93,53 +112,107 @@
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>
 <script>
-    document.getElementById("formInput").addEventListener("submit", function(event) {
-        event.preventDefault(); // Mencegah pengiriman form langsung
-
-        var paslon = document.getElementById("paslon").options[document.getElementById("paslon").selectedIndex].text;
-        var suaraSah = document.getElementById("suara_sah").value;
-        var suaraTidakSah = document.getElementById("tidak_sah").value;
-        var tps = document.getElementById("tps").value;
-        var desa = document.getElementById("desa").options[document.getElementById("desa").selectedIndex].text;
-        var kecamatan = document.getElementById("kecamatan").options[document.getElementById("kecamatan").selectedIndex].text;
-
-        var confirmMessage =
-            "APAKAH ANDA YAKIN INGIN MENGINPUT DATA Untuk Paslon : " + paslon + "<br>" +
-            "Dengan Suara Sah : " + suaraSah + "<br>" +
-            "Suara Tidak Sah : " + suaraTidakSah + "<br>" +
-            "Di TPS : " + tps + "<br>" + " Desa : " + desa + "<br>" + " Kecamatan : " + kecamatan + "<br><br>" +
-            "DATA TIDAK BISA DIUBAH, PASTIKAN DATA YANG ANDA ENTRY BENAR";
-
-        Swal.fire({
-            title: 'Konfirmasi Penginputan Data',
-            html: confirmMessage,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Input Data!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.submit();
-            }
-        });
+    document.getElementById('formInput').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah submit form secara langsung
+        checkDuplicateData();
     });
 
-    function limitDigits(input) {
-        if (input.value > 99) {
-            input.value = 99;
-        } else if (input.value < 1 && input.value !== "") {
-            input.value = 1;
-        }
+    function checkDuplicateData() {
+        // Ambil data yang akan diperiksa
+        var kecamatan = document.getElementById('kecamatan').value;
+        var desa = document.getElementById('desa').value;
+        var tpsNumber = document.querySelector('[name="tps_number[]"]').value;
+
+        // AJAX Request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?= base_url('suara/checkDuplicate') ?>', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.exists) {
+                    // Jika data sudah ada, tampilkan peringatan
+                    displayError('Data ini sudah pernah ditambahkan ke database.');
+                } else {
+                    // Jika tidak ada duplikasi, submit form
+                    document.getElementById('formInput').submit();
+                }
+            }
+        };
+        xhr.send('kecamatan=' + kecamatan + '&desa=' + desa + '&tpsNumber=' + tpsNumber);
     }
 
-    function calculateTotal() {
-        var suaraSah = parseInt(document.getElementById("suara_sah").value) || 0;
-        var tidakSah = parseInt(document.getElementById("tidak_sah").value) || 0;
-        document.getElementById("jlh_suara").value = suaraSah + tidakSah;
+    function displayError(message) {
+        // Tambahkan pesan error di input TPS
+        var tpsInput = document.querySelector('[name="tps_number[]"]');
+        tpsInput.classList.add('is-invalid'); // Tambah class bootstrap merah
+        var errorDiv = document.createElement('div');
+        errorDiv.classList.add('invalid-feedback');
+        errorDiv.innerText = message;
+        tpsInput.parentElement.appendChild(errorDiv);
+
+        // Tambahkan class merah ke pembungkus form
+        var tpsContainer = document.getElementById('tpsContainer');
+        tpsContainer.classList.add('has-error');
     }
 </script>
+<script>
+    let tpsCount = 1;
 
+    document.getElementById('addTPSButton').addEventListener('click', function() {
+        tpsCount++;
+        const tpsContainer = document.getElementById('tpsContainer');
 
+        // Create new TPS form
+        const newTpsForm = document.createElement('div');
+        newTpsForm.classList.add('tps-form');
+        newTpsForm.setAttribute('id', 'tps' + tpsCount);
+
+        // Add the form structure for new TPS
+        newTpsForm.innerHTML = `
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="tps_number">TPS</label>
+                        <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <?php foreach ($paslon as $key => $p) : ?>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="paslon${<?= $key + 1 ?>}"><?= $p['nama_paslon'] ?></label>
+                        <input type="hidden" name="id_paslon[]" value="<?= $p['id'] ?>">
+                        <input type="number" class="form-control" name="suara_sah[${<?= $p['id'] ?>}][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
+                        <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
+                    </div>
+                </div>
+            </div>
+
+             <button type="button" class="btn btn-danger removeTPSButton"><i class="fas fa-trash"></i> </button>
+        `;
+
+        // Append the new TPS form to the container
+        tpsContainer.appendChild(newTpsForm);
+    });
+
+    // Event delegation to handle removal of TPS forms
+    document.getElementById('tpsContainer').addEventListener('click', function(event) {
+        if (event.target.classList.contains('removeTPSButton')) {
+            event.target.closest('.tps-form').remove(); // Hapus TPS form yang diklik
+        }
+    });
+</script>
 <script>
     $(document).ready(function() {
         // Saat kecamatan dipilih

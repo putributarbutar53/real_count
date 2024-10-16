@@ -113,6 +113,7 @@ class Chart extends BaseController
             ->join('paslon', 'paslon.id = hasil.id_paslon') // Join dengan tabel paslon
             ->groupBy('hasil.id_paslon')
             ->findAll();
+
         $dataGrafik = [];
         $labels = [];
         foreach ($data as $row) {
@@ -121,15 +122,31 @@ class Chart extends BaseController
 
         if ($selectedKec) {
             foreach ($selectedKec as $id_kec) {
+                // Ambil total suara untuk kecamatan yang dipilih
                 $dataSuara = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
                     ->where('id_kec', $id_kec)
                     ->groupBy('id_paslon')
                     ->findAll();
 
+                // Hitung total suara di kecamatan tersebut
+                $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
+
                 $kecamatan = $this->kec->find($id_kec);
+                $dataPaslon = [];
+                foreach ($dataSuara as $suara) {
+                    // Hitung persentase suara
+                    $persentase = $totalSuaraKecamatan > 0 ? (($suara['total_suara'] / $totalSuaraKecamatan) * 100) : 0;
+                    $dataPaslon[] = [
+                        'id_paslon' => $suara['id_paslon'],
+                        'total_suara' => $suara['total_suara'],
+                        'persentase' => number_format($persentase, 2) // Format dua desimal
+                    ];
+                }
+
                 $dataGrafik[] = [
                     'kecamatan' => $kecamatan['nama_kec'],
-                    'data' => $dataSuara
+                    'data' => $dataPaslon,
+                    'total_suara_kecamatan' => $totalSuaraKecamatan // Tambahkan total suara per kecamatan
                 ];
             }
         }
