@@ -5,18 +5,17 @@ namespace App\Controllers\suara24;
 use App\Controllers\BaseController;
 use App\Models\AdminModel;
 use App\Models\KecamatanModel;
-use App\Models\DesaModel;
-use App\Models\PaslonModel;
-use CodeIgniter\Config\Config;
-use CodeIgniter\Database\Query;
+use App\Models\HasilModel;
 use CodeIgniter\API\ResponseTrait;
 
 class Login extends BaseController
 {
-    var $model, $validation;
+    var $model, $kec, $hasil, $validation;
     use ResponseTrait;
     function __construct()
     {
+        $this->hasil = new HasilModel();
+        $this->kec = new KecamatanModel();
         $this->model = new AdminModel();
         $this->validation = \Config\Services::validation();
         helper("cookie");
@@ -34,6 +33,7 @@ class Login extends BaseController
                 return redirect()->to('suara24/login');
             }
             $akun = [
+                'admin_id_kec' => $dataAkun['idkec'],
                 'admin_username' => $username,
                 'admin_name' => $dataAkun['name'],
                 'admin_email' => $dataAkun['email'],
@@ -89,6 +89,7 @@ class Login extends BaseController
             }
 
             $akun = [
+                'admin_id_kec' => $dataAkun['idkec'],
                 'admin_username' => $dataAkun['username'],
                 'admin_name' => $dataAkun['name'],
                 'admin_email' => $dataAkun['email'],
@@ -103,13 +104,14 @@ class Login extends BaseController
     }
     function logout()
     {
+
         delete_cookie("admin_cookie_username");
         delete_cookie("admin_cookie_password");
         session()->destroy();
         if (session()->get('admin_username') != '') {
             session()->setFlashdata("success", "Anda berhasil logout");
         }
-        echo view("web/chart");
+        return view('web/auth/login');
     }
 
     function lupapassword()

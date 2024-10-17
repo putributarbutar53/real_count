@@ -1,44 +1,6 @@
-<!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<?php $this->extend('web/layout/main') ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <title>Login</title>
-
-
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url() ?>favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>favicon/favicon-16x16.png">
-    <link rel="manifest" href="<?= base_url() ?>favicon/site.webmanifest">
-    <meta name="theme-color" content="#ffffff">
-
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <script src="<?php echo base_url() ?>assets/js/config.navbar-vertical.js"></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-    <link href="<?php echo base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/css/theme.css" rel="stylesheet">
-
-</head>
-
-
-<body>
-
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
+<?php $this->section('content') ?>
     <main class="main" id="top">
 
 
@@ -102,28 +64,15 @@
             </div>
         </div>
     </main>
-    <!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
-
-
-
-
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
-    <script src="<?php echo base_url() ?>assets/js/jquery.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/popper.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/@fortawesome/all.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/stickyfilljs/stickyfill.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/sticky-kit/sticky-kit.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/is_js/is.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/lodash/lodash.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
-    <script src="<?php echo base_url() ?>assets/js/theme.js"></script>
-
-</body>
-
-</html>
+<?php $this->endSection()?>
+<?php $this->section('script')?>
+<script>
+     function adddata() {
+        $('#editor_add').load('<?= site_url('suara24/data/add') ?>', function() {
+            $('#add').modal({
+                show: true
+            });
+        });
+    }
+</script>
+<?php $this->endSection()?>

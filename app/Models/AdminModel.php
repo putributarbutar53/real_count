@@ -13,6 +13,7 @@ class AdminModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        'idkec',
         'username',
         'password',
         'email',

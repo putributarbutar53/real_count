@@ -14,10 +14,10 @@
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>asset/img/logo/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url() ?>favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>favicon/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>assets/favicon/img/logo/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url() ?>assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>assets/favicon/favicon-16x16.png">
     <link rel="manifest" href="<?= base_url() ?>favicon/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <!-- ===============================================-->
@@ -27,7 +27,6 @@
 
     <script src="<?= base_url() ?>assets/js/config.navbar-vertical.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="<?= base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/lib/prismjs/prism-okaidia.css" rel="stylesheet">
@@ -47,12 +46,6 @@
     <script src="<?= base_url() ?>assets/lib/datatables-bs4/dataTables.bootstrap4.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/datatables.net-responsive/dataTables.responsive.js"></script>
     <script src="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.js"></script>
-    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
-
-    <link type="text/css" href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
-    <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
-    <!-- checkbox -->
     <style>
         .tps-form {
             border: 1px solid #ccc;
@@ -138,10 +131,10 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
     <script src="<?= base_url() ?>assets/lib/prismjs/prism.js"></script>
 
-    <!-- <script src="<?= base_url() ?>assets/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url() ?>assets/lib/datatables/js/jquery.dataTables.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/datatables-bs4/dataTables.bootstrap4.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/datatables.net-responsive/dataTables.responsive.js"></script>
-    <script src="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.js"></script> -->
+    <script src="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.js"></script>
     <script src="<?= base_url() ?>assets/lib/flatpickr/flatpickr.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/fancybox/jquery.fancybox.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/select2/select2.min.js"></script>
@@ -150,7 +143,7 @@
     <script src="<?= base_url() ?>assets/js/theme.js"></script>
     <script src="<?= base_url() ?>assets/lib/echarts/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- <script type="text/javascript" src="https://cd  n.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
+
 
 
     <script>

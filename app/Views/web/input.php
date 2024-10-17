@@ -28,14 +28,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="kecamatan">Pilih Kecamatan</label>
-                                <select class="form-control selectpicker" id="kecamatan" name="id_kec">
-                                    <option value="">-- Pilih Kecamatan --</option>
+                                <select class="form-control selectpicker" id="kecamatan" name="id_kec" readonly>
                                     <?php foreach ($kecamatan as $kec) : ?>
-                                        <option value="<?= $kec['id'] ?>"><?= $kec['nama_kec'] ?></option>
+                                        <option value="<?= $kec['id'] ?>" <?= (session()->get('admin_id_kec') == $kec['id']) ? 'selected' : '' ?>><?= $kec['nama_kec'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
+
 
                         <div class="col-md-4">
                             <div class="form-group">
@@ -125,7 +125,7 @@
 
         // AJAX Request
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '<?= base_url('suara/checkDuplicate') ?>', true);
+        xhr.open('POST', '<?= base_url('suara24/suara/checkDuplicate') ?>', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onreadystatechange = function() {
@@ -214,6 +214,44 @@
     });
 </script>
 <script>
+    $(document).ready(function() {
+        // Mengambil id_kec dari session
+        var id_kec = $('#kecamatan').val();
+
+        if (id_kec) {
+            loadDesa(id_kec); // Panggil fungsi untuk load desa berdasarkan id_kec dari session
+        }
+
+        // Saat kecamatan diubah
+        $('#kecamatan').on('change', function() {
+            var id_kec = $(this).val();
+            if (id_kec) {
+                loadDesa(id_kec);
+            } else {
+                $('#desa').empty().append('<option value="">-- Pilih Desa --</option>').prop('disabled', true);
+            }
+        });
+
+        // Fungsi untuk memuat desa berdasarkan kecamatan
+        function loadDesa(id_kec) {
+            $.ajax({
+                url: "<?= site_url('suara24/suara/getDesaByKecamatan') ?>/" + id_kec,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $('#desa').empty().append('<option value="">-- Pilih Desa --</option>');
+                    $.each(data, function(key, value) {
+                        $('#desa').append('<option value="' + value.id + '">' + value.nama_desa + '</option>');
+                    });
+                    $('#desa').prop('disabled', false);
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat mengambil data desa');
+                }
+            });
+        }
+    });
+
     $(document).ready(function() {
         // Saat kecamatan dipilih
         $('#kecamatan').change(function() {

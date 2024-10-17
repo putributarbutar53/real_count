@@ -40,6 +40,34 @@
                     </a>
                 </li>
             </ul>
+
+            <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
+                <div class="navbar-vertical-divider">
+                    <hr class="navbar-vertical-hr my-2" />
+                </div>
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item<?php if (current_url() === site_url('suara24/data')) { ?> active<?php } ?>">
+                        <a class="nav-link" href="<?php echo site_url('suara24/data') ?>">
+                            <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-layer-group"></span></span><span class="nav-link-text">Data</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            <?php } ?>
+            <div class="navbar-vertical-divider">
+                <hr class="navbar-vertical-hr my-2" />
+            </div>
+            <?php if (session()->has('admin_username')): ?>
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item<?php if (current_url() === site_url('suara24/login/logout')) { ?> active<?php } ?>">
+                        <a class="nav-link" href="<?php echo site_url('suara24/login/logout') ?>">
+                            <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-sign-out-alt"></span></span><span class="nav-link-text">Logout</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+
         </div>
     </div>
 </nav>

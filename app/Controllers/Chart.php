@@ -71,10 +71,8 @@ class Chart extends BaseController
 
         return $this->response->setJSON($suaraPaslon);
     }
-    // Fungsi untuk mendapatkan data chart
     public function getchart()
     {
-        // $this->output->enable_profiler(true);
         $data = $this->hasil
             ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
@@ -91,7 +89,6 @@ class Chart extends BaseController
         $persentaseSuara = [];
 
         foreach ($data as $row) {
-            // Menggunakan nama_paslon sebagai label
             $labels[] = $row['nama_paslon'];
             $totalSuara[] = $row['total_suara'];
 
@@ -100,8 +97,8 @@ class Chart extends BaseController
 
         return $this->respond([
             'labels' => $labels,
-            'total_suara' => $totalSuara, 
-            'persentase_suara' => $persentaseSuara 
+            'total_suara' => $totalSuara,
+            'persentase_suara' => $persentaseSuara
         ]);
     }
 
@@ -122,31 +119,27 @@ class Chart extends BaseController
 
         if ($selectedKec) {
             foreach ($selectedKec as $id_kec) {
-                // Ambil total suara untuk kecamatan yang dipilih
                 $dataSuara = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
                     ->where('id_kec', $id_kec)
                     ->groupBy('id_paslon')
                     ->findAll();
-
-                // Hitung total suara di kecamatan tersebut
                 $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
 
                 $kecamatan = $this->kec->find($id_kec);
                 $dataPaslon = [];
                 foreach ($dataSuara as $suara) {
-                    // Hitung persentase suara
                     $persentase = $totalSuaraKecamatan > 0 ? (($suara['total_suara'] / $totalSuaraKecamatan) * 100) : 0;
                     $dataPaslon[] = [
                         'id_paslon' => $suara['id_paslon'],
                         'total_suara' => $suara['total_suara'],
-                        'persentase' => number_format($persentase, 2) // Format dua desimal
+                        'persentase' => number_format($persentase, 2)
                     ];
                 }
 
                 $dataGrafik[] = [
                     'kecamatan' => $kecamatan['nama_kec'],
                     'data' => $dataPaslon,
-                    'total_suara_kecamatan' => $totalSuaraKecamatan // Tambahkan total suara per kecamatan
+                    'total_suara_kecamatan' => $totalSuaraKecamatan
                 ];
             }
         }
