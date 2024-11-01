@@ -179,8 +179,6 @@
     });
 </script>
 
-
-
 <script>
     var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
@@ -189,23 +187,31 @@
 
     function loadChart() {
         $.ajax({
-            url: '<?= site_url('chart/getchart') ?>', // Endpoint untuk mengambil data chart dari controller
+            url: '<?= site_url('chart/getchart') ?>',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
                 var warna = [];
 
                 response.labels.forEach(function(label) {
-                    if (label === 'Efendi & Audimurphi') {
-                        warna.push('#006BFF');
-                    } else if (label === 'Robertson Tonny') {
-                        warna.push('#08C2FF');
-                    } else if (label === 'Poltak & Anugerah') {
-                        warna.push('#E72929');
+                    if (label === 'Effendi - Audi') {
+                        warna.push('#006BFF'); // Biru untuk Effendi - Audi
+                    } else if (label === 'Robinson - Tonny') {
+                        warna.push('#08C2FF'); // Biru muda untuk Robinson - Tonny
+                    } else if (label === 'Poltak - Anugerah') {
+                        warna.push('#E72929'); // Merah untuk Poltak - Anugerah
                     } else {
-                        warna.push('#4BC0C0');
+                        warna.push('#4BC0C0'); // Warna default
                     }
                 });
+
+                // Tambahkan warna khusus untuk Suara Tidak Sah
+                warna.push('#808080'); // Abu-abu untuk suara tidak sah
+
+                // Tambahkan label dan data Suara Tidak Sah ke data chart
+                response.labels.push("Suara Tidak Sah");
+                response.total_suara.push(response.tidak_sah);
+
                 // Jika bar chart sudah ada, update datanya
                 if (barChart) {
                     barChart.data.labels = response.labels;
@@ -219,18 +225,18 @@
                         data: {
                             labels: response.labels,
                             datasets: [{
-                                label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
+                                label: 'Jumlah Perolehan Suara',
                                 backgroundColor: warna,
                                 borderColor: '#ffffff',
-                                data: response.total_suara // Menampilkan total suara sah
+                                data: response.total_suara
                             }]
                         },
                         options: {
                             scales: {
-                                y: { // 'yAxes' diubah menjadi 'y'
+                                y: {
                                     beginAtZero: true
                                 },
-                                x: { // 'xAxes' diubah menjadi 'x'
+                                x: {
                                     beginAtZero: true
                                 }
                             }
@@ -243,20 +249,32 @@
                     });
                 }
 
+                // Update atau buat pie chart dengan persentase dan tidak sah
                 if (pieChart) {
+                    // Hitung persentase suara tidak sah
+                    const totalSuaraSemua = response.total_suara.reduce((a, b) => a + b, 0);
+                    const persentaseTidakSah = (response.tidak_sah / totalSuaraSemua) * 100;
+                    response.persentase_suara.push(persentaseTidakSah);
+
                     pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
-                    pieChart.data.datasets[0].data = response.persentase_suara; // Menampilkan persentase suara sah
+                    pieChart.data.datasets[0].data = response.persentase_suara;
                     pieChart.update();
                 } else {
+                    // Hitung persentase suara tidak sah
+                    const totalSuaraSemua = response.total_suara.reduce((a, b) => a + b, 0);
+                    const persentaseTidakSah = (response.tidak_sah / totalSuaraSemua) * 100;
+                    response.persentase_suara.push(persentaseTidakSah);
+
+                    // Membuat pie chart baru
                     pieChart = new Chart(chartPie, {
                         type: 'pie',
                         data: {
                             labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
                             datasets: [{
-                                label: 'Persentase Suara Sah',
+                                label: 'Persentase Suara Sah dan Tidak Sah',
                                 backgroundColor: warna,
                                 borderColor: '#ffffff',
-                                data: response.persentase_suara // Menampilkan persentase suara sah
+                                data: response.persentase_suara
                             }]
                         },
                         options: {
@@ -267,8 +285,7 @@
                             animation: {
                                 animateScale: true,
                                 animateRotate: true
-                            },
-
+                            }
                         }
                     });
                 }
@@ -277,7 +294,6 @@
     }
 
     setInterval(loadChart, 5000);
-
     loadChart();
 </script>
 <script>
@@ -295,23 +311,24 @@
                     kecamatan: selectedKecamatan
                 },
                 success: function(response) {
+                    console.log(response); // Debugging: melihat data respons
+
                     $('#grafikContainer').empty();
 
                     // Menentukan warna berdasarkan nama paslon
                     var warna = {};
                     response.labels.forEach(function(label) {
-                        if (label === 'Efendi & Audimurphi') {
+                        if (label === 'Effendi - Audi') {
                             warna[label] = '#006BFF';
-                        } else if (label === 'Robertson Tonny') {
+                        } else if (label === 'Robinson - Tonny') {
                             warna[label] = '#08C2FF';
-                        } else if (label === 'Poltak & Anugerah') {
+                        } else if (label === 'Poltak - Anugerah') {
                             warna[label] = '#E72929';
                         } else {
                             warna[label] = '#4BC0C0';
                         }
                     });
 
-                
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
@@ -327,24 +344,32 @@
 
                         // Mengambil label dan data untuk chart
                         let labels = grafikData.data.map(function(item) {
-                            return response.labels[item.id_paslon - 1]; // Sesuaikan ID dengan index label
+                            return response.labels[item.id_paslon - 1];
                         });
                         let data = grafikData.data.map(function(item) {
-                            return item.total_suara; // Pastikan ini mengambil total suara yang benar
+                            return item.total_suara;
                         });
                         let percentages = grafikData.data.map(function(item) {
-                            return item.persentase; // Ambil persentase dari respons
+                            return item.persentase;
                         });
+
+                        // Tambahkan "Suara Tidak Sah" sebagai label dan data tambahan
+                        labels.push("Suara Tidak Sah");
+                        data.push(grafikData.total_tidak_sah);
+                        percentages.push(((grafikData.total_tidak_sah / grafikData.total_suara_kecamatan) * 100).toFixed(2));
+
+                        // Tambahkan warna untuk "Suara Tidak Sah"
+                        warna["Suara Tidak Sah"] = '#808080';
 
                         // Membuat chart
                         let ctx = document.getElementById(chartId).getContext('2d');
                         new Chart(ctx, {
                             type: 'pie',
                             data: {
-                                labels: labels.map((label, index) => `${label} (${percentages[index]}%)`), // Menampilkan persentase di label
+                                labels: labels.map((label, index) => `${label} (${percentages[index]}%)`),
                                 datasets: [{
                                     data: data,
-                                    backgroundColor: labels.map(label => warna[label]) // Ambil warna sesuai label
+                                    backgroundColor: labels.map(label => warna[label])
                                 }]
                             },
                             options: {
@@ -362,5 +387,6 @@
         }
     });
 </script>
+
 
 <?php $this->endSection() ?>
