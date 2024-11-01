@@ -148,7 +148,7 @@
 <script>
     function refreshData() {
         $.ajax({
-            url: '<?= site_url('chart/getSuara') ?>', // URL ke controller
+            url: '<?= site_url('chart/getSuara') ?>', // URL ke controller untuk data suara
             method: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -158,27 +158,49 @@
                 $('#suara-robinson').text(parseInt(data.suara_robinson).toLocaleString('id-ID'));
                 $('#suara-effendi').text(parseInt(data.suara_effendi).toLocaleString('id-ID'));
 
-                // Hitung persentase
-                let totalSuara = data.total_suara || 1; // untuk menghindari pembagian dengan nol
-                let persentasePoltak = (data.suara_poltak / totalSuara * 100).toFixed(1);
-                let persentaseRobinson = (data.suara_robinson / totalSuara * 100).toFixed(1);
-                let persentaseEffendi = (data.suara_effendi / totalSuara * 100).toFixed(1);
+                // Panggil loadChartAndCards untuk menghitung persentase dengan benar
+                loadChartAndCards();
+            }
+        });
+    }
 
-                // Update badge dengan persentase
-                $('#badge-poltak').text(persentasePoltak + '%');
-                $('#badge-robinson').text(persentaseRobinson + '%');
-                $('#badge-effendi').text(persentaseEffendi + '%');
+    function loadChartAndCards() {
+        $.ajax({
+            url: '<?= base_url('chart/getchart') ?>', // URL ke controller untuk persentase
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // Menghitung total suara dari response.total_suara saja
+                const totalSuaraKeseluruhan = response.total_suara.reduce((acc, val) => acc + val, 0);
+
+                // Memetakan data ke paslon berdasarkan label
+                const labelMap = {
+                    "Poltak - Anugerah": { id: "poltak", color: "badge-danger" },
+                    "Robinson - Tonny": { id: "robinson", color: "badge-info" },
+                    "Effendi - Audi": { id: "effendi", color: "badge-primary" }
+                };
+
+                response.labels.forEach((label, index) => {
+                    const paslon = labelMap[label];
+                    if (paslon) {
+                        // Update persentase di badge menggunakan data dari loadChartAndCards
+                        $(`#badge-${paslon.id}`)
+                            .text(`${response.persentase_suara[index].toFixed(1)}%`)
+                            .removeClass()
+                            .addClass(`badge ${paslon.color} rounded-capsule ml-2`);
+                    }
+                });
             }
         });
     }
 
     setInterval(refreshData, 5000);
 
+    // Panggil fungsi refreshData saat halaman dimuat
     $(document).ready(function() {
         refreshData();
     });
 </script>
-
 <script>
     var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
@@ -318,17 +340,16 @@
                     // Menentukan warna berdasarkan nama paslon
                     var warna = {};
                     response.labels.forEach(function(label) {
-                        if (label === 'Effendi - Audi') {
-                            warna[label] = '#006BFF';
+                        if (label === 'Poltak - Anugerah') {
+                            warna[label] = '#E72929'; // Warna untuk Poltak - Anugerah
                         } else if (label === 'Robinson - Tonny') {
-                            warna[label] = '#08C2FF';
-                        } else if (label === 'Poltak - Anugerah') {
-                            warna[label] = '#E72929';
+                            warna[label] = '#08C2FF'; // Warna untuk Robinson - Tonny
+                        } else if (label === 'Effendi - Audi') {
+                            warna[label] = '#006BFF'; // Warna untuk Effendi - Audi
                         } else {
-                            warna[label] = '#4BC0C0';
+                            warna[label] = '#4BC0C0'; // Warna default untuk lainnya
                         }
                     });
-
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
@@ -387,6 +408,4 @@
         }
     });
 </script>
-
-
 <?php $this->endSection() ?>

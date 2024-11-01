@@ -198,5 +198,4 @@ public function getGrafikByKecamatan()
         'labels' => $labels,
     ]);
 }
-
 }
