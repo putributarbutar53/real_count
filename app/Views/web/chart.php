@@ -337,19 +337,14 @@
 
                     $('#grafikContainer').empty();
 
-                    // Menentukan warna berdasarkan nama paslon
-                    var warna = {};
-                    response.labels.forEach(function(label) {
-                        if (label === 'Poltak - Anugerah') {
-                            warna[label] = '#E72929'; // Warna untuk Poltak - Anugerah
-                        } else if (label === 'Robinson - Tonny') {
-                            warna[label] = '#08C2FF'; // Warna untuk Robinson - Tonny
-                        } else if (label === 'Effendi - Audi') {
-                            warna[label] = '#006BFF'; // Warna untuk Effendi - Audi
-                        } else {
-                            warna[label] = '#4BC0C0'; // Warna default untuk lainnya
-                        }
-                    });
+                    // Menentukan warna berdasarkan nama paslon dengan urutan yang benar
+                    var warna = {
+                        'Effendi - Audi': '#006BFF',
+                        'Poltak - Anugerah': '#E72929',
+                        'Robinson - Tonny': '#08C2FF',
+                        'Suara Tidak Sah': '#808080'
+                    };
+                    
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
@@ -357,6 +352,8 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h5>Grafik Suara Paslon Kecamatan ${grafikData.kecamatan}</h5>
+                                        <p>Total Suara Sah: ${grafikData.total_suara_kecamatan}</p>
+                                        <p>Total DPT: ${grafikData.total_dpt}</p>
                                     </div>
                                     <canvas id="${chartId}" width="1618" height="1000"></canvas>
                                 </div>
@@ -365,7 +362,7 @@
 
                         // Mengambil label dan data untuk chart
                         let labels = grafikData.data.map(function(item) {
-                            return response.labels[item.id_paslon - 1];
+                            return `${response.labels[item.id_paslon - 1]} (Suara: ${item.total_suara})`;
                         });
                         let data = grafikData.data.map(function(item) {
                             return item.total_suara;
@@ -377,12 +374,9 @@
                         // Tambahkan "Suara Tidak Sah" sebagai label dan data tambahan
                         labels.push("Suara Tidak Sah");
                         data.push(grafikData.total_tidak_sah);
-                        percentages.push(((grafikData.total_tidak_sah / grafikData.total_suara_kecamatan) * 100).toFixed(2));
+                        percentages.push(((grafikData.total_tidak_sah / grafikData.total_dpt) * 100).toFixed(2));
 
-                        // Tambahkan warna untuk "Suara Tidak Sah"
-                        warna["Suara Tidak Sah"] = '#808080';
-
-                        // Membuat chart
+                        // Membuat chart dengan warna yang sesuai
                         let ctx = document.getElementById(chartId).getContext('2d');
                         new Chart(ctx, {
                             type: 'pie',
@@ -390,7 +384,7 @@
                                 labels: labels.map((label, index) => `${label} (${percentages[index]}%)`),
                                 datasets: [{
                                     data: data,
-                                    backgroundColor: labels.map(label => warna[label])
+                                    backgroundColor: labels.map(label => warna[label.split(' (')[0]]) // mengambil nama paslon dari label untuk warna
                                 }]
                             },
                             options: {
@@ -408,4 +402,7 @@
         }
     });
 </script>
+
+
+
 <?php $this->endSection() ?>

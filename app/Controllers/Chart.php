@@ -135,16 +135,16 @@ class Chart extends BaseController
     ]);
 }
 
-
 public function getGrafikByKecamatan()
 {
     $selectedKec = $this->request->getPost('kecamatan');
 
     // Mengambil label untuk setiap paslon
     $data = $this->hasil
-        ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
+        ->select('paslon.id, paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
         ->join('paslon', 'paslon.id = hasil.id_paslon')
         ->groupBy('hasil.id_paslon')
+        ->orderBy('paslon.id', 'ASC') // Pastikan diurutkan berdasarkan ID paslon
         ->findAll();
 
     $dataGrafik = [];
@@ -159,6 +159,7 @@ public function getGrafikByKecamatan()
             $dataSuara = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
                 ->where('id_kec', $id_kec)
                 ->groupBy('id_paslon')
+                ->orderBy('id_paslon', 'ASC') // Mengurutkan berdasarkan ID paslon
                 ->findAll();
             $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
 
@@ -166,16 +167,37 @@ public function getGrafikByKecamatan()
             $tidakSahData = $this->hasil
                 ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
                 ->where('id_kec', $id_kec)
-                ->groupBy('id_kec, id_desa, tps')
+                ->groupBy('id_kec', 'id_desa', 'tps')
                 ->findAll();
             $totalTidakSah = array_sum(array_column($tidakSahData, 'total_tidak_sah'));
+
+            // Mendapatkan total DPT untuk kecamatan yang dipilih
+            $uniqueTpsCombinations = $this->hasil
+                ->select('id_kec, id_desa, tps')
+                ->where('id_kec', $id_kec)
+                ->groupBy('id_kec', 'id_desa', 'tps')
+                ->findAll();
+
+            $totalDpt = 0;
+            foreach ($uniqueTpsCombinations as $combination) {
+                $dptData = $this->dpt->where([
+                    'id_kec' => $combination['id_kec'],
+                    'id_desa' => $combination['id_desa'],
+                    'nomor_tps' => $combination['tps']
+                ])->first();
+
+                if ($dptData) {
+                    $totalDpt += $dptData['jlh_dpt'];
+                }
+            }
 
             // Mendapatkan nama kecamatan
             $kecamatan = $this->kec->find($id_kec);
             $dataPaslon = [];
 
             foreach ($dataSuara as $suara) {
-                $persentase = $totalSuaraKecamatan > 0 ? (($suara['total_suara'] / $totalSuaraKecamatan) * 100) : 0;
+                // Menggunakan total DPT sebagai pembagi untuk menghitung persentase
+                $persentase = $totalDpt > 0 ? (($suara['total_suara'] / $totalDpt) * 100) : 0;
                 $dataPaslon[] = [
                     'id_paslon' => $suara['id_paslon'],
                     'total_suara' => $suara['total_suara'],
@@ -183,12 +205,13 @@ public function getGrafikByKecamatan()
                 ];
             }
 
-            // Memasukkan data kecamatan beserta total suara tidak sah
+            // Memasukkan data kecamatan beserta total suara tidak sah dan total DPT
             $dataGrafik[] = [
                 'kecamatan' => $kecamatan['nama_kec'],
                 'data' => $dataPaslon,
                 'total_suara_kecamatan' => $totalSuaraKecamatan,
-                'total_tidak_sah' => $totalTidakSah // Tambahkan total tidak sah
+                'total_tidak_sah' => $totalTidakSah,
+                'total_dpt' => $totalDpt // Menyertakan total DPT dalam respons
             ];
         }
     }
@@ -198,4 +221,5 @@ public function getGrafikByKecamatan()
         'labels' => $labels,
     ]);
 }
+
 }
