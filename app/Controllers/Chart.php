@@ -97,7 +97,7 @@ class Chart extends BaseController
     // Mendapatkan total DPT berdasarkan kombinasi id_kec, id_desa, dan tps yang ada di tabel hasil
     $uniqueTpsCombinations = $this->hasil
         ->select('id_kec, id_desa, tps')
-        ->groupBy('id_kec, id_desa, tps')
+        ->groupBy('id_kec', 'id_desa', 'tps')
         ->findAll();
 
     $totalDpt = 0;
@@ -127,13 +127,20 @@ class Chart extends BaseController
         $persentaseSuara[] = $persentase;
     }
 
+    // Hitung persentase untuk suara tidak sah berdasarkan totalDpt
+    $persentaseTidakSah = $totalDpt > 0 ? ($totalTidakSah / $totalDpt) * 100 : 0;
+
     return $this->respond([
         'labels' => $labels,
         'total_suara' => $totalSuara,
         'persentase_suara' => $persentaseSuara,
-        'tidak_sah' => $totalTidakSah // Kirim total tidak sah ke respons
+        'tidak_sah' => $totalTidakSah, // Kirim total tidak sah ke respons
+        'persentase_tidak_sah' => $persentaseTidakSah, // Kirim persentase tidak sah ke respons
+        'total_dpt' => $totalDpt // Kirim total DPT ke respons
     ]);
 }
+
+
 
 public function getGrafikByKecamatan()
 {
@@ -144,7 +151,7 @@ public function getGrafikByKecamatan()
         ->select('paslon.id, paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
         ->join('paslon', 'paslon.id = hasil.id_paslon')
         ->groupBy('hasil.id_paslon')
-        ->orderBy('paslon.id', 'ASC') // Pastikan diurutkan berdasarkan ID paslon
+        ->orderBy('paslon.id', 'ASC')
         ->findAll();
 
     $dataGrafik = [];
@@ -159,7 +166,7 @@ public function getGrafikByKecamatan()
             $dataSuara = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
                 ->where('id_kec', $id_kec)
                 ->groupBy('id_paslon')
-                ->orderBy('id_paslon', 'ASC') // Mengurutkan berdasarkan ID paslon
+                ->orderBy('id_paslon', 'ASC')
                 ->findAll();
             $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
 
@@ -171,21 +178,23 @@ public function getGrafikByKecamatan()
                 ->findAll();
             $totalTidakSah = array_sum(array_column($tidakSahData, 'total_tidak_sah'));
 
-            // Mendapatkan total DPT untuk kecamatan yang dipilih
+            // Menghitung total DPT untuk kecamatan berdasarkan kombinasi unik id_desa dan tps
             $uniqueTpsCombinations = $this->hasil
-                ->select('id_kec, id_desa, tps')
+                ->select('id_desa, tps')
                 ->where('id_kec', $id_kec)
-                ->groupBy('id_kec', 'id_desa', 'tps')
+                ->groupBy('id_desa', 'tps')
                 ->findAll();
 
             $totalDpt = 0;
             foreach ($uniqueTpsCombinations as $combination) {
+                // Cari jumlah DPT berdasarkan kombinasi unik dari id_kec, id_desa, dan tps
                 $dptData = $this->dpt->where([
-                    'id_kec' => $combination['id_kec'],
+                    'id_kec' => $id_kec,
                     'id_desa' => $combination['id_desa'],
                     'nomor_tps' => $combination['tps']
                 ])->first();
 
+                // Jika data ditemukan, tambahkan ke totalDpt
                 if ($dptData) {
                     $totalDpt += $dptData['jlh_dpt'];
                 }
@@ -196,7 +205,7 @@ public function getGrafikByKecamatan()
             $dataPaslon = [];
 
             foreach ($dataSuara as $suara) {
-                // Menggunakan total DPT sebagai pembagi untuk menghitung persentase
+                // Menggunakan total DPT sebagai pembagi untuk menghitung persentase suara sah per paslon
                 $persentase = $totalDpt > 0 ? (($suara['total_suara'] / $totalDpt) * 100) : 0;
                 $dataPaslon[] = [
                     'id_paslon' => $suara['id_paslon'],

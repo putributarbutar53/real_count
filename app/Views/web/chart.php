@@ -46,6 +46,7 @@
     </div>
 
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
+    <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div>
         <div class="card text-center">
             <h5>Persentase perolehan suara</h5>
             <canvas id="pie" width="700" height="350"></canvas>
@@ -234,6 +235,9 @@
                 response.labels.push("Suara Tidak Sah");
                 response.total_suara.push(response.tidak_sah);
 
+                // Tampilkan total DPT di bagian atas grafik
+                $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
+
                 // Jika bar chart sudah ada, update datanya
                 if (barChart) {
                     barChart.data.labels = response.labels;
@@ -273,19 +277,15 @@
 
                 // Update atau buat pie chart dengan persentase dan tidak sah
                 if (pieChart) {
-                    // Hitung persentase suara tidak sah
-                    const totalSuaraSemua = response.total_suara.reduce((a, b) => a + b, 0);
-                    const persentaseTidakSah = (response.tidak_sah / totalSuaraSemua) * 100;
-                    response.persentase_suara.push(persentaseTidakSah);
-
+                    // Menggunakan persentase dari response JSON untuk update
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+                    
                     pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
                     pieChart.data.datasets[0].data = response.persentase_suara;
                     pieChart.update();
                 } else {
-                    // Hitung persentase suara tidak sah
-                    const totalSuaraSemua = response.total_suara.reduce((a, b) => a + b, 0);
-                    const persentaseTidakSah = (response.tidak_sah / totalSuaraSemua) * 100;
-                    response.persentase_suara.push(persentaseTidakSah);
+                    // Tambahkan persentase untuk Suara Tidak Sah dari response JSON
+                    response.persentase_suara.push(response.persentase_tidak_sah);
 
                     // Membuat pie chart baru
                     pieChart = new Chart(chartPie, {
@@ -318,6 +318,7 @@
     setInterval(loadChart, 5000);
     loadChart();
 </script>
+
 <script>
     $('.kecamatan-checkbox').on('change', function() {
         let selectedKecamatan = [];
@@ -402,7 +403,4 @@
         }
     });
 </script>
-
-
-
 <?php $this->endSection() ?>
