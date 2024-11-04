@@ -18,4 +18,6 @@ $routes->add('', '\Login::login');
     $routes->add('login', 'Suara24\Login::login');
     $routes->add('lupapassword', 'Suara24\Login::lupapassword');
     $routes->add('resetpassword', 'Suara24\Login::resetpassword');
+    $routes->get('send', 'Realtime::index');
+
 });

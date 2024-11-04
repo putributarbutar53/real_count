@@ -7,7 +7,7 @@
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/authentication-corner.png);"></div>
         <div class="card-body position-relative">
             <h6>Total Suara</h6>
-            <div id="total-suara" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">110</div>
+            <div id="total-suara" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif"></div>
         </div>
     </div>
 
@@ -145,7 +145,7 @@
 <?php $this->endSection() ?>
 
 <?php $this->section('script') ?>
-<script>
+<!-- <script>
     function refreshData() {
         $.ajax({
             url: '<?= site_url('chart/getSuara') ?>', // URL ke controller
@@ -177,109 +177,126 @@
     $(document).ready(function() {
         refreshData();
     });
-</script>
-
-
+</script> -->
 
 <script>
+    // Inisialisasi Pusher
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('9ac0d2af743317b62be2', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    // Subscribe ke channel
+    var channel = pusher.subscribe('chart-channel');
+
+    // Pastikan channel menerima event 'chart-update'
+    channel.bind('chart-update', function(data) {
+        console.log("Data received from Pusher:", data); // Untuk memastikan data diterima
+        updateChart(data);
+    });
+
+    // Debug event 'pusher:subscription_succeeded'
+    channel.bind('pusher:subscription_succeeded', function() {
+        console.log("Successfully subscribed to chart-channel");
+    });
+
     var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
 
     var barChart, pieChart;
 
-    function loadChart() {
-        $.ajax({
-            url: '<?= site_url('chart/getchart') ?>', // Endpoint untuk mengambil data chart dari controller
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                var warna = [];
+    // Fungsi untuk memperbarui chart
+    function updateChart(response) {
+        var warna = [];
 
-                response.labels.forEach(function(label) {
-                    if (label === 'Efendi & Audimurphi') {
-                        warna.push('#006BFF');
-                    } else if (label === 'Robertson Tonny') {
-                        warna.push('#08C2FF');
-                    } else if (label === 'Poltak & Anugerah') {
-                        warna.push('#E72929');
-                    } else {
-                        warna.push('#4BC0C0');
-                    }
-                });
-                // Jika bar chart sudah ada, update datanya
-                if (barChart) {
-                    barChart.data.labels = response.labels;
-                    barChart.data.datasets[0].data = response.total_suara;
-                    barChart.data.datasets[0].backgroundColor = warna;
-                    barChart.update();
-                } else {
-                    // Membuat bar chart baru
-                    barChart = new Chart(chartBar, {
-                        type: 'bar',
-                        data: {
-                            labels: response.labels,
-                            datasets: [{
-                                label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
-                                backgroundColor: warna,
-                                borderColor: '#ffffff',
-                                data: response.total_suara // Menampilkan total suara sah
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: { // 'yAxes' diubah menjadi 'y'
-                                    beginAtZero: true
-                                },
-                                x: { // 'xAxes' diubah menjadi 'x'
-                                    beginAtZero: true
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false // Sembunyikan legend
-                            }
-                        }
-                    });
-                }
-
-                if (pieChart) {
-                    pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
-                    pieChart.data.datasets[0].data = response.persentase_suara; // Menampilkan persentase suara sah
-                    pieChart.update();
-                } else {
-                    pieChart = new Chart(chartPie, {
-                        type: 'pie',
-                        data: {
-                            labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
-                            datasets: [{
-                                label: 'Persentase Suara Sah',
-                                backgroundColor: warna,
-                                borderColor: '#ffffff',
-                                data: response.persentase_suara // Menampilkan persentase suara sah
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            legend: {
-                                position: 'top',
-                            },
-                            animation: {
-                                animateScale: true,
-                                animateRotate: true
-                            },
-
-                        }
-                    });
-                }
+        response.labels.forEach(function(label) {
+            if (label === 'Efendi & Audimurphi') {
+                warna.push('#006BFF');
+            } else if (label === 'Robertson Tonny') {
+                warna.push('#08C2FF');
+            } else if (label === 'Poltak & Anugerah') {
+                warna.push('#E72929');
+            } else {
+                warna.push('#4BC0C0');
             }
         });
+
+        if (barChart) {
+            // Update bar chart
+            barChart.data.labels = response.labels;
+            barChart.data.datasets[0].data = response.total_suara;
+            barChart.data.datasets[0].backgroundColor = warna;
+            barChart.update();
+        } else {
+            // Buat bar chart baru
+            barChart = new Chart(chartBar, {
+                type: 'bar',
+                data: {
+                    labels: response.labels,
+                    datasets: [{
+                        label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.total_suara
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
+
+        if (pieChart) {
+            // Update pie chart
+            pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
+            pieChart.data.datasets[0].data = response.persentase_suara;
+            pieChart.update();
+        } else {
+            // Buat pie chart baru
+            pieChart = new Chart(chartPie, {
+                type: 'pie',
+                data: {
+                    labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                    datasets: [{
+                        label: 'Persentase Suara Sah',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.persentase_suara
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top'
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
     }
 
-    setInterval(loadChart, 5000);
-
-    loadChart();
+    // Mendengarkan event 'chart-update' dari Pusher untuk memperbarui chart
+    channel.bind('chart-update', function(data) {
+        updateChart(data);
+    });
 </script>
+
 <script>
     $('.kecamatan-checkbox').on('change', function() {
         let selectedKecamatan = [];
@@ -311,7 +328,7 @@
                         }
                     });
 
-                
+
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`

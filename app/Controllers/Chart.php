@@ -6,17 +6,34 @@ use App\Models\PaslonModel;
 use App\Models\HasilModel;
 use App\Models\KecamatanModel;
 use CodeIgniter\API\ResponseTrait;
+use Pusher\Pusher;
+use GuzzleHttp\Client;
 
 class Chart extends BaseController
 {
-    var $model, $kec, $validation, $hasil;
+    var $model, $kec, $validation, $hasil, $pusher;
     use ResponseTrait;
     function __construct()
     {
         $this->model = new PaslonModel();
         $this->hasil = new HasilModel();
         $this->kec = new KecamatanModel();
-        $this->validation = \Config\Services::validation();
+
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $httpClient = new Client([
+            'verify' => false,
+        ]);
+
+        $this->pusher = new Pusher(
+            '9ac0d2af743317b62be2',
+            '63c22ca53e56ea2bccba',
+            '1889285',
+            $options,
+            $httpClient
+        );
     }
     public function index(): string
     {
@@ -73,6 +90,7 @@ class Chart extends BaseController
     }
     public function getchart()
     {
+        // Mendapatkan data perolehan suara
         $data = $this->hasil
             ->select('paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
@@ -91,15 +109,21 @@ class Chart extends BaseController
         foreach ($data as $row) {
             $labels[] = $row['nama_paslon'];
             $totalSuara[] = $row['total_suara'];
-
             $persentaseSuara[] = ($row['total_suara'] / $totalSemuaSuara) * 100;
         }
 
-        return $this->respond([
+        // Data yang akan dikirim melalui Pusher
+        $chartData = [
             'labels' => $labels,
             'total_suara' => $totalSuara,
             'persentase_suara' => $persentaseSuara
-        ]);
+        ];
+
+        // Mengirim data ke channel 'chart-channel' dan event 'chart-update'
+        $this->pusher->trigger('chart-channel', 'chart-update', $chartData);
+
+        // Mengembalikan response JSON
+        return $this->respond(['status' => 'Data sent to Pusher']);
     }
 
     public function getGrafikByKecamatan()

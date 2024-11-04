@@ -38,6 +38,7 @@
     <link href="<?= base_url() ?>assets/css/theme.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= base_url() ?>assets/js/jquery.min.js"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
 
 
