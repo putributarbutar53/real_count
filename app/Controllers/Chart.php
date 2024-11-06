@@ -94,20 +94,23 @@ class Chart extends BaseController
     // Hitung total tidak sah dari hasil query di atas
     $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
 
-    // Mendapatkan total DPT berdasarkan kombinasi id_kec, id_desa, dan tps yang ada di tabel hasil
+    // Ambil kombinasi unik dari `id_kec`, `id_desa`, dan `tps` di tabel `hasil`
     $uniqueTpsCombinations = $this->hasil
         ->select('id_kec, id_desa, tps')
-        ->groupBy('id_kec', 'id_desa', 'tps')
+        ->groupBy('id_kec, id_desa, tps')
         ->findAll();
 
+    // Menghitung total DPT berdasarkan kombinasi unik
     $totalDpt = 0;
     foreach ($uniqueTpsCombinations as $combination) {
+        // Ambil data dari tabel DPT berdasarkan kombinasi id_kec, id_desa, dan nomor_tps
         $dptData = $dptModel->where([
             'id_kec' => $combination['id_kec'],
             'id_desa' => $combination['id_desa'],
             'nomor_tps' => $combination['tps']
         ])->first();
 
+        // Jika data ditemukan, tambahkan jlh_dpt ke totalDpt
         if ($dptData) {
             $totalDpt += $dptData['jlh_dpt'];
         }
@@ -139,6 +142,7 @@ class Chart extends BaseController
         'total_dpt' => $totalDpt // Kirim total DPT ke respons
     ]);
 }
+
 
 
 
