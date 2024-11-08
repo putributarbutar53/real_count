@@ -46,7 +46,7 @@
     </div>
 
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
-    <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div>
+    <!-- <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div> -->
         <div class="card text-center">
             <h5>Persentase perolehan suara</h5>
             <canvas id="pie" width="700" height="350"></canvas>
@@ -54,6 +54,8 @@
     </div>
 
 </div>
+
+
 <div class="card bg-light mb-3">
     <div class="card-body p-3">
         <p class="fs--1 mb-0">
