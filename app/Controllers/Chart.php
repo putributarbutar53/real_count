@@ -146,7 +146,6 @@ class Chart extends BaseController
             $totalSuara[] = $row['total_suara'];
             $persentaseSuara[] = $persentase;
         }
-
         // Hitung persentase untuk suara tidak sah berdasarkan totalDpt
         $persentaseTidakSah = $totalDpt > 0 ? ($totalTidakSah / $totalDpt) * 100 : 0;
 
