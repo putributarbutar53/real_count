@@ -146,7 +146,7 @@
 <?php $this->endSection() ?>
 
 <?php $this->section('script') ?>
-<!-- <script>
+<script>
     function refreshData() {
         $.ajax({
             url: '<?= site_url('chart/getSuara') ?>', // URL ke controller untuk data suara
@@ -203,27 +203,6 @@
     });
 </script>
 <script>
-    // Inisialisasi Pusher
-    Pusher.logToConsole = true;
-    var pusher = new Pusher('9ac0d2af743317b62be2', {
-        cluster: 'ap1',
-        encrypted: true
-    });
-
-    // Subscribe ke channel
-    var channel = pusher.subscribe('chart-channel');
-
-    // Pastikan channel menerima event 'chart-update'
-    channel.bind('chart-update', function(data) {
-        console.log("Data received from Pusher:", data); // Untuk memastikan data diterima
-        updateChart(data);
-    });
-
-    // Debug event 'pusher:subscription_succeeded'
-    channel.bind('pusher:subscription_succeeded', function() {
-        console.log("Successfully subscribed to chart-channel");
-    });
-
     var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
 
