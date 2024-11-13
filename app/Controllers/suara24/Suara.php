@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\suara24;
+
 use App\Controllers\BaseController;
 use App\Models\PaslonModel;
 use App\Models\HasilModel;
@@ -41,64 +42,66 @@ class Suara extends BaseController
     }
 
     public function save()
-{
-    $idKecamatan = $this->request->getPost('id_kec');
-    $idDesa = $this->request->getPost('id_desa');
-    $tpsNumbers = $this->request->getPost('tps_number');
-    $idPaslonArray = $this->request->getPost('id_paslon');
-    $suaraSahArray = $this->request->getPost('suara_sah');
-    $tidakSahArray = $this->request->getPost('tidak_sah');
-    $kodeKonfirmasi = $this->request->getPost('kode_konfirmasi');
+    {
+        $id_user = session()->get('admin_username');
+        $idKecamatan = $this->request->getPost('id_kec');
+        $idDesa = $this->request->getPost('id_desa');
+        $tpsNumbers = $this->request->getPost('tps_number');
+        $idPaslonArray = $this->request->getPost('id_paslon');
+        $suaraSahArray = $this->request->getPost('suara_sah');
+        $tidakSahArray = $this->request->getPost('tidak_sah');
+        $kodeKonfirmasi = $this->request->getPost('kode_konfirmasi');
 
-    if ($kodeKonfirmasi !== '12345') {
-        return redirect()->back()->with('error', 'Kode konfirmasi salah. Silakan coba lagi.');
-    }
-
-    $kecamatan = $this->kec->find($idKecamatan);
-    $desa = $this->desa->find($idDesa);
-    if (!$kecamatan || !$desa) {
-        return redirect()->back()->with('error', 'Kecamatan atau Desa tidak ditemukan.');
-    }
-
-    $dataInserted = false;
-    foreach ($tpsNumbers as $index => $tps) {
-        $tidakSah = isset($tidakSahArray[$index]) ? $tidakSahArray[$index] : 0;
-        foreach ($idPaslonArray as $paslonId) {
-            $suaraSah = isset($suaraSahArray[$paslonId][$index]) ? $suaraSahArray[$paslonId][$index] : 0;
-
-            // Cek jika data sudah ada
-            $existingData = $this->model->where([
-                'id_kec' => $idKecamatan,
-                'id_desa' => $idDesa,
-                'tps' => $tps,
-                'id_paslon' => $paslonId,
-            ])->first();
-
-            if ($existingData) {
-                continue; // Lewati proses insert jika data sudah ada
-            }
-
-            // Jika data tidak ditemukan, insert
-            $data = [
-                'id_kec' => $idKecamatan,
-                'id_desa' => $idDesa,
-                'tps' => $tps,
-                'id_paslon' => $paslonId,
-                'suara_sah' => $suaraSah,
-                'tidak_sah' => $tidakSah,
-                'jlh_suara' => $suaraSah + $tidakSah
-            ];
-
-            $this->model->insert($data);
-            $dataInserted = true;
+        if ($kodeKonfirmasi !== '12345') {
+            return redirect()->back()->with('error', 'Kode konfirmasi salah. Silakan coba lagi.');
         }
-    }
 
-    if ($dataInserted) {
-        return redirect()->to('suara24/suara')->with('success', 'Data berhasil disimpan.');
+        $kecamatan = $this->kec->find($idKecamatan);
+        $desa = $this->desa->find($idDesa);
+        if (!$kecamatan || !$desa) {
+            return redirect()->back()->with('error', 'Kecamatan atau Desa tidak ditemukan.');
+        }
+
+        $dataInserted = false;
+        foreach ($tpsNumbers as $index => $tps) {
+            $tidakSah = isset($tidakSahArray[$index]) ? $tidakSahArray[$index] : 0;
+            foreach ($idPaslonArray as $paslonId) {
+                $suaraSah = isset($suaraSahArray[$paslonId][$index]) ? $suaraSahArray[$paslonId][$index] : 0;
+
+                // Cek jika data sudah ada
+                $existingData = $this->model->where([
+                    'id_kec' => $idKecamatan,
+                    'id_desa' => $idDesa,
+                    'tps' => $tps,
+                    'id_paslon' => $paslonId,
+                ])->first();
+
+                if ($existingData) {
+                    continue; // Lewati proses insert jika data sudah ada
+                }
+
+                // Jika data tidak ditemukan, insert
+                $data = [
+                    'id_user' => $id_user,
+                    'id_kec' => $idKecamatan,
+                    'id_desa' => $idDesa,
+                    'tps' => $tps,
+                    'id_paslon' => $paslonId,
+                    'suara_sah' => $suaraSah,
+                    'tidak_sah' => $tidakSah,
+                    'jlh_suara' => $suaraSah + $tidakSah
+                ];
+
+                $this->model->insert($data);
+                $dataInserted = true;
+            }
+        }
+
+        if ($dataInserted) {
+            return redirect()->to('suara24/suara')->with('success', 'Data berhasil disimpan.');
+        }
+        return redirect()->to('suara24/suara')->with('info', 'Tidak ada data yang baru dimasukkan.');
     }
-    return redirect()->to('suara24/suara')->with('info', 'Tidak ada data yang baru dimasukkan.');
-}
 
     public function checkDuplicate()
     {

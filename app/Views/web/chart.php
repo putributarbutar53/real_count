@@ -46,7 +46,7 @@
     </div>
 
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
-    <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div>
+        <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div>
         <div class="card text-center">
             <h5>Persentase perolehan suara</h5>
             <canvas id="pie" width="700" height="350"></canvas>
@@ -178,9 +178,18 @@
 
                 // Memetakan data ke paslon berdasarkan label
                 const labelMap = {
-                    "Poltak - Anugerah": { id: "poltak", color: "badge-danger" },
-                    "Robinson - Tonny": { id: "robinson", color: "badge-info" },
-                    "Effendi - Audi": { id: "effendi", color: "badge-primary" }
+                    "Poltak - Anugerah": {
+                        id: "poltak",
+                        color: "badge-danger"
+                    },
+                    "Robinson - Tonny": {
+                        id: "robinson",
+                        color: "badge-info"
+                    },
+                    "Effendi - Audi": {
+                        id: "effendi",
+                        color: "badge-primary"
+                    }
                 };
 
                 response.labels.forEach((label, index) => {
@@ -281,7 +290,7 @@
                 if (pieChart) {
                     // Menggunakan persentase dari response JSON untuk update
                     response.persentase_suara.push(response.persentase_tidak_sah);
-                    
+
                     pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
                     pieChart.data.datasets[0].data = response.persentase_suara;
                     pieChart.update();
@@ -415,7 +424,7 @@
                         'Robinson - Tonny': '#08C2FF',
                         'Suara Tidak Sah': '#808080'
                     };
-                    
+
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
