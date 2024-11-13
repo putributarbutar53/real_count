@@ -8,7 +8,7 @@ class HasilModel extends Model
 {
     protected $table      = 'hasil';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['id_paslon', 'id_kec', 'id_desa', 'tps', 'suara_sah', 'tidak_sah', 'jlh_suara'];
+    protected $allowedFields = ['id_paslon', 'id_kec', 'id_desa', 'tps', 'suara_sah', 'tidak_sah', 'jlh_suara','id_user'];
 
     public function getWithDetails()
     {

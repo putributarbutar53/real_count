@@ -18,7 +18,6 @@ class Chart extends BaseController
         $this->hasil = new HasilModel();
         $this->dpt = new DptModel();
         $this->kec = new KecamatanModel();
-        $this->validation = \Config\Services::validation();
     }
     public function index(): string
     {
@@ -153,6 +152,7 @@ class Chart extends BaseController
             'total_dpt' => $totalDpt // Kirim total DPT ke respons
         ]);
     }
+
     public function getGrafikByKecamatan()
     {
         $selectedKec = $this->request->getPost('kecamatan');

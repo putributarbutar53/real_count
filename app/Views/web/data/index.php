@@ -16,86 +16,92 @@
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
+            <button class="btn btn-falcon-info mr-1 mb-1" type="button">Export Excel
+            </button>
         </div>
     </div>
-        <div class="card-body bg-light">
-            <div class="row list">
-                <div class="col">
-                    <table id="table_index" width="100%" class="table mb-0 table-striped table-dashboard data-table border-bottom border-200">
-                        <thead class="bg-200">
-                            <tr>
-                                <th><b>nama paslon</b></th>
-                                <th><b>kecamatan</b></th>
-                                <th><b>desa</b></th>
-                                <th><b>tps</b></th>
-                                <th><b>suara sah</b></th>
-                                <th data-orderable="false"><b>#</b></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+    <div class="card-body bg-light">
+        <div class="row list">
+            <div class="col">
+                <table id="table_index" width="100%" class="table mb-0 table-striped table-dashboard data-table border-bottom border-200">
+                    <thead class="bg-200">
+                        <tr>
+                            <th><b>nama paslon</b></th>
+                            <th><b>kecamatan</b></th>
+                            <th><b>desa</b></th>
+                            <th><b>tps</b></th>
+                            <th><b>suara sah</b></th>
+                            <th><b>Operator</b></th>
+                            <th data-orderable="false"><b>#</b></th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <?php $this->endSection() ?>
-    <?php $this->section('script') ?>
-    <script>
-        function dataindex() {
-            $('#table_index').DataTable({
-                'processing': true,
-                'serverSide': true,
-                'scrollX': true,
-                'serverMethod': 'post',
-                'searchDelay': '350',
-                'responsive': false,
-                'lengthChange': true,
-                'autoWidth': true,
-                'sWrapper': 'falcon-data-table-wrapper',
+<?php $this->endSection() ?>
+<?php $this->section('script') ?>
+<script>
+    function dataindex() {
+        $('#table_index').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'scrollX': true,
+            'serverMethod': 'post',
+            'searchDelay': '350',
+            'responsive': false,
+            'lengthChange': true,
+            'autoWidth': true,
+            'sWrapper': 'falcon-data-table-wrapper',
 
-                'ajax': {
-                    'url': '<?= site_url('suara24/data/loaddata') ?>',
-                    'headers': {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'ajax': {
+                'url': '<?= site_url('suara24/data/loaddata') ?>',
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            },
+            'columns': [{
+                    data: 'nama_paslon',
+                },
+                {
+                    data: 'nama_kec'
+                },
+                {
+                    data: 'nama_desa'
+                },
+                {
+                    data: 'tps'
+                },
+                {
+                    data: 'suara_sah'
+                },
+                {
+                    data: 'username'
+                },
+                {
+                    data: 'navButton',
+                    render: function(data, type, row) {
+                        if (row.username != 'superadmin')
+                            return '<button onclick="editdata(' + row.id + ')" class="btn btn-sm btn-falcon-warning mb-1"><i class="fas fa-pen-square"></i></button>&nbsp;<button onclick="deletedata(' + row.id + ')" class="btn btn-sm btn-falcon-danger mb-1"><i class="fas fa-trash-alt"></i></button>';
+                        else return "";
                     }
                 },
-                'columns': [{
-                        data: 'nama_paslon',
-                    },
-                    {
-                        data: 'nama_kec'
-                    },
-                    {
-                        data: 'nama_desa'
-                    },
-                    {
-                        data: 'tps'
-                    },
-                    {
-                        data: 'suara_sah'
-                    },
-                    {
-                        data: 'navButton',
-                        render: function(data, type, row) {
-                            if (row.username != 'admin')
-                                return '<button onclick="editdata(' + row.id + ')" class="btn btn-sm btn-falcon-warning mb-1"><i class="fas fa-pen-square"></i></button>&nbsp;<button onclick="deletedata(' + row.id + ')" class="btn btn-sm btn-falcon-danger mb-1"><i class="fas fa-trash-alt"></i></button>';
-                            else return "";
-                        }
-                    },
-                ],
-                // 'dom':'Bfrtip',
-                // 'buttons':[
-                // 'copy','csv','excel','pdf','print'
-                // ],
-                'order': [
-                    [2, 'desc']
-                ],
-                'language': {
-                    'emptyTable': 'Belum ada data'
-                },
-                'destroy': true,
-            });
-        }
+            ],
+            // 'dom':'Bfrtip',
+            // 'buttons':[
+            // 'copy','csv','excel','pdf','print'
+            // ],
+            'order': [
+                [2, 'desc']
+            ],
+            'language': {
+                'emptyTable': 'Belum ada data'
+            },
+            'destroy': true,
+        });
+    }
 
     $(document).ready(function() {
         $('#table_index').DataTable().columns.adjust();
@@ -109,7 +115,7 @@
         $("#click_yes").off("click").on("click", function() {
             $.ajax({
                 type: 'DELETE',
-                url: "<?= site_url('admin2011/admin/delete') ?>/" + iddata,
+                url: "<?= site_url('suara24/suara/delete') ?>/" + iddata,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

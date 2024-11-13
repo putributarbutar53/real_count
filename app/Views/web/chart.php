@@ -242,9 +242,18 @@
 
                 // Memetakan data ke paslon berdasarkan label
                 const labelMap = {
-                    "Poltak - Anugerah": { id: "poltak", color: "badge-danger" },
-                    "Robinson - Tonny": { id: "robinson", color: "badge-info" },
-                    "Effendi - Audi": { id: "effendi", color: "badge-primary" }
+                    "Poltak - Anugerah": {
+                        id: "poltak",
+                        color: "badge-danger"
+                    },
+                    "Robinson - Tonny": {
+                        id: "robinson",
+                        color: "badge-info"
+                    },
+                    "Effendi - Audi": {
+                        id: "effendi",
+                        color: "badge-primary"
+                    }
                 };
 
                 response.labels.forEach((label, index) => {
@@ -345,7 +354,7 @@
                 if (pieChart) {
                     // Menggunakan persentase dari response JSON untuk update
                     response.persentase_suara.push(response.persentase_tidak_sah);
-                    
+
                     pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
                     pieChart.data.datasets[0].data = response.persentase_suara;
                     pieChart.update();
@@ -379,6 +388,74 @@
                 }
             }
         });
+
+        if (barChart) {
+            // Update bar chart
+            barChart.data.labels = response.labels;
+            barChart.data.datasets[0].data = response.total_suara;
+            barChart.data.datasets[0].backgroundColor = warna;
+            barChart.update();
+        } else {
+            // Buat bar chart baru
+            barChart = new Chart(chartBar, {
+                type: 'bar',
+                data: {
+                    labels: response.labels,
+                    datasets: [{
+                        label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.total_suara
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
+
+        if (pieChart) {
+            // Update pie chart
+            pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
+            pieChart.data.datasets[0].data = response.persentase_suara;
+            pieChart.update();
+        } else {
+            // Buat pie chart baru
+            pieChart = new Chart(chartPie, {
+                type: 'pie',
+                data: {
+                    labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                    datasets: [{
+                        label: 'Persentase Suara Sah',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.persentase_suara
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top'
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
     }
 
     setInterval(loadChart, 5000);
@@ -411,7 +488,7 @@
                         'Robinson - Tonny': '#08C2FF',
                         'Suara Tidak Sah': '#808080'
                     };
-                    
+
                     response.dataGrafik.forEach(function(grafikData) {
                         let chartId = 'chart_' + grafikData.kecamatan.replace(/\s/g, '');
                         $('#grafikContainer').append(`
