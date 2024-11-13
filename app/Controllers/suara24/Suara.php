@@ -50,11 +50,6 @@ class Suara extends BaseController
         $idPaslonArray = $this->request->getPost('id_paslon');
         $suaraSahArray = $this->request->getPost('suara_sah');
         $tidakSahArray = $this->request->getPost('tidak_sah');
-        $kodeKonfirmasi = $this->request->getPost('kode_konfirmasi');
-
-        if ($kodeKonfirmasi !== '12345') {
-            return redirect()->back()->with('error', 'Kode konfirmasi salah. Silakan coba lagi.');
-        }
 
         $kecamatan = $this->kec->find($idKecamatan);
         $desa = $this->desa->find($idDesa);

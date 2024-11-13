@@ -74,10 +74,8 @@ class Chart extends BaseController
     }
     public function getchart()
     {
-        // Memuat model DptModel untuk mengambil data DPT
         $dptModel = $this->dpt;
 
-        // Query untuk mendapatkan total suara sah per paslon
         $data = $this->hasil
             ->select('paslon.nama_paslon, hasil.id_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
@@ -163,40 +161,43 @@ class Chart extends BaseController
         if ($selectedKec) {
             foreach ($selectedKec as $id_kec) {
                 // Menghitung total suara sah per paslon untuk kecamatan yang dipilih
-                $dataSuara = $this->hasil->select('id_paslon, SUM(suara_sah) as total_suara')
+                $dataSuara = $this->hasil
+                    ->select('id_paslon, SUM(suara_sah) as total_suara')
                     ->where('id_kec', $id_kec)
                     ->groupBy('id_paslon')
                     ->orderBy('id_paslon', 'ASC')
                     ->findAll();
                 $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
 
-                // Menghitung total tidak sah dengan hanya sekali per kombinasi id_kec, id_desa, dan tps
+                // Menghitung total suara tidak sah berdasarkan kombinasi unik id_kec, id_desa, dan tps
                 $tidakSahData = $this->hasil
-                    ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
+                    ->select('id_kec, id_desa, tps, SUM(tidak_sah) as total_tidak_sah')
                     ->where('id_kec', $id_kec)
                     ->groupBy('id_kec', 'id_desa', 'tps')
                     ->findAll();
                 $totalTidakSah = array_sum(array_column($tidakSahData, 'total_tidak_sah'));
 
-                // Menghitung total DPT untuk kecamatan berdasarkan kombinasi unik id_desa dan tps
+                // Mencari kombinasi unik `id_kec`, `id_desa`, dan `tps` di tabel `hasil`
                 $uniqueTpsCombinations = $this->hasil
-                    ->select('id_desa, tps')
+                    ->select('id_kec, id_desa, tps')
                     ->where('id_kec', $id_kec)
-                    ->groupBy('id_desa', 'tps')
+                    ->groupBy(['id_kec', 'id_desa', 'tps']) // Pastikan tps dihitung sebagai kombinasi unik
                     ->findAll();
 
+                // Menghitung total DPT berdasarkan kombinasi unik dari tabel `dpt`
                 $totalDpt = 0;
                 foreach ($uniqueTpsCombinations as $combination) {
-                    // Cari jumlah DPT berdasarkan kombinasi unik dari id_kec, id_desa, dan tps
-                    $dptData = $this->dpt->where([
-                        'id_kec' => $id_kec,
-                        'id_desa' => $combination['id_desa'],
-                        'nomor_tps' => $combination['tps']
-                    ])->first();
+                    // Ambil data DPT berdasarkan `id_kec`, `id_desa`, dan `tps`
+                    $dptDataList = $this->dpt
+                        ->select('jlh_dpt')
+                        ->where('id_kec', $combination['id_kec'])
+                        ->where('id_desa', $combination['id_desa'])
+                        ->where('nomor_tps', $combination['tps'])
+                        ->findAll(); // Menggunakan findAll untuk memastikan setiap data dihitung
 
-                    // Jika data ditemukan, tambahkan ke totalDpt
-                    if ($dptData) {
-                        $totalDpt += $dptData['jlh_dpt'];
+                    // Menambahkan setiap `jlh_dpt` yang ditemukan untuk setiap kombinasi unik `id_kec`, `id_desa`, dan `tps`
+                    foreach ($dptDataList as $dpt) {
+                        $totalDpt += $dpt['jlh_dpt'];
                     }
                 }
 
