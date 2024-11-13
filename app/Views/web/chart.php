@@ -4,14 +4,69 @@
 <?php $this->section('content') ?>
 <div class="card-deck">
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/authentication-corner.png);"></div>
-        <div class="card-body position-relative">
-            <h6>Total Suara</h6>
-            <div id="total-suara" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">110</div>
-            <small>Persentase Partisipasi Masyarakat<span id="badge-partisipasi" class="badge badge-success rounded-capsule ml-2">0%</span></small>
+    <div class="card-body position-relative">
+            <h6>
+                Partisipasi Masyarakat
+                <span id="badge-prov" class="badge badge-secondary rounded-capsule ml-2">0%</span>
+            </h6>
+            
+            <!-- Menampilkan Total Suara Sah dengan keterangan -->
+            <div style="display: flex; align-items: center;">
+                <h6>Sah :</h6>
+                <div id="total-sah" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
+                    0 / 0
+                </div>
+            </div>
+
+            <!-- Menampilkan Total Suara Tidak Sah dengan keterangan -->
+            <div style="display: flex; align-items: center;">
+                <h6>Tidak Sah :</h6>
+                <div id="total-tidak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
+                    0 / 0
+                </div>
+            </div>
         </div>
     </div>
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
+        <!-- <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/polga2p.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div> -->
+        <div class="card-body position-relative">
+            <h6>1. Bobby - Surya<span id="badge-bobby" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
+            <div id="suara-bobby" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
+        </div>
+    </div>
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
+        <!-- <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/robton.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div> -->
+        <div class="card-body position-relative">
+            <h6>2. Edy - Hasan<span id="badge-edy" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
+            <div id="suara-edy" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
+        </div>
+    </div>
+</div>
+<div class="card-deck">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
+        <div class="card-body position-relative">
+            <h6>
+                Partisipasi Masyarakat
+                <span id="badge-partisipasi" class="badge badge-secondary rounded-capsule ml-2">0%</span>
+            </h6>
+            
+            <!-- Menampilkan Total Suara Sah dengan keterangan -->
+            <div style="display: flex; align-items: center;">
+                <h6>Sah :</h6>
+                <div id="total-suara-sah" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
+                    0 / 0
+                </div>
+            </div>
 
+            <!-- Menampilkan Total Suara Tidak Sah dengan keterangan -->
+            <div style="display: flex; align-items: center;">
+                <h6>Tidak Sah :</h6>
+                <div id="total-suara-tidak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
+                    0 / 0
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/polga2p.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div>
         <div class="card-body position-relative">
@@ -19,7 +74,6 @@
             <div id="suara-poltak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
-
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/robton.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div>
         <div class="card-body position-relative">
@@ -27,7 +81,6 @@
             <div id="suara-robinson" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
-
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2diaudiho.png); width:135px; background-position: bottom; margin-left: 125px;"></div>
 
@@ -36,7 +89,6 @@
             <div id="suara-effendi" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
-
 </div>
 <div class="row no-gutters">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
@@ -47,16 +99,16 @@
     </div>
 
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
-    <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div>
+    <!-- <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div> -->
         <div class="card text-center">
-            <h5>Persentase perolehan suara</h5>
+            <h5>Persentase perolehan suara Bupati</h5>
             <canvas id="pie" width="700" height="350"></canvas>
         </div>
     </div>
 
 </div>
 
-
+<?php if (session()->get('admin_role') == 'superadmin') { ?>
 <div class="card bg-light mb-3">
     <div class="card-body p-3">
         <p class="fs--1 mb-0">
@@ -146,6 +198,7 @@
 </div>
 
 <div id="grafikContainer" class="row no-gutters"></div>
+<?php } ?>
 <?php $this->endSection() ?>
 
 <?php $this->section('script') ?>
@@ -156,11 +209,21 @@
             method: 'GET',
             dataType: 'json',
             success: function(data) {
+                const totalSuara = parseInt(data.total_suara_sah);
+                const totalSuaraTidakSah = parseInt(data.total_suara_tidak);
+                const totalDpt = data.total_dpt; // Mendapatkan total DPT dari response
+                const partisipasi = (totalSuara / totalDpt) * 100;
                 // Update jumlah suara
-                $('#total-suara').text(parseInt(data.total_suara).toLocaleString('id-ID'));
+                $('#total-suara-sah').text(parseInt(data.total_suara_sah).toLocaleString('id-ID'));
+                $('#total-suara-tidak').text(totalSuaraTidakSah.toLocaleString('id-ID'));
                 $('#suara-poltak').text(parseInt(data.suara_poltak).toLocaleString('id-ID'));
                 $('#suara-robinson').text(parseInt(data.suara_robinson).toLocaleString('id-ID'));
                 $('#suara-effendi').text(parseInt(data.suara_effendi).toLocaleString('id-ID'));
+                $('#total-suara-sah').text(totalSuara.toLocaleString('id-ID') + ' / ' + totalDpt.toLocaleString('id-ID'));
+                $('#total-suara-tidak').text(totalSuaraTidakSah.toLocaleString('id-ID') + ' / ' + totalDpt.toLocaleString('id-ID'));
+
+                // Menampilkan persentase partisipasi dengan 2 angka di belakang koma
+                $('#badge-partisipasi').text(partisipasi.toFixed(2) + '%');
 
                 // Panggil loadChartAndCards untuk menghitung persentase dengan benar
                 loadChartAndCards();
