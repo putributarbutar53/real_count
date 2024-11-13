@@ -43,7 +43,7 @@ class Suara extends BaseController
 
     public function save()
     {
-        $id_user = session()->get('admin_username');
+        $id_user = session()->get('admin_id');
         $idKecamatan = $this->request->getPost('id_kec');
         $idDesa = $this->request->getPost('id_desa');
         $tpsNumbers = $this->request->getPost('tps_number');
