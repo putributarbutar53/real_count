@@ -25,7 +25,7 @@
                 <form id="formInput" action="<?= base_url('suara24/suara/save') ?>" method="post">
                     <div class="row">
                         <!-- Kecamatan, Desa, Kode Konfirmasi -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kecamatan">Pilih Kecamatan</label>
                                 <select class="form-control selectpicker" id="kecamatan" name="id_kec" readonly>
@@ -37,7 +37,7 @@
                         </div>
 
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="desa">Pilih Desa</label>
                                 <select class="form-control selectpicker" id="desa" name="id_desa" disabled>
@@ -46,13 +46,13 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label for="kode_konfirmasi">Kode Konfirmasi</label>
                                 <input type="text" class="form-control" id="kode_konfirmasi" name="kode_konfirmasi" placeholder="Masukkan Kode Konfirmasi">
                                 <small>Masukkan kode konfirmasi yang telah diberikan admin</small>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Nama Paslon dari Database & TPS Dinamis -->

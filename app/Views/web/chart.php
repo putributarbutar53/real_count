@@ -8,6 +8,7 @@
         <div class="card-body position-relative">
             <h6>Total Suara</h6>
             <div id="total-suara" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">110</div>
+            <small>Persentase Partisipasi Masyarakat<span id="badge-partisipasi" class="badge badge-success rounded-capsule ml-2">0%</span></small>
         </div>
     </div>
 

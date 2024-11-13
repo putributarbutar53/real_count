@@ -75,10 +75,8 @@ class Chart extends BaseController
     }
     public function getchart()
     {
-        // Memuat model DptModel untuk mengambil data DPT
         $dptModel = $this->dpt;
 
-        // Query untuk mendapatkan total suara sah per paslon
         $data = $this->hasil
             ->select('paslon.nama_paslon, hasil.id_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
@@ -143,95 +141,94 @@ class Chart extends BaseController
         ]);
     }
     public function getGrafikByKecamatan()
-{
-    $selectedKec = $this->request->getPost('kecamatan');
+    {
+        $selectedKec = $this->request->getPost('kecamatan');
 
-    // Mengambil label untuk setiap paslon
-    $data = $this->hasil
-        ->select('paslon.id, paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
-        ->join('paslon', 'paslon.id = hasil.id_paslon')
-        ->groupBy('hasil.id_paslon')
-        ->orderBy('paslon.id', 'ASC')
-        ->findAll();
+        // Mengambil label untuk setiap paslon
+        $data = $this->hasil
+            ->select('paslon.id, paslon.nama_paslon, SUM(hasil.suara_sah) as total_suara')
+            ->join('paslon', 'paslon.id = hasil.id_paslon')
+            ->groupBy('hasil.id_paslon')
+            ->orderBy('paslon.id', 'ASC')
+            ->findAll();
 
-    $dataGrafik = [];
-    $labels = [];
-    foreach ($data as $row) {
-        $labels[] = $row['nama_paslon'];
-    }
+        $dataGrafik = [];
+        $labels = [];
+        foreach ($data as $row) {
+            $labels[] = $row['nama_paslon'];
+        }
 
-    if ($selectedKec) {
-        foreach ($selectedKec as $id_kec) {
-            // Menghitung total suara sah per paslon untuk kecamatan yang dipilih
-            $dataSuara = $this->hasil
-                ->select('id_paslon, SUM(suara_sah) as total_suara')
-                ->where('id_kec', $id_kec)
-                ->groupBy('id_paslon')
-                ->orderBy('id_paslon', 'ASC')
-                ->findAll();
-            $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
+        if ($selectedKec) {
+            foreach ($selectedKec as $id_kec) {
+                // Menghitung total suara sah per paslon untuk kecamatan yang dipilih
+                $dataSuara = $this->hasil
+                    ->select('id_paslon, SUM(suara_sah) as total_suara')
+                    ->where('id_kec', $id_kec)
+                    ->groupBy('id_paslon')
+                    ->orderBy('id_paslon', 'ASC')
+                    ->findAll();
+                $totalSuaraKecamatan = array_sum(array_column($dataSuara, 'total_suara'));
 
-            // Menghitung total suara tidak sah berdasarkan kombinasi unik id_kec, id_desa, dan tps
-            $tidakSahData = $this->hasil
-                ->select('id_kec, id_desa, tps, SUM(tidak_sah) as total_tidak_sah')
-                ->where('id_kec', $id_kec)
-                ->groupBy('id_kec', 'id_desa', 'tps')
-                ->findAll();
-            $totalTidakSah = array_sum(array_column($tidakSahData, 'total_tidak_sah'));
+                // Menghitung total suara tidak sah berdasarkan kombinasi unik id_kec, id_desa, dan tps
+                $tidakSahData = $this->hasil
+                    ->select('id_kec, id_desa, tps, SUM(tidak_sah) as total_tidak_sah')
+                    ->where('id_kec', $id_kec)
+                    ->groupBy('id_kec', 'id_desa', 'tps')
+                    ->findAll();
+                $totalTidakSah = array_sum(array_column($tidakSahData, 'total_tidak_sah'));
 
-            // Mencari kombinasi unik `id_kec`, `id_desa`, dan `tps` di tabel `hasil`
-            $uniqueTpsCombinations = $this->hasil
-                ->select('id_kec, id_desa, tps')
-                ->where('id_kec', $id_kec)
-                ->groupBy(['id_kec', 'id_desa', 'tps']) // Pastikan tps dihitung sebagai kombinasi unik
-                ->findAll();
+                // Mencari kombinasi unik `id_kec`, `id_desa`, dan `tps` di tabel `hasil`
+                $uniqueTpsCombinations = $this->hasil
+                    ->select('id_kec, id_desa, tps')
+                    ->where('id_kec', $id_kec)
+                    ->groupBy(['id_kec', 'id_desa', 'tps']) // Pastikan tps dihitung sebagai kombinasi unik
+                    ->findAll();
 
-            // Menghitung total DPT berdasarkan kombinasi unik dari tabel `dpt`
-            $totalDpt = 0;
-            foreach ($uniqueTpsCombinations as $combination) {
-                // Ambil data DPT berdasarkan `id_kec`, `id_desa`, dan `tps`
-                $dptDataList = $this->dpt
-                    ->select('jlh_dpt')
-                    ->where('id_kec', $combination['id_kec'])
-                    ->where('id_desa', $combination['id_desa'])
-                    ->where('nomor_tps', $combination['tps'])
-                    ->findAll(); // Menggunakan findAll untuk memastikan setiap data dihitung
+                // Menghitung total DPT berdasarkan kombinasi unik dari tabel `dpt`
+                $totalDpt = 0;
+                foreach ($uniqueTpsCombinations as $combination) {
+                    // Ambil data DPT berdasarkan `id_kec`, `id_desa`, dan `tps`
+                    $dptDataList = $this->dpt
+                        ->select('jlh_dpt')
+                        ->where('id_kec', $combination['id_kec'])
+                        ->where('id_desa', $combination['id_desa'])
+                        ->where('nomor_tps', $combination['tps'])
+                        ->findAll(); // Menggunakan findAll untuk memastikan setiap data dihitung
 
-                // Menambahkan setiap `jlh_dpt` yang ditemukan untuk setiap kombinasi unik `id_kec`, `id_desa`, dan `tps`
-                foreach ($dptDataList as $dpt) {
-                    $totalDpt += $dpt['jlh_dpt'];
+                    // Menambahkan setiap `jlh_dpt` yang ditemukan untuk setiap kombinasi unik `id_kec`, `id_desa`, dan `tps`
+                    foreach ($dptDataList as $dpt) {
+                        $totalDpt += $dpt['jlh_dpt'];
+                    }
                 }
-            }
 
-            // Mendapatkan nama kecamatan
-            $kecamatan = $this->kec->find($id_kec);
-            $dataPaslon = [];
+                // Mendapatkan nama kecamatan
+                $kecamatan = $this->kec->find($id_kec);
+                $dataPaslon = [];
 
-            foreach ($dataSuara as $suara) {
-                // Menggunakan total DPT sebagai pembagi untuk menghitung persentase suara sah per paslon
-                $persentase = $totalDpt > 0 ? (($suara['total_suara'] / $totalDpt) * 100) : 0;
-                $dataPaslon[] = [
-                    'id_paslon' => $suara['id_paslon'],
-                    'total_suara' => $suara['total_suara'],
-                    'persentase' => number_format($persentase, 2)
+                foreach ($dataSuara as $suara) {
+                    // Menggunakan total DPT sebagai pembagi untuk menghitung persentase suara sah per paslon
+                    $persentase = $totalDpt > 0 ? (($suara['total_suara'] / $totalDpt) * 100) : 0;
+                    $dataPaslon[] = [
+                        'id_paslon' => $suara['id_paslon'],
+                        'total_suara' => $suara['total_suara'],
+                        'persentase' => number_format($persentase, 2)
+                    ];
+                }
+
+                // Memasukkan data kecamatan beserta total suara tidak sah dan total DPT
+                $dataGrafik[] = [
+                    'kecamatan' => $kecamatan['nama_kec'],
+                    'data' => $dataPaslon,
+                    'total_suara_kecamatan' => $totalSuaraKecamatan,
+                    'total_tidak_sah' => $totalTidakSah,
+                    'total_dpt' => $totalDpt // Menyertakan total DPT dalam respons
                 ];
             }
-
-            // Memasukkan data kecamatan beserta total suara tidak sah dan total DPT
-            $dataGrafik[] = [
-                'kecamatan' => $kecamatan['nama_kec'],
-                'data' => $dataPaslon,
-                'total_suara_kecamatan' => $totalSuaraKecamatan,
-                'total_tidak_sah' => $totalTidakSah,
-                'total_dpt' => $totalDpt // Menyertakan total DPT dalam respons
-            ];
         }
-    }
 
-    return $this->respond([
-        'dataGrafik' => $dataGrafik,
-        'labels' => $labels,
-    ]);
-}
- 
+        return $this->respond([
+            'dataGrafik' => $dataGrafik,
+            'labels' => $labels,
+        ]);
+    }
 }
