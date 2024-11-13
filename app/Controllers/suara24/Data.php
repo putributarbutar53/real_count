@@ -45,12 +45,14 @@ class Data extends BaseController
         // Hitung total record dengan filter pencarian
         $totalRecordsWithFilter = $db->table('hasil')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
+            ->join('cpadmin', 'cpadmin.id = hasil.id_user')
             ->join('kecamatan', 'kecamatan.id = hasil.id_kec')
             ->join('desa', 'desa.id = hasil.id_desa')
             ->where('hasil.id !=', '0')
             ->groupStart()
-            
+
             ->like('paslon.nama_paslon', $searchValue)  // Search by paslon name
+            ->like('cpadmin.username', $searchValue)
             ->orLike('kecamatan.nama_kec', $searchValue)  // Search by kecamatan name
             ->orLike('desa.nama_desa', $searchValue)  // Search by desa name
             ->orLike('hasil.tps', $searchValue)
@@ -61,13 +63,15 @@ class Data extends BaseController
         // Query data dengan join ke tabel lain
         $orderBy = ($columnName == '') ? 'hasil.id DESC' : $columnName . ' ' . $columnSortOrder;
         $data = $db->table('hasil')
-            ->select('hasil.*, paslon.nama_paslon, kecamatan.nama_kec, desa.nama_desa')
+            ->select('hasil.*, paslon.nama_paslon, kecamatan.nama_kec, desa.nama_desa, cpadmin.username')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
+            ->join('cpadmin', 'cpadmin.id = hasil.id_user')
             ->join('kecamatan', 'kecamatan.id = hasil.id_kec')
             ->join('desa', 'desa.id = hasil.id_desa')
             ->where('hasil.id !=', '0')
             ->groupStart()
             ->like('paslon.nama_paslon', $searchValue)  // Search by paslon name
+            ->like('cpadmin.username', $searchValue)
             ->orLike('kecamatan.nama_kec', $searchValue)  // Search by kecamatan name
             ->orLike('desa.nama_desa', $searchValue)  // Search by desa name
             ->orLike('hasil.suara_sah', $searchValue)
@@ -131,6 +135,20 @@ class Data extends BaseController
                     'status' => 'success',
                     'message' => 'Data updated successfully'
                 ], 200);
+        }
+    }
+    public function deletedata($id)
+    {
+        $deleted = $this->hasil->delete($id);
+        if ($deleted) {
+            return $this->respond([
+                'status' => 'success',
+                'message' => 'Data deleted successfully'
+            ], 200);
+        } else {
+            return $this->respond([
+                'message' => 'Ops! Id tidak valid'
+            ], 400);
         }
     }
 }

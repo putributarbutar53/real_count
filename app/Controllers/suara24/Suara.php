@@ -43,7 +43,7 @@ class Suara extends BaseController
 
     public function save()
     {
-        $id_user = session()->get('admin_id');
+        $id_user = $this->request->getVar('id_user');
         $idKecamatan = $this->request->getPost('id_kec');
         $idDesa = $this->request->getPost('id_desa');
         $tpsNumbers = $this->request->getPost('tps_number');
@@ -77,15 +77,15 @@ class Suara extends BaseController
 
                 // Jika data tidak ditemukan, insert
                 $data = [
-                    'id_user' => $id_user,
                     'id_kec' => $idKecamatan,
                     'id_desa' => $idDesa,
                     'tps' => $tps,
                     'id_paslon' => $paslonId,
                     'suara_sah' => $suaraSah,
                     'tidak_sah' => $tidakSah,
-                    'jlh_suara' => $suaraSah + $tidakSah
-                ];
+                    'jlh_suara' => $suaraSah + $tidakSah,
+                    'id_user' => $id_user,
+                ]; 
 
                 $this->model->insert($data);
                 $dataInserted = true;

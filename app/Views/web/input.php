@@ -23,6 +23,8 @@
         <div class="row flex-between-center">
             <div class="col">
                 <form id="formInput" action="<?= base_url('suara24/suara/save') ?>" method="post">
+                    <input type="hidden" name="id_user" value="<?= session('admin_id') ?>">
+
                     <div class="row">
                         <!-- Kecamatan, Desa, Kode Konfirmasi -->
                         <div class="col-md-6">
