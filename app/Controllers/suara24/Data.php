@@ -7,6 +7,7 @@ use App\Models\AdminModel;
 use App\Models\KecamatanModel;
 use App\Models\DesaModel;
 use App\Models\HasilModel;
+use App\Models\HasilProvModel;
 use App\Models\PaslonModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -155,16 +156,17 @@ class Data extends BaseController
     }
     public function exportExcel()
     {
-        $hasilModel = new HasilModel(); // Model untuk data hasil
-        $paslonModel = new PaslonModel(); // Model untuk data paslon
+        $hasilModel = new HasilModel();
+        $kecamatanModel = new KecamatanModel();
+        $desaModel = new DesaModel();
+        $paslonModel = new PaslonModel();
 
-        // Ambil semua data hasil
-        $dataHasil = $hasilModel->select('hasil.*, kecamatan.nama_kec, desa.nama_desa, hasil.tps')
-            ->join('kecamatan', 'hasil.id_kec = kecamatan.id')
-            ->join('desa', 'hasil.id_desa = desa.id')
+        // Ambil data hasil yang di-*group* berdasarkan id_kecamatan, id_desa, dan tps
+        $dataHasil = $hasilModel->select('id_kec, id_desa, tps')
+            ->groupBy('id_kec, id_desa, tps')
             ->findAll();
 
-        // Ambil semua paslon untuk mendapatkan nama mereka
+        // Ambil semua data paslon
         $dataPaslon = $paslonModel->findAll();
 
         // Membuat spreadsheet baru
@@ -172,49 +174,130 @@ class Data extends BaseController
         $sheet = $spreadsheet->getActiveSheet();
 
         // Menambahkan header
-        $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'Nama Kecamatan');
-        $sheet->setCellValue('C1', 'Nama Desa');
-        $sheet->setCellValue('D1', 'TPS');
-        $sheet->setCellValue('E1', 'Jumlah Suara');
-
-        // Menambahkan header nama paslon di kolom F1, G1, H1
-        $sheet->setCellValue('F1', $dataPaslon[0]['nama_paslon']); // Paslon 1
-        $sheet->setCellValue('G1', $dataPaslon[1]['nama_paslon']); // Paslon 2
-        $sheet->setCellValue('H1', $dataPaslon[2]['nama_paslon']); // Paslon 3
+        $sheet->setCellValue('A1', 'Nama Kecamatan');
+        $sheet->setCellValue('B1', 'Nama Desa');
+        $sheet->setCellValue('C1', 'TPS');
+        $sheet->setCellValue('D1', $dataPaslon[0]['nama_paslon']); // Paslon 1
+        $sheet->setCellValue('E1', $dataPaslon[1]['nama_paslon']); // Paslon 2
+        $sheet->setCellValue('F1', $dataPaslon[2]['nama_paslon']); // Paslon 3
 
         // Mengisi data mulai dari baris kedua
         $row = 2;
-        foreach ($dataHasil as $item) {
-            $sheet->setCellValue('A' . $row, $item['id']);
-            $sheet->setCellValue('B' . $row, $item['nama_kec']);
-            $sheet->setCellValue('C' . $row, $item['nama_desa']);
-            $sheet->setCellValue('D' . $row, $item['tps']);
-            $sheet->setCellValue('E' . $row, $item['suara_sah']);
+        foreach ($dataHasil as $hasil) {
+            // Ambil nama kecamatan dan desa
+            $namaKecamatan = $kecamatanModel->find($hasil['id_kec'])['nama_kec'];
+            $namaDesa = $desaModel->find($hasil['id_desa'])['nama_desa'];
 
-            // Mengisi jumlah suara paslon di kolom F, G, dan H
+            $sheet->setCellValue('A' . $row, $namaKecamatan);
+            $sheet->setCellValue('B' . $row, $namaDesa);
+            $sheet->setCellValue('C' . $row, $hasil['tps']);
+
+            // Ambil jumlah suara untuk setiap paslon
             $suaraPaslon = [
                 1 => 0, // Paslon 1
                 2 => 0, // Paslon 2
                 3 => 0  // Paslon 3
             ];
 
-            foreach ($dataHasil as $hasil) {
-                if (isset($suaraPaslon[$hasil['id_paslon']])) {
-                    $suaraPaslon[$hasil['id_paslon']] += $hasil['suara_sah'];
-                }
+            // Cari data suara untuk kombinasi id_kecamatan, id_desa, dan tps
+            $dataSuara = $hasilModel->where('id_kec', $hasil['id_kec'])
+                ->where('id_desa', $hasil['id_desa'])
+                ->where('tps', $hasil['tps'])
+                ->findAll();
+
+            // Hitung jumlah suara per paslon
+            foreach ($dataSuara as $suara) {
+                $suaraPaslon[$suara['id_paslon']] = $suara['suara_sah'];
             }
 
-            $sheet->setCellValue('F' . $row, $suaraPaslon[1]);
-            $sheet->setCellValue('G' . $row, $suaraPaslon[2]);
-            $sheet->setCellValue('H' . $row, $suaraPaslon[3]);
+            // Isi jumlah suara paslon di kolom D, E, dan F
+            $sheet->setCellValue('D' . $row, $suaraPaslon[1]);
+            $sheet->setCellValue('E' . $row, $suaraPaslon[2]);
+            $sheet->setCellValue('F' . $row, $suaraPaslon[3]);
 
             $row++;
         }
 
         // Membuat file Excel dan menyiapkan untuk diunduh
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'data paslon.xlsx';
+        $fileName = 'data_export.xlsx';
+
+        // Set header untuk download file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    public function exportExcelprov()
+    {
+        $hasilModel = new HasilModel();
+        $kecamatanModel = new KecamatanModel();
+        $desaModel = new DesaModel();
+        $paslonModel = new PaslonModel();
+        $hasilProv = new HasilProvModel();
+        // Ambil data hasil yang di-*group* berdasarkan id_kecamatan, id_desa, dan tps
+        $dataHasil = $hasilProv->select('id_kec, id_desa, tps')
+            ->groupBy('id_kec, id_desa, tps')
+            ->findAll();
+
+        // Ambil semua data paslon
+        $dataPaslon = $paslonModel->findAll();
+
+        // Membuat spreadsheet baru
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Menambahkan header
+        $sheet->setCellValue('A1', 'Nama Kecamatan');
+        $sheet->setCellValue('B1', 'Nama Desa');
+        $sheet->setCellValue('C1', 'TPS');
+        $sheet->setCellValue('D1', $dataPaslon[0]['nama_paslon']); // Paslon 1
+        $sheet->setCellValue('E1', $dataPaslon[1]['nama_paslon']); // Paslon 2
+        $sheet->setCellValue('F1', $dataPaslon[2]['nama_paslon']); // Paslon 3
+
+        // Mengisi data mulai dari baris kedua
+        $row = 2;
+        foreach ($dataHasil as $hasil) {
+            // Ambil nama kecamatan dan desa
+            $namaKecamatan = $kecamatanModel->find($hasil['id_kec'])['nama_kec'];
+            $namaDesa = $desaModel->find($hasil['id_desa'])['nama_desa'];
+
+            $sheet->setCellValue('A' . $row, $namaKecamatan);
+            $sheet->setCellValue('B' . $row, $namaDesa);
+            $sheet->setCellValue('C' . $row, $hasil['tps']);
+
+            // Ambil jumlah suara untuk setiap paslon
+            $suaraPaslon = [
+                1 => 0, // Paslon 1
+                2 => 0, // Paslon 2
+                3 => 0  // Paslon 3
+            ];
+
+            // Cari data suara untuk kombinasi id_kecamatan, id_desa, dan tps
+            $dataSuara = $hasilModel->where('id_kec', $hasil['id_kec'])
+                ->where('id_desa', $hasil['id_desa'])
+                ->where('tps', $hasil['tps'])
+                ->findAll();
+
+            // Hitung jumlah suara per paslon
+            foreach ($dataSuara as $suara) {
+                $suaraPaslon[$suara['id_paslon']] = $suara['suara_sah'];
+            }
+
+            // Isi jumlah suara paslon di kolom D, E, dan F
+            $sheet->setCellValue('D' . $row, $suaraPaslon[1]);
+            $sheet->setCellValue('E' . $row, $suaraPaslon[2]);
+            $sheet->setCellValue('F' . $row, $suaraPaslon[3]);
+
+            $row++;
+        }
+
+        // Membuat file Excel dan menyiapkan untuk diunduh
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'data_export.xlsx';
 
         // Set header untuk download file
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
