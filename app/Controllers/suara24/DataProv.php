@@ -14,7 +14,6 @@ class DataProv extends BaseController
     }
     public function index()
     {
-
         return view('web/data/prove');
     }
 
