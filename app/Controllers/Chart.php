@@ -61,17 +61,30 @@ class Chart extends BaseController
 
         // Menghitung total suara sah
         $totalSuaraSah = $hasilModel->selectSum('suara_sah')->first();
+        $tidakSahTotal = $this->hasil
+            ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
+            ->groupBy('id_kec, id_desa, tps')
+            ->findAll();
+
+        // Hitung total tidak sah dari hasil query di atas
+        $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
+
+        // Total jumlah suara yang dapat diterima (misalnya, jumlah suara yang valid)
+        $totalDpt = 150643; // Ganti dengan jumlah DPT yang sesuai
 
         // Menghitung suara untuk setiap paslon
         $suaraPaslon = [
-            'total_suara' => $totalSuaraSah['suara_sah'],
+            'total_suara_sah' => $totalSuaraSah['suara_sah'],
+            'total_suara_tidak' => $totalTidakSah,
             'suara_poltak' => $hasilModel->where('id_paslon', 1)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
             'suara_robinson' => $hasilModel->where('id_paslon', 2)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
             'suara_effendi' => $hasilModel->where('id_paslon', 3)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
+            'total_dpt' => $totalDpt // Menambahkan total DPT
         ];
 
         return $this->response->setJSON($suaraPaslon);
     }
+
     public function getchart()
     {
         $dptModel = $this->dpt;
