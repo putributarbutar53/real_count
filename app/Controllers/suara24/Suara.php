@@ -7,11 +7,12 @@ use App\Models\PaslonModel;
 use App\Models\HasilModel;
 use App\Models\KecamatanModel;
 use App\Models\DesaModel;
+use App\Models\HasilProvModel;
 use CodeIgniter\API\ResponseTrait;
 
 class Suara extends BaseController
 {
-    var $model, $paslon, $tps, $kec, $desa, $validation;
+    var $model, $paslon, $tps, $kec, $desa, $hasilprov, $validation;
     use ResponseTrait;
     function __construct()
     {
@@ -19,6 +20,7 @@ class Suara extends BaseController
         $this->paslon = new PaslonModel();
         $this->kec = new KecamatanModel();
         $this->desa = new DesaModel();
+        $this->hasilprov = new HasilProvModel();
         $this->validation = \Config\Services::validation();
     }
     public function index(): string
@@ -51,6 +53,11 @@ class Suara extends BaseController
         $suaraSahArray = $this->request->getPost('suara_sah');
         $tidakSahArray = $this->request->getPost('tidak_sah');
 
+        // Data untuk hasil_prov (input Gubernur)
+        $bobbySuryaArray = $this->request->getPost('bobby_surya');
+        $edyHasanArray = $this->request->getPost('edy_hasan');
+        $tidakSahGubArray = $this->request->getPost('tidak_sah_gub');
+
         $kecamatan = $this->kec->find($idKecamatan);
         $desa = $this->desa->find($idDesa);
         if (!$kecamatan || !$desa) {
@@ -58,12 +65,14 @@ class Suara extends BaseController
         }
 
         $dataInserted = false;
+
+        // Simpan data untuk tabel hasil (Pemilihan Bupati)
         foreach ($tpsNumbers as $index => $tps) {
             $tidakSah = isset($tidakSahArray[$index]) ? $tidakSahArray[$index] : 0;
             foreach ($idPaslonArray as $paslonId) {
                 $suaraSah = isset($suaraSahArray[$paslonId][$index]) ? $suaraSahArray[$paslonId][$index] : 0;
 
-                // Cek jika data sudah ada
+                // Cek jika data sudah ada di tabel hasil
                 $existingData = $this->model->where([
                     'id_kec' => $idKecamatan,
                     'id_desa' => $idDesa,
@@ -75,7 +84,7 @@ class Suara extends BaseController
                     continue; // Lewati proses insert jika data sudah ada
                 }
 
-                // Jika data tidak ditemukan, insert
+                // Jika data tidak ditemukan, insert ke tabel hasil
                 $data = [
                     'id_kec' => $idKecamatan,
                     'id_desa' => $idDesa,
@@ -92,11 +101,47 @@ class Suara extends BaseController
             }
         }
 
+        // Simpan data untuk tabel hasil_prov (Pemilihan Gubernur)
+        foreach ($tpsNumbers as $index => $tps) {
+            $bobbySurya = isset($bobbySuryaArray[$index]) ? $bobbySuryaArray[$index] : 0;
+            $edyHasan = isset($edyHasanArray[$index]) ? $edyHasanArray[$index] : 0;
+            $tidakSahGub = isset($tidakSahGubArray[$index]) ? $tidakSahGubArray[$index] : 0;
+
+            // Simpan data pasangan Bobby-Surya (id_paslon = 1) di tabel hasil_prov
+            $dataProvBobby = [
+                'id_kec' => $idKecamatan,
+                'id_desa' => $idDesa,
+                'tps' => $tps,
+                'id_paslon' => 1, // id_paslon untuk Bobby-Surya
+                'suara_sah' => $bobbySurya,
+                'tidak_sah' => $tidakSahGub,
+                'jlh_suara' => $bobbySurya + $tidakSahGub,
+                'id_user' => $id_user,
+            ];
+            $this->hasilprov->insert($dataProvBobby);
+
+            // Simpan data pasangan Edy-Hasan (id_paslon = 2) di tabel hasil_prov
+            $dataProvEdy = [
+                'id_kec' => $idKecamatan,
+                'id_desa' => $idDesa,
+                'tps' => $tps,
+                'id_paslon' => 2, // id_paslon untuk Edy-Hasan
+                'suara_sah' => $edyHasan,
+                'tidak_sah' => $tidakSahGub,
+                'jlh_suara' => $edyHasan + $tidakSahGub,
+                'id_user' => $id_user,
+            ];
+            $this->hasilprov->insert($dataProvEdy);
+
+            $dataInserted = true;
+        }
+
         if ($dataInserted) {
             return redirect()->to('suara24/suara')->with('success', 'Data berhasil disimpan.');
         }
         return redirect()->to('suara24/suara')->with('info', 'Tidak ada data yang baru dimasukkan.');
     }
+
 
     public function checkDuplicate()
     {

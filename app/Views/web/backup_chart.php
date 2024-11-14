@@ -92,22 +92,21 @@
 </div>
 <div class="row no-gutters">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
-        <div class="card text-center h-100 card-center">
-            <h5>Persentase perolehan suara Gubernur</h5>
-            <div class="chart-container">
-                <canvas id="chart-pie"></canvas>
-            </div>
+        <div class="card text-center h-100"> <!-- Tambahkan kelas text-center dari Bootstrap -->
+            <h4>Grafik perolehan suara</h4>
+            <canvas class="max-w-100" id="bar" width="1618" height="1000"></canvas>
+            <!-- <canvas class="max-w-100" id="chart-pie" width="1618" height="1000"></canvas> -->
         </div>
     </div>
 
     <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
-        <div class="card text-center card-center">
+        <!-- <div id="totalDptContainer" style="font-weight: bold; margin-bottom: 10px;"></div> -->
+        <div class="card text-center">
             <h5>Persentase perolehan suara Bupati</h5>
-            <div class="chart-container">
-                <canvas id="pie"></canvas>
-            </div>
+            <canvas id="pie" width="700" height="350"></canvas>
         </div>
     </div>
+
 </div>
 
 <?php if (session()->get('admin_role') == 'superadmin') { ?>
@@ -280,8 +279,10 @@
     });
 </script>
 <script>
+    var chartBar = document.getElementById('bar').getContext('2d');
     var chartPie = document.getElementById('pie').getContext('2d');
-    var pieChart;
+
+    var barChart, pieChart;
 
     function loadChart() {
         $.ajax({
@@ -313,6 +314,43 @@
                 // Tampilkan total DPT di bagian atas grafik
                 $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
+                // Jika bar chart sudah ada, update datanya
+                if (barChart) {
+                    barChart.data.labels = response.labels;
+                    barChart.data.datasets[0].data = response.total_suara;
+                    barChart.data.datasets[0].backgroundColor = warna;
+                    barChart.update();
+                } else {
+                    // Membuat bar chart baru
+                    barChart = new Chart(chartBar, {
+                        type: 'bar',
+                        data: {
+                            labels: response.labels,
+                            datasets: [{
+                                label: 'Jumlah Perolehan Suara',
+                                backgroundColor: warna,
+                                borderColor: '#ffffff',
+                                data: response.total_suara
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                },
+                                x: {
+                                    beginAtZero: true
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false // Sembunyikan legend
+                            }
+                        }
+                    });
+                }
+
                 // Update atau buat pie chart dengan persentase dan tidak sah
                 if (pieChart) {
                     // Menggunakan persentase dari response JSON untuk update
@@ -339,10 +377,8 @@
                         },
                         options: {
                             responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top'
-                                }
+                            legend: {
+                                position: 'top',
                             },
                             animation: {
                                 animateScale: true,
@@ -353,12 +389,79 @@
                 }
             }
         });
+
+        if (barChart) {
+            // Update bar chart
+            barChart.data.labels = response.labels;
+            barChart.data.datasets[0].data = response.total_suara;
+            barChart.data.datasets[0].backgroundColor = warna;
+            barChart.update();
+        } else {
+            // Buat bar chart baru
+            barChart = new Chart(chartBar, {
+                type: 'bar',
+                data: {
+                    labels: response.labels,
+                    datasets: [{
+                        label: 'Grafik Jumlah Suara Yang Diperoleh Setiap Paslon',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.total_suara
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
+
+        if (pieChart) {
+            // Update pie chart
+            pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
+            pieChart.data.datasets[0].data = response.persentase_suara;
+            pieChart.update();
+        } else {
+            // Buat pie chart baru
+            pieChart = new Chart(chartPie, {
+                type: 'pie',
+                data: {
+                    labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                    datasets: [{
+                        label: 'Persentase Suara Sah',
+                        backgroundColor: warna,
+                        borderColor: '#ffffff',
+                        data: response.persentase_suara
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top'
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
     }
 
     setInterval(loadChart, 5000);
     loadChart();
 </script>
-
 
 <script>
     $('.kecamatan-checkbox').on('change', function() {

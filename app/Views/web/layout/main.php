@@ -87,6 +87,25 @@
             }
         }
     </style>
+    <style>
+        /* CSS untuk memusatkan chart dan mengurangi area putih */
+        .card-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            /* Kurangi padding card */
+        }
+
+        /* CSS untuk mengatur ukuran maksimum chart */
+        .chart-container {
+            max-width: 80%;
+            /* Batas maksimum lebar */
+            max-height: 360px;
+            /* Batas maksimum tinggi */
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
