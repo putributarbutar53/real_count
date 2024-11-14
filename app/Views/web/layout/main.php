@@ -29,6 +29,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="<?= base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
+    <link href="<?= base_url() ?>assets/lib/datatables-bs4/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/lib/prismjs/prism-okaidia.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/lib/datatables-bs4/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.css" rel="stylesheet">
@@ -179,6 +181,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@latest"></script>
+    <script src="<?= base_url() ?>assets/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url() ?>assets/lib/datatables-bs4/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/lib/datatables.net-responsive/dataTables.responsive.js"></script>
+    <script src="<?= base_url() ?>assets/lib/datatables.net-responsive-bs4/responsive.bootstrap4.js"></script>
     <script src="<?= base_url() ?>assets/js/popper.min.js"></script>
     <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
     <script src="<?= base_url() ?>assets/lib/@fortawesome/all.min.js"></script>

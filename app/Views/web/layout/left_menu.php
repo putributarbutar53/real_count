@@ -29,7 +29,7 @@
                     </a>
                 </li>
             </ul>
-            <div class="navbar-vertical-divider">
+            <!-- <div class="navbar-vertical-divider">
                 <hr class="navbar-vertical-hr my-2" />
             </div>
             <ul class="navbar-nav flex-column">
@@ -39,9 +39,9 @@
                         </div>
                     </a>
                 </li>
-            </ul>
+            </ul> -->
 
-            
+
 
             <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
                 <div class="navbar-vertical-divider">
@@ -56,9 +56,7 @@
                     </li>
                 </ul>
             <?php } ?>
-            <div class="navbar-vertical-divider">
-                <hr class="navbar-vertical-hr my-2" />
-            </div>
+
             <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
                 <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
@@ -85,7 +83,7 @@
                     </li>
                 </ul>
             <?php endif; ?>
-            
+
 
         </div>
     </div>

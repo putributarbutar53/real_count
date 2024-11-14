@@ -111,7 +111,7 @@
 </div>
 
 <?php if (session()->get('admin_role') == 'superadmin') { ?>
-    <div class="card bg-light mb-3">
+    <!-- <div class="card bg-light mb-3">
         <div class="card-body p-3">
             <p class="fs--1 mb-0">
                 <strong>Data Suara per Kecamatan</strong>
@@ -163,7 +163,7 @@
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="card bg-light mb-3">
         <div class="card-body p-3">
             <p class="fs--1 mb-0">
@@ -427,8 +427,6 @@
     setInterval(loadChartBupati, 5000);
     loadChartBupati();
 </script>
-
-
 <script>
     var chartPieGubernur = document.getElementById('chart-pie-gubernur').getContext('2d');
     var pieChartGubernur;
@@ -515,8 +513,6 @@
     // Panggilan berulang setiap 5 detik
     setInterval(loadChartGubernur, 5000);
 </script>
-
-
 <script>
     $('.kecamatan-checkbox').on('change', function() {
         let selectedKecamatan = [];
