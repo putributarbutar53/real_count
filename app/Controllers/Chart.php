@@ -89,7 +89,6 @@ class Chart extends BaseController
     }
     public function getSuaraProv()
     {
-
         // Calculate total valid votes
         $totalSuaraSah = $this->hasilprov->selectSum('suara_sah')->first();
 
@@ -114,9 +113,6 @@ class Chart extends BaseController
 
         return $this->response->setJSON($suaraPaslon);
     }
-
-
-
     public function getchart()
     {
         $dptModel = $this->dpt;
