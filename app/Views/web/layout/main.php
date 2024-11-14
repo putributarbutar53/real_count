@@ -88,22 +88,61 @@
         }
     </style>
     <style>
-        /* CSS untuk memusatkan chart dan mengurangi area putih */
+        /* Center the chart and reduce white space */
         .card-center {
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 5px;
-            /* Kurangi padding card */
+            /* Reduce padding inside the card */
+            padding-top: 10px;
+            height: auto;
+            width: 100%;
+            /* Atur lebar sesuai kebutuhan */
+            /* max-width: 350px; */
+            background-color: #ffffff;
+            /* Keeps the white background */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            /* Optional: subtle shadow for separation */
         }
 
-        /* CSS untuk mengatur ukuran maksimum chart */
-        .chart-container {
-            max-width: 80%;
-            /* Batas maksimum lebar */
-            max-height: 360px;
-            /* Batas maksimum tinggi */
-            width: 100%;
+        /* Fixed size for charts */
+        #pie,
+        #chart-pie-gubernur {
+            width: 450px !important;
+            height: 450px !important;
+            transform: translateY(-89px);
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Adjust card container for smaller screens */
+        @media (max-width: 768px) {
+            .card-center {
+                flex-direction: column;
+                padding: 8px;
+                /* Reduce padding for smaller screens */
+                margin: 5px;
+                /* Optional: add margin for spacing */
+            }
+
+            #pie,
+            #chart-pie-gubernur {
+                transform: translateY(-50px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-center {
+                padding: 5px;
+                /* Further reduce padding */
+                margin: 5px;
+            }
+
+            #pie,
+            #chart-pie-gubernur {
+                transform: translateY(-30px);
+            }
         }
     </style>
 </head>
