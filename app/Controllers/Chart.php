@@ -21,6 +21,7 @@ class Chart extends BaseController
         $this->hasilprov = new HasilProvModel();
         $this->kec = new KecamatanModel();
     }
+
     public function index(): string
     {
         $data['paslon'] = $this->model->orderBy('id', 'ASC')->findAll();
@@ -200,7 +201,7 @@ class Chart extends BaseController
             ->groupBy('id_kec, id_desa, tps')
             ->findAll();
 
-        $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
+        $totalTidakSah = $tidakSahTotal ? array_sum(array_column($tidakSahTotal, 'total_tidak_sah')) : 0;
 
         // Calculate the total DPT using unique TPS combinations
         $uniqueTpsCombinations = $this->hasilprov
