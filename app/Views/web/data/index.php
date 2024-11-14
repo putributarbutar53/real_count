@@ -16,7 +16,7 @@
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
-            <button class="btn btn-falcon-info mr-1 mb-1" type="button">Export Excel
+            <button class="btn btn-falcon-info mr-1 mb-1" id="export" type="button">Export Excel
             </button>
         </div>
     </div>
@@ -148,6 +148,11 @@
             });
         });
     }
+
+    document.getElementById('export').addEventListener('click', function() {
+        window.location.href = '<?= base_url('suara24/data/exportExcel') ?>';
+    });
+</script>
 </script>
 
 <?php $this->endSection() ?>

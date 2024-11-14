@@ -85,7 +85,7 @@ class Suara extends BaseController
                     'tidak_sah' => $tidakSah,
                     'jlh_suara' => $suaraSah + $tidakSah,
                     'id_user' => $id_user,
-                ]; 
+                ];
 
                 $this->model->insert($data);
                 $dataInserted = true;
