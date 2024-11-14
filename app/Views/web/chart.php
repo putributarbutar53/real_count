@@ -353,62 +353,64 @@
             method: 'GET',
             dataType: 'json',
             success: function(response) {
-                var warna = [];
+                // Tentukan urutan label yang pasti
+                var orderedLabels = ["Poltak - Anugerah", "Robinson - Tonny", "Effendi - Audi", "Suara Tidak Sah"];
+                var orderedColors = ['#E72929', '#08C2FF', '#006BFF', '#808080'];
+                var orderedData = [];
+                var orderedPersentase = [];
 
-                response.labels.forEach(function(label) {
-                    if (label === 'Effendi - Audi') {
-                        warna.push('#006BFF'); // Biru untuk Effendi - Audi
-                    } else if (label === 'Robinson - Tonny') {
-                        warna.push('#08C2FF'); // Biru muda untuk Robinson - Tonny
-                    } else if (label === 'Poltak - Anugerah') {
-                        warna.push('#E72929'); // Merah untuk Poltak - Anugerah
-                    } else {
-                        warna.push('#4BC0C0'); // Warna default
+                // Tambahkan data "Suara Tidak Sah" ke response jika belum ada
+                if (!response.labels.includes("Suara Tidak Sah")) {
+                    response.labels.push("Suara Tidak Sah");
+                    response.total_suara.push(response.tidak_sah);
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+                }
+
+                // Urutkan data berdasarkan orderedLabels
+                orderedLabels.forEach(function(label) {
+                    var index = response.labels.indexOf(label);
+                    if (index !== -1) {
+                        orderedData.push(response.total_suara[index]);
+                        orderedPersentase.push(response.persentase_suara[index]);
                     }
                 });
-
-                warna.push('#808080'); // Warna untuk suara tidak sah
-
-                response.labels.push("Suara Tidak Sah");
-                response.total_suara.push(response.tidak_sah);
 
                 $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
                 if (pieChartBupati) {
-                    response.persentase_suara.push(response.persentase_tidak_sah);
-
-                    pieChartBupati.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
-                    pieChartBupati.data.datasets[0].data = response.persentase_suara;
+                    // Update chart dengan data yang sudah diurutkan
+                    pieChartBupati.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
+                    pieChartBupati.data.datasets[0].data = orderedPersentase;
+                    pieChartBupati.data.datasets[0].backgroundColor = orderedColors;
                     pieChartBupati.update();
                 } else {
-                    response.persentase_suara.push(response.persentase_tidak_sah);
-
+                    // Buat chart baru dengan data yang sudah diurutkan
                     pieChartBupati = new Chart(chartPieBupati, {
                         type: 'pie',
                         data: {
-                            labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                            labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                             datasets: [{
                                 label: 'Persentase Suara Sah dan Tidak Sah',
-                                backgroundColor: warna,
+                                backgroundColor: orderedColors,
                                 borderColor: '#ffffff',
-                                data: response.persentase_suara
+                                data: orderedPersentase
                             }]
                         },
                         options: {
                             responsive: true,
                             plugins: {
                                 legend: {
-                                    position: 'right', // Changed from 'top' to 'right'
-                                    align: 'center', // Center align the legend items
+                                    position: 'right',
+                                    align: 'center',
                                     labels: {
-                                        usePointStyle: true, // Use small circles for labels
-                                        padding: 8 // Add padding between labels and chart
+                                        usePointStyle: true,
+                                        padding: 8
                                     }
                                 }
                             },
                             layout: {
                                 padding: {
-                                    right: 8 // Optional: extra padding to the right
+                                    right: 8
                                 }
                             },
                             animation: {
@@ -421,9 +423,11 @@
             }
         });
     }
+
     setInterval(loadChartBupati, 5000);
     loadChartBupati();
 </script>
+
 
 <script>
     var chartPieGubernur = document.getElementById('chart-pie-gubernur').getContext('2d');
@@ -435,44 +439,47 @@
             method: 'GET',
             dataType: 'json',
             success: function(response) {
-                console.log("Data loaded", response); // Tambahkan ini untuk debugging
-                var warna = [];
+                // Urutan label yang pasti
+                var orderedLabels = ["Bobby - Surya", "Edy - Hasan", "Suara Tidak Sah"];
+                var orderedColors = ['#006BFF', '#E72929', '#808080'];
+                var orderedData = [];
+                var orderedPersentase = [];
 
-                response.labels.forEach(function(label) {
-                    if (label === 'Bobby - Surya') {
-                        warna.push('#006BFF'); // Biru untuk Bobby - Surya
-                    } else if (label === 'Edy - Hasan') {
-                        warna.push('#E72929'); // Merah untuk Edy - Hasan
-                    } else {
-                        warna.push('#4BC0C0'); // Warna default
+                // Tambahkan data "Suara Tidak Sah" ke response jika belum ada
+                if (!response.labels.includes("Suara Tidak Sah")) {
+                    response.labels.push("Suara Tidak Sah");
+                    response.total_suara.push(response.tidak_sah);
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+                }
+
+                // Urutkan data berdasarkan orderedLabels
+                orderedLabels.forEach(function(label) {
+                    var index = response.labels.indexOf(label);
+                    if (index !== -1) {
+                        orderedData.push(response.total_suara[index]);
+                        orderedPersentase.push(response.persentase_suara[index]);
                     }
                 });
-
-                warna.push('#808080'); // Abu-abu untuk suara tidak sah
-
-                response.labels.push("Suara Tidak Sah");
-                response.total_suara.push(response.tidak_sah);
 
                 $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
                 if (pieChartGubernur) {
-                    response.persentase_suara.push(response.persentase_tidak_sah);
-
-                    pieChartGubernur.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
-                    pieChartGubernur.data.datasets[0].data = response.persentase_suara;
+                    // Update chart dengan data yang sudah diurutkan
+                    pieChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
+                    pieChartGubernur.data.datasets[0].data = orderedPersentase;
+                    pieChartGubernur.data.datasets[0].backgroundColor = orderedColors;
                     pieChartGubernur.update();
                 } else {
-                    response.persentase_suara.push(response.persentase_tidak_sah);
-
+                    // Buat chart baru dengan data yang sudah diurutkan
                     pieChartGubernur = new Chart(chartPieGubernur, {
                         type: 'pie',
                         data: {
-                            labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                            labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                             datasets: [{
                                 label: 'Persentase Suara Sah dan Tidak Sah',
-                                backgroundColor: warna,
+                                backgroundColor: orderedColors,
                                 borderColor: '#ffffff',
-                                data: response.persentase_suara
+                                data: orderedPersentase
                             }]
                         },
                         options: {
@@ -482,7 +489,7 @@
                                     position: 'right', // Changed from 'top' to 'right'
                                     align: 'center', // Center align the legend items
                                     labels: {
-                                        usePointStyle: true,
+                                        usePointStyle: true, // Use small circles for labels
                                         padding: 10
                                     }
                                 }
@@ -508,6 +515,7 @@
     // Panggilan berulang setiap 5 detik
     setInterval(loadChartGubernur, 5000);
 </script>
+
 
 <script>
     $('.kecamatan-checkbox').on('change', function() {
