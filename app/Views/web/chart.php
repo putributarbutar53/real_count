@@ -95,7 +95,7 @@
         <div class="card text-center h-100 card-center">
             <h5>Persentase perolehan suara Gubernur</h5>
             <div class="chart-container">
-                <canvas id="chart-pie"></canvas>
+                <canvas id="chart-pie-gubernur"></canvas>
             </div>
         </div>
     </div>
@@ -280,10 +280,74 @@
     });
 </script>
 <script>
-    var chartPie = document.getElementById('pie').getContext('2d');
-    var pieChart;
+    function refreshDataProv() {
+        $.ajax({
+            url: '<?= site_url('chart/getSuaraProv') ?>',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const totalSuara = parseInt(data.total_suara_sah);
+                const totalSuaraTidakSah = parseInt(data.total_suara_tidak);
+                const totalDpt = data.total_dpt;
+                const partisipasi = (totalSuara / totalDpt) * 100;
 
-    function loadChart() {
+                // Update total votes
+                $('#total-sah').text(`${totalSuara.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')}`);
+                $('#total-tidak').text(`${totalSuaraTidakSah.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')}`);
+
+                // Update candidate votes
+                $('#suara-bobby').text(parseInt(data.suara_bobby).toLocaleString('id-ID'));
+                $('#suara-edy').text(parseInt(data.suara_edy).toLocaleString('id-ID'));
+
+                // Display participation percentage
+                $('#badge-prov').text(partisipasi.toFixed(2) + '%');
+
+                loadChartAndCardsProv();
+            }
+        });
+    }
+
+    function loadChartAndCardsProv() {
+        $.ajax({
+            url: '<?= base_url('chart/getchartprov') ?>',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const labelMap = {
+                    "Bobby - Surya": {
+                        id: "bobby",
+                        color: "badge-primary"
+                    },
+                    "Edy - Hasan": {
+                        id: "edy",
+                        color: "badge-danger"
+                    }
+                };
+
+                response.labels.forEach((label, index) => {
+                    const paslon = labelMap[label];
+                    if (paslon) {
+                        $(`#badge-${paslon.id}`)
+                            .text(`${response.persentase_suara[index].toFixed(1)}%`)
+                            .removeClass()
+                            .addClass(`badge ${paslon.color} rounded-capsule ml-2`);
+                    }
+                });
+            }
+        });
+    }
+    setInterval(refreshDataProv, 5000);
+
+    $(document).ready(function() {
+        refreshDataProv();
+    });
+</script>
+<script>
+    // Chart Pie untuk Bupati
+    var chartPieBupati = document.getElementById('pie').getContext('2d');
+    var pieChartBupati;
+
+    function loadChartBupati() {
         $.ajax({
             url: '<?= site_url('chart/getchart') ?>',
             method: 'GET',
@@ -303,30 +367,23 @@
                     }
                 });
 
-                // Tambahkan warna khusus untuk Suara Tidak Sah
-                warna.push('#808080'); // Abu-abu untuk suara tidak sah
+                warna.push('#808080'); // Warna untuk suara tidak sah
 
-                // Tambahkan label dan data Suara Tidak Sah ke data chart
                 response.labels.push("Suara Tidak Sah");
                 response.total_suara.push(response.tidak_sah);
 
-                // Tampilkan total DPT di bagian atas grafik
                 $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
-                // Update atau buat pie chart dengan persentase dan tidak sah
-                if (pieChart) {
-                    // Menggunakan persentase dari response JSON untuk update
+                if (pieChartBupati) {
                     response.persentase_suara.push(response.persentase_tidak_sah);
 
-                    pieChart.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
-                    pieChart.data.datasets[0].data = response.persentase_suara;
-                    pieChart.update();
+                    pieChartBupati.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
+                    pieChartBupati.data.datasets[0].data = response.persentase_suara;
+                    pieChartBupati.update();
                 } else {
-                    // Tambahkan persentase untuk Suara Tidak Sah dari response JSON
                     response.persentase_suara.push(response.persentase_tidak_sah);
 
-                    // Membuat pie chart baru
-                    pieChart = new Chart(chartPie, {
+                    pieChartBupati = new Chart(chartPieBupati, {
                         type: 'pie',
                         data: {
                             labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
@@ -341,7 +398,98 @@
                             responsive: true,
                             plugins: {
                                 legend: {
-                                    position: 'top'
+                                    position: 'right', // Changed from 'top' to 'right'
+                                    align: 'center', // Center align the legend items
+                                    labels: {
+                                        usePointStyle: true, // Use small circles for labels
+                                        padding: 8 // Add padding between labels and chart
+                                    }
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    right: 8 // Optional: extra padding to the right
+                                }
+                            },
+                            animation: {
+                                animateScale: true,
+                                animateRotate: true
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+    setInterval(loadChartBupati, 5000);
+    loadChartBupati();
+</script>
+
+<script>
+    var chartPieGubernur = document.getElementById('chart-pie-gubernur').getContext('2d');
+    var pieChartGubernur;
+
+    function loadChartGubernur() {
+        $.ajax({
+            url: '<?= site_url('chart/getchartprov') ?>',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log("Data loaded", response); // Tambahkan ini untuk debugging
+                var warna = [];
+
+                response.labels.forEach(function(label) {
+                    if (label === 'Bobby - Surya') {
+                        warna.push('#006BFF'); // Biru untuk Bobby - Surya
+                    } else if (label === 'Edy - Hasan') {
+                        warna.push('#E72929'); // Merah untuk Edy - Hasan
+                    } else {
+                        warna.push('#4BC0C0'); // Warna default
+                    }
+                });
+
+                warna.push('#808080'); // Abu-abu untuk suara tidak sah
+
+                response.labels.push("Suara Tidak Sah");
+                response.total_suara.push(response.tidak_sah);
+
+                $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
+
+                if (pieChartGubernur) {
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+
+                    pieChartGubernur.data.labels = response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`);
+                    pieChartGubernur.data.datasets[0].data = response.persentase_suara;
+                    pieChartGubernur.update();
+                } else {
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+
+                    pieChartGubernur = new Chart(chartPieGubernur, {
+                        type: 'pie',
+                        data: {
+                            labels: response.labels.map((label, index) => `${label} (${response.persentase_suara[index].toFixed(2)}%)`),
+                            datasets: [{
+                                label: 'Persentase Suara Sah dan Tidak Sah',
+                                backgroundColor: warna,
+                                borderColor: '#ffffff',
+                                data: response.persentase_suara
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'right', // Changed from 'top' to 'right'
+                                    align: 'center', // Center align the legend items
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 10
+                                    }
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    right: 10
                                 }
                             },
                             animation: {
@@ -355,10 +503,11 @@
         });
     }
 
-    setInterval(loadChart, 5000);
-    loadChart();
+    // Panggilan pertama
+    setTimeout(loadChartGubernur, 0);
+    // Panggilan berulang setiap 5 detik
+    setInterval(loadChartGubernur, 5000);
 </script>
-
 
 <script>
     $('.kecamatan-checkbox').on('change', function() {
