@@ -69,7 +69,28 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <small>Input Suara Pemilihan Gubernur</small>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="bobby_surya">Bobby-Surya</label>
+                                        <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="edy_hasan">Edy-Hasan</label>
+                                        <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tidak_sah_gub">Jumlah Suara Tidak Sah</label>
+                                        <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <small>Input Suara Pemilihan Bupati</small>
                             <div class="row">
                                 <?php foreach ($paslon as $key => $p) : ?>
                                     <!-- Nama Paslon dan Input Suara Sah -->
@@ -94,7 +115,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group d-flex justify-content-end"> <!-- Menggunakan flexbox untuk mengatur alignment -->
+                    <div class="form-group d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" id="addTPSButton">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -173,17 +194,40 @@
 
         // Add the form structure for new TPS
         newTpsForm.innerHTML = `
-            <div class="row align-items-center">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label for="tps_number">TPS</label>
-                        <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
-                    </div>
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="tps_number">TPS</label>
+                    <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
                 </div>
             </div>
-
-            <div class="row">
-                <?php foreach ($paslon as $key => $p) : ?>
+        </div>
+        
+        <small>Input Suara Pemilihan Gubernur</small>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="bobby_surya">Bobby-Surya</label>
+                    <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="edy_hasan">Edy-Hasan</label>
+                    <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="tidak_sah_gub">Jumlah Suara Tidak Sah</label>
+                    <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required>
+                </div>
+            </div>
+        </div>
+        
+        <small>Input Suara Pemilihan Bupati</small>
+        <div class="row">
+            <?php foreach ($paslon as $key => $p) : ?>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="paslon${<?= $key + 1 ?>}"><?= $p['nama_paslon'] ?></label>
@@ -191,22 +235,23 @@
                         <input type="number" class="form-control" name="suara_sah[${<?= $p['id'] ?>}][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required>
                     </div>
                 </div>
-                <?php endforeach; ?>
-                
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
-                        <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
-                    </div>
+            <?php endforeach; ?>
+            
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
+                    <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
                 </div>
             </div>
+        </div>
 
-             <button type="button" class="btn btn-danger removeTPSButton"><i class="fas fa-trash"></i> </button>
-        `;
+        <button type="button" class="btn btn-danger removeTPSButton"><i class="fas fa-trash"></i> </button>
+    `;
 
         // Append the new TPS form to the container
         tpsContainer.appendChild(newTpsForm);
     });
+
 
     // Event delegation to handle removal of TPS forms
     document.getElementById('tpsContainer').addEventListener('click', function(event) {
