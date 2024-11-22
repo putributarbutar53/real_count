@@ -45,7 +45,6 @@ class Data extends BaseController
         // Hitung total record tanpa filter
         $totalRecords = $db->table('hasil')->countAll();
 
-        // Hitung total record dengan filter pencarian
         $totalRecordsWithFilter = $db->table('hasil')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->join('cpadmin', 'cpadmin.id = hasil.id_user')
@@ -108,25 +107,6 @@ class Data extends BaseController
     {
         $action = $this->request->getVar('action');
         switch ($action) {
-                // case "add":
-                //     $requestData = $this->request->getPost();
-                //     $check = $this->model->where('slug', $this->request->getPost('slug'))->first();
-                //     if (!empty($check['slug'])) {
-                //         $requestData['slug'] = $check['slug'] . "-" . rand();
-                //     }
-                //     $image = $this->request->getFile('picture');
-                //     if ($image->isValid()) {
-                //         $newName = $image->getRandomName();
-                //         $image->move(ROOTPATH . 'public/' . getenv('dir.upload.articles'), $newName);
-                //         $requestData['picture'] = $newName;
-                //     }
-                //     $requestData['created_at'] = date('Y-m-d H:i:s');
-                //     $requestData['updated_at'] = date('Y-m-d H:i:s');
-                //     $this->model->insert($requestData);
-                //     return $this->respond([
-                //         'status' => 'success',
-                //         'message' => 'Data inserted successfully'
-                //     ], 200);
             case "update":
                 $requestData = array(
                     'suara_sah' => $this->request->getVar('suara_sah'),
@@ -173,24 +153,28 @@ class Data extends BaseController
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+
         // Menambahkan header
-        $sheet->setCellValue('A1', 'Nama Kecamatan');
-        $sheet->setCellValue('B1', 'Nama Desa');
-        $sheet->setCellValue('C1', 'TPS');
-        $sheet->setCellValue('D1', $dataPaslon[0]['nama_paslon']); // Paslon 1
-        $sheet->setCellValue('E1', $dataPaslon[1]['nama_paslon']); // Paslon 2
-        $sheet->setCellValue('F1', $dataPaslon[2]['nama_paslon']); // Paslon 3
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kecamatan');
+        $sheet->setCellValue('C1', 'Desa');
+        $sheet->setCellValue('D1', 'TPS');
+        $sheet->setCellValue('E1', $dataPaslon[0]['nama_paslon']); // Paslon 1
+        $sheet->setCellValue('F1', $dataPaslon[1]['nama_paslon']); // Paslon 2
+        $sheet->setCellValue('G1', $dataPaslon[2]['nama_paslon']); // Paslon 3
 
         // Mengisi data mulai dari baris kedua
         $row = 2;
+        $nomorUrut = 1;
         foreach ($dataHasil as $hasil) {
             // Ambil nama kecamatan dan desa
             $namaKecamatan = $kecamatanModel->find($hasil['id_kec'])['nama_kec'];
             $namaDesa = $desaModel->find($hasil['id_desa'])['nama_desa'];
 
-            $sheet->setCellValue('A' . $row, $namaKecamatan);
-            $sheet->setCellValue('B' . $row, $namaDesa);
-            $sheet->setCellValue('C' . $row, $hasil['tps']);
+            $sheet->setCellValue('A' . $row, $nomorUrut);
+            $sheet->setCellValue('B' . $row, $namaKecamatan);
+            $sheet->setCellValue('C' . $row, $namaDesa);
+            $sheet->setCellValue('D' . $row, $hasil['tps']);
 
             // Ambil jumlah suara untuk setiap paslon
             $suaraPaslon = [
@@ -211,16 +195,17 @@ class Data extends BaseController
             }
 
             // Isi jumlah suara paslon di kolom D, E, dan F
-            $sheet->setCellValue('D' . $row, $suaraPaslon[1]);
-            $sheet->setCellValue('E' . $row, $suaraPaslon[2]);
-            $sheet->setCellValue('F' . $row, $suaraPaslon[3]);
+            $sheet->setCellValue('E' . $row, $suaraPaslon[1]);
+            $sheet->setCellValue('F' . $row, $suaraPaslon[2]);
+            $sheet->setCellValue('G' . $row, $suaraPaslon[3]);
 
             $row++;
+            $nomorUrut++;
         }
 
         // Membuat file Excel dan menyiapkan untuk diunduh
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'data_export.xlsx';
+        $fileName = 'Perolehan Suara.xlsx';
 
         // Set header untuk download file
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

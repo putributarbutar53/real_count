@@ -15,10 +15,11 @@
 </div>
 <div class="card mb-3">
     <div class="card-header">
-        <div class="row flex-between-center">
-            <button class="btn btn-falcon-info mr-1 mb-1" id="export" type="button">Export Excel
-            </button>
-        </div>
+        <button class="btn btn-falcon-success mr-1 mb-1" id="export" type="button" style="margin-left: 15px;">
+            <i class="fas fa-file-excel"></i>
+            Export
+        </button>
+
     </div>
     <div class="card-body bg-light">
         <div class="row list">
@@ -84,7 +85,7 @@
                     data: 'navButton',
                     render: function(data, type, row) {
                         if (row.username != 'superadmin')
-                            return '<button onclick="editdata(' + row.id + ')" class="btn btn-sm btn-falcon-warning mb-1"><i class="fas fa-pen-square"></i></button>&nbsp;<button onclick="deletedata(' + row.id + ')" class="btn btn-sm btn-falcon-danger mb-1"><i class="fas fa-trash-alt"></i></button>';
+                            return '<button onclick="editdata(' + row.id + ')" class="btn btn-sm btn-falcon-warning mb-1"><i class="fas fa-pen-square"></i></button>';
                         else return "";
                     }
                 },
@@ -135,7 +136,7 @@
     }
 
     function editdata(iddata) {
-        $.get("<?= site_url('suara24/data/edit') ?>/" + iddata, function(data, status) {
+        $.get("<?= site_url('suara24/dataProv/edit') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
@@ -150,7 +151,7 @@
     }
 
     document.getElementById('export').addEventListener('click', function() {
-        window.location.href = '<?= base_url('suara24/data/exportExcel') ?>';
+        window.location.href = '<?= base_url('suara24/dataProv/exportExcel') ?>';
     });
 </script>
 </script>

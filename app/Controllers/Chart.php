@@ -84,7 +84,6 @@ class Chart extends BaseController
             'suara_effendi' => $hasilModel->where('id_paslon', 3)->selectSum('suara_sah')->first()['suara_sah'] ?? 0,
             'total_dpt' => $totalDpt // Menambahkan total DPT
         ];
-
         return $this->response->setJSON($suaraPaslon);
     }
     public function getSuaraProv()
@@ -246,7 +245,6 @@ class Chart extends BaseController
             'total_dpt' => $totalDpt
         ]);
     }
-
 
     public function getGrafikByKecamatan()
     {
