@@ -109,9 +109,7 @@ class Chart extends BaseController
     public function getchart()
     {
         $data = $this->hasil
-            ->select('paslon.nama_paslon, hasil.id_paslon, 
-              SUM(hasil.suara_sah) AS total_suara_sah, 
-              MAX(hasil.tidak_sah) AS total_tidak_sah') // Mengambil nilai suara tidak sah terbesar
+            ->select('paslon.nama_paslon, hasil.id_paslon, SUM(hasil.suara_sah) as total_suara')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->groupBy('hasil.id_paslon')
             ->findAll();
@@ -129,7 +127,9 @@ class Chart extends BaseController
 
         $totalSuaraSah = $totalSuaraSah ? $totalSuaraSah['total_suara_sah'] : 0;
 
-        $totalSuara = $totalSuaraSah + $totalTidakSah;
+        $labels = [];
+        $totalSuara = [];
+        $persentaseSuara = [];
 
         foreach ($data as $row) {
             $paslonName = $row['nama_paslon'];
