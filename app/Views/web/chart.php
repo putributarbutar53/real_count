@@ -2,9 +2,9 @@
 <?php $this->extend('web/layout/main') ?>
 
 <?php $this->section('content') ?>
-<div class="card-deck">
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="card-body position-relative">
+<div class="card-deck" style="height: 100px; display: flex;">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
+        <div class="card-body position-relative" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
             <h6>
                 Partisipasi Masyarakat
                 <span id="badge-prov" class="badge badge-secondary rounded-capsule ml-2">0%</span>
@@ -27,14 +27,15 @@
             </div>
         </div>
     </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
+
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/1.png); width: 95px; height: 30px; background-position: bottom; margin-left: 260px;"></div>
         <div class="card-body position-relative">
             <h6>1. Bobby - Surya<span id="badge-bobby" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
             <div id="suara-bobby" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
         <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2.png); width: 95px; height: 90px; background-position: bottom; margin-left: 260px;"></div>
         <div class="card-body position-relative">
             <h6>2. Edy - Hasan<span id="badge-edy" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
@@ -42,7 +43,7 @@
         </div>
     </div>
 </div>
-<div class="card-deck">
+<div class="card-deck" style="height: 100px; display: flex; flex-wrap: wrap; justify-content: space-between;">
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="card-body position-relative">
             <h6>
@@ -68,21 +69,21 @@
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/polga2p.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div>
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/1fixx.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div>
         <div class="card-body position-relative">
             <h6>1. Poltak - Anugerah<span id="badge-poltak" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
             <div id="suara-poltak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/robton.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div>
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2fix-removebg.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div>
         <div class="card-body position-relative">
             <h6>2. Robinson - Tonny<span id="badge-robinson" class="badge badge-info rounded-capsule ml-2">0%</span></h6>
             <div id="suara-robinson" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2diaudiho.png); width:135px; background-position: bottom; margin-left: 140px;"></div>
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/3fixx.png); width:135px; background-position: bottom; margin-left: 140px;"></div>
 
         <div class="card-body position-relative">
             <h6>3. Effendi - Audi<span id="badge-effendi" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
@@ -90,21 +91,21 @@
         </div>
     </div>
 </div>
-<div class="row no-gutters">
+<div class="row no-gutters" style="margin-top: 20px;">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
         <div class="card text-center h-100 card-center">
             <h5>Persentase perolehan suara Gubernur</h5>
             <div class="chart-container">
-                <canvas id="chart-pie-gubernur"></canvas>
+                <canvas id="chart-bar-gubernur"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
+    <div class=" col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
         <div class="card text-center card-center">
             <h5>Persentase perolehan suara Bupati</h5>
             <div class="chart-container">
-                <canvas id="pie"></canvas>
+                <canvas id="bar"></canvas>
             </div>
         </div>
     </div>
@@ -343,9 +344,9 @@
     });
 </script>
 <script>
-    // Chart Pie untuk Bupati
-    var chartPieBupati = document.getElementById('pie').getContext('2d');
-    var pieChartBupati;
+    // Chart Bar untuk Bupati
+    var chartBarBupati = document.getElementById('bar').getContext('2d');
+    var barChartBupati;
 
     function loadChartBupati() {
         $.ajax({
@@ -377,45 +378,51 @@
 
                 $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
-                if (pieChartBupati) {
+                if (barChartBupati) {
                     // Update chart dengan data yang sudah diurutkan
-                    pieChartBupati.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
-                    pieChartBupati.data.datasets[0].data = orderedPersentase;
-                    pieChartBupati.data.datasets[0].backgroundColor = orderedColors;
-                    pieChartBupati.update();
+                    barChartBupati.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
+                    barChartBupati.data.datasets[0].data = orderedData;
+                    barChartBupati.data.datasets[0].backgroundColor = orderedColors;
+                    barChartBupati.update();
                 } else {
                     // Buat chart baru dengan data yang sudah diurutkan
-                    pieChartBupati = new Chart(chartPieBupati, {
-                        type: 'pie',
+                    barChartBupati = new Chart(chartBarBupati, {
+                        type: 'bar',
                         data: {
                             labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                             datasets: [{
-                                label: 'Persentase Suara Sah dan Tidak Sah',
+                                label: 'Total Suara',
                                 backgroundColor: orderedColors,
                                 borderColor: '#ffffff',
-                                data: orderedPersentase
+                                data: orderedData,
+                                borderWidth: 1
                             }]
                         },
                         options: {
                             responsive: true,
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        padding: 10
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
                             plugins: {
                                 legend: {
-                                    position: 'right',
-                                    align: 'center',
-                                    labels: {
-                                        usePointStyle: true,
-                                        padding: 8
-                                    }
+                                    display: false // Hide legend to avoid cluttering the chart
                                 }
                             },
                             layout: {
                                 padding: {
-                                    right: 8
+                                    right: 10
                                 }
                             },
                             animation: {
-                                animateScale: true,
-                                animateRotate: true
+                                duration: 0 // Disable animation for static chart
                             }
                         }
                     });
@@ -424,12 +431,13 @@
         });
     }
 
-    setInterval(loadChartBupati, 5000);
-    loadChartBupati();
+    loadChartBupati(); // First load
+    setInterval(loadChartBupati, 5000); // Update every 5 seconds (can be removed if not needed)
 </script>
+
 <script>
-    var chartPieGubernur = document.getElementById('chart-pie-gubernur').getContext('2d');
-    var pieChartGubernur;
+    var chartBarGubernur = document.getElementById('chart-bar-gubernur').getContext('2d');
+    var barChartGubernur;
 
     function loadChartGubernur() {
         $.ajax({
@@ -438,29 +446,24 @@
             dataType: 'json',
             success: function(response) {
                 try {
-                    // Cek apakah response berisi data yang dibutuhkan
                     if (!response || !response.labels || !response.total_suara || !response.persentase_suara) {
                         console.error("Response data tidak lengkap:", response);
                         return;
                     }
 
-                    // Debugging: cetak response ke console
                     console.log("Response dari server:", response);
 
-                    // Urutan label yang pasti
                     var orderedLabels = ["Bobby - Surya", "Edy - Hasan", "Suara Tidak Sah"];
                     var orderedColors = ['#006BFF', '#E72929', '#808080'];
                     var orderedData = [];
                     var orderedPersentase = [];
 
-                    // Tambahkan data "Suara Tidak Sah" ke response jika belum ada
                     if (!response.labels.includes("Suara Tidak Sah")) {
                         response.labels.push("Suara Tidak Sah");
                         response.total_suara.push(response.tidak_sah);
                         response.persentase_suara.push(response.persentase_tidak_sah);
                     }
 
-                    // Urutkan data berdasarkan orderedLabels
                     orderedLabels.forEach(function(label) {
                         var index = response.labels.indexOf(label);
                         if (index !== -1) {
@@ -471,33 +474,41 @@
 
                     $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
-                    if (pieChartGubernur) {
-                        // Update chart dengan data yang sudah diurutkan
-                        pieChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
-                        pieChartGubernur.data.datasets[0].data = orderedPersentase;
-                        pieChartGubernur.data.datasets[0].backgroundColor = orderedColors;
-                        pieChartGubernur.update();
+                    if (barChartGubernur) {
+                        barChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
+                        barChartGubernur.data.datasets[0].data = orderedData;
+                        barChartGubernur.data.datasets[0].backgroundColor = orderedColors;
+                        barChartGubernur.update();
                     } else {
-                        // Buat chart baru dengan data yang sudah diurutkan
-                        pieChartGubernur = new Chart(chartPieGubernur, {
-                            type: 'pie',
+                        barChartGubernur = new Chart(chartBarGubernur, {
+                            type: 'bar',
                             data: {
                                 labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                                 datasets: [{
-                                    label: 'Persentase Suara Sah dan Tidak Sah',
+                                    label: 'Total Suara',
                                     backgroundColor: orderedColors,
                                     borderColor: '#ffffff',
-                                    data: orderedPersentase
+                                    data: orderedData,
+                                    borderWidth: 1
                                 }]
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false, // Allow resizing
+                                scales: {
+                                    x: {
+                                        beginAtZero: true
+                                    },
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
                                 plugins: {
                                     legend: {
-                                        position: 'right', // Changed from 'top' to 'right'
-                                        align: 'center', // Center align the legend items
+                                        position: 'top',
+                                        align: 'center',
                                         labels: {
-                                            usePointStyle: true, // Use small circles for labels
+                                            usePointStyle: true,
                                             padding: 10
                                         }
                                     }
@@ -521,9 +532,7 @@
         });
     }
 
-    // Panggilan pertama
     setTimeout(loadChartGubernur, 0);
-    // Panggilan berulang setiap 5 detik
     setInterval(loadChartGubernur, 5000);
 </script>
 <script>
