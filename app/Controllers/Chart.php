@@ -72,10 +72,8 @@ class Chart extends BaseController
         // Hitung total tidak sah dari hasil query di atas
         $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
 
-        // Total jumlah suara yang dapat diterima (misalnya, jumlah suara yang valid)
         $totalDpt = 150643; // Ganti dengan jumlah DPT yang sesuai
 
-        // Menghitung suara untuk setiap paslon
         $suaraPaslon = [
             'total_suara_sah' => $totalSuaraSah['suara_sah'],
             'total_suara_tidak' => $totalTidakSah,
@@ -88,20 +86,16 @@ class Chart extends BaseController
     }
     public function getSuaraProv()
     {
-        // Calculate total valid votes
         $totalSuaraSah = $this->hasilprov->selectSum('suara_sah')->first();
 
-        // Calculate total invalid votes
         $tidakSahTotal = $this->hasilprov
             ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
             ->groupBy('id_kec, id_desa, tps')
             ->findAll();
         $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
 
-        // Total DPT, update this value based on your requirements
         $totalDpt = 150643;
 
-        // Calculate votes per candidate
         $suaraPaslon = [
             'total_suara_sah' => $totalSuaraSah['suara_sah'],
             'total_suara_tidak' => $totalTidakSah,
@@ -122,46 +116,53 @@ class Chart extends BaseController
             ->groupBy('hasil.id_paslon')
             ->findAll();
 
+        $tidakSahTotal = $this->hasil
+            ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
+            ->groupBy('id_kec, id_desa, tps')
+            ->findAll();
 
+        $totalTidakSah = array_sum(array_column($tidakSahTotal, 'total_tidak_sah'));
 
+        $totalSuaraSah = $this->hasil
+            ->select('SUM(hasil.suara_sah) as total_suara_sah')
+            ->first();
 
-        // Calculate percentages
-        $totalSuaraSah = 0;
-        $totalTidakSah = 0;
-
-        foreach ($data as $result) {
-            $totalSuaraSah += $result->total_suara_sah;
-            $totalTidakSah += $result->total_tidak_sah;
-        }
+        $totalSuaraSah = $totalSuaraSah ? $totalSuaraSah['total_suara_sah'] : 0;
 
         $totalSuara = $totalSuaraSah + $totalTidakSah;
 
-        $percentages = [];
-        foreach ($data as $result) {
-            $percentages[] = [
-                'nama_paslon' => $result->nama_paslon,
-                'id_paslon'   => $result->id_paslon,
-                'percentage'  => ($result->total_suara_sah / $totalSuara) * 100
-            ];
+        foreach ($data as $row) {
+            $paslonName = $row['nama_paslon'];
+
+            $totalSuaraPaslon = $totalSuaraSah + $totalTidakSah;
+
+            $persentase = $totalSuaraPaslon > 0 ? ($row['total_suara'] / $totalSuaraPaslon) * 100 : 0;
+
+            $labels[] = $paslonName;
+            $totalSuara[] = $row['total_suara'];
+            $persentaseSuara[] = $persentase;
         }
 
-        return $this->respond([
+        $totalSuaraAll = $totalSuaraSah + $totalTidakSah;
+        $persentaseTidakSah = $totalSuaraAll > 0 ? ($totalTidakSah / $totalSuaraAll) * 100 : 0;
 
-            'persentase_suara' => $percentages,
+        return $this->respond([
+            'labels' => $labels,
+            'total_suara' => $totalSuara,
+            'persentase_suara' => $persentaseSuara,
+            'tidak_sah' => $totalTidakSah,
+            'persentase_tidak_sah' => $persentaseTidakSah
         ]);
     }
 
+
     public function getchartprov()
     {
-        $dptModel = $this->dpt;
-
-        // Fetch total valid votes per candidate
         $data = $this->hasilprov
             ->select('hasil_prov.id_paslon, SUM(hasil_prov.suara_sah) as total_suara')
             ->groupBy('hasil_prov.id_paslon')
             ->findAll();
 
-        // Calculate the total invalid votes by unique combination of id_kec, id_desa, and tps
         $tidakSahTotal = $this->hasilprov
             ->select('id_kec, id_desa, tps, MAX(tidak_sah) as total_tidak_sah')
             ->groupBy('id_kec, id_desa, tps')
@@ -169,53 +170,40 @@ class Chart extends BaseController
 
         $totalTidakSah = $tidakSahTotal ? array_sum(array_column($tidakSahTotal, 'total_tidak_sah')) : 0;
 
-        // Calculate the total DPT using unique TPS combinations
-        $uniqueTpsCombinations = $this->hasilprov
-            ->select('id_kec, id_desa, tps')
-            ->groupBy('id_kec, id_desa, tps')
-            ->findAll();
+        $totalSuaraSah = $this->hasilprov
+            ->select('SUM(hasil_prov.suara_sah) as total_suara_sah')
+            ->first();
 
-        $totalDpt = 0;
-        foreach ($uniqueTpsCombinations as $combination) {
-            $dptData = $dptModel->where([
-                'id_kec' => $combination['id_kec'],
-                'id_desa' => $combination['id_desa'],
-                'nomor_tps' => $combination['tps']
-            ])->first();
-
-            if ($dptData) {
-                $totalDpt += $dptData['jlh_dpt'];
-            }
-        }
+        $totalSuaraSah = $totalSuaraSah ? $totalSuaraSah['total_suara_sah'] : 0;
 
         $labels = [];
         $totalSuara = [];
         $persentaseSuara = [];
 
         foreach ($data as $row) {
-            // Hardcode names for paslon IDs
             $paslonName = ($row['id_paslon'] == 1) ? 'Bobby - Surya' : (($row['id_paslon'] == 2) ? 'Edy - Hasan' : 'Unknown');
 
-            // Calculate the percentage of valid votes
-            $persentase = $totalDpt > 0 ? ($row['total_suara'] / $totalDpt) * 100 : 0;
+            $totalSuaraPaslon = $totalSuaraSah + $totalTidakSah;
 
-            // Append data for JSON response
+            $persentase = $totalSuaraPaslon > 0 ? ($row['total_suara'] / $totalSuaraPaslon) * 100 : 0;
+
             $labels[] = $paslonName;
             $totalSuara[] = $row['total_suara'];
             $persentaseSuara[] = $persentase;
         }
 
-        $persentaseTidakSah = $totalDpt > 0 ? ($totalTidakSah / $totalDpt) * 100 : 0;
+        $totalSuaraAll = $totalSuaraSah + $totalTidakSah;
+        $persentaseTidakSah = $totalSuaraAll > 0 ? ($totalTidakSah / $totalSuaraAll) * 100 : 0;
 
         return $this->respond([
             'labels' => $labels,
             'total_suara' => $totalSuara,
             'persentase_suara' => $persentaseSuara,
             'tidak_sah' => $totalTidakSah,
-            'persentase_tidak_sah' => $persentaseTidakSah,
-            'total_dpt' => $totalDpt
+            'persentase_tidak_sah' => $persentaseTidakSah
         ]);
     }
+
 
     public function getGrafikByKecamatan()
     {
