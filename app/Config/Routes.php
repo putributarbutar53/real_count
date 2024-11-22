@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 $routes->setAutoRoute(true);
-$routes->get('/', 'Chart::index');
+$routes->get('/', 'suara24\Login::login');
 $routes->get('hasil/data', 'Hasil::getHasilSuara');
 $routes->get('hasil/getget', 'Hasil::getSuara');
 
