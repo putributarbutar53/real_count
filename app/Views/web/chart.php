@@ -28,14 +28,14 @@
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <!-- <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/polga2p.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div> -->
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/1.png); width: 95px; height: 30px; background-position: bottom; margin-left: 260px;"></div>
         <div class="card-body position-relative">
             <h6>1. Bobby - Surya<span id="badge-bobby" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
             <div id="suara-bobby" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <!-- <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/robton.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div> -->
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2.png); width: 95px; height: 90px; background-position: bottom; margin-left: 260px;"></div>
         <div class="card-body position-relative">
             <h6>2. Edy - Hasan<span id="badge-edy" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
             <div id="suara-edy" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2diaudiho.png); width:135px; background-position: bottom; margin-left: 125px;"></div>
+        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2diaudiho.png); width:135px; background-position: bottom; margin-left: 140px;"></div>
 
         <div class="card-body position-relative">
             <h6>3. Effendi - Audi<span id="badge-effendi" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
@@ -214,7 +214,7 @@
                 const totalSuara = parseInt(data.total_suara_sah);
                 const totalSuaraTidakSah = parseInt(data.total_suara_tidak);
                 const totalDpt = data.total_dpt; // Mendapatkan total DPT dari response
-                const partisipasi = (totalSuara / totalDpt) * 100;
+                const partisipasi = ((totalSuara + totalSuaraTidakSah) / totalDpt) * 100; // Menghit
                 // Update jumlah suara
                 $('#total-suara-sah').text(parseInt(data.total_suara_sah).toLocaleString('id-ID'));
                 $('#total-suara-tidak').text(totalSuaraTidakSah.toLocaleString('id-ID'));
@@ -289,7 +289,7 @@
                 const totalSuara = parseInt(data.total_suara_sah);
                 const totalSuaraTidakSah = parseInt(data.total_suara_tidak);
                 const totalDpt = data.total_dpt;
-                const partisipasi = (totalSuara / totalDpt) * 100;
+                const partisipasi = ((totalSuara + totalSuaraTidakSah) / totalDpt) * 100;
 
                 // Update total votes
                 $('#total-sah').text(`${totalSuara.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')}`);
