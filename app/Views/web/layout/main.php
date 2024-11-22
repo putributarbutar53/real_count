@@ -109,14 +109,13 @@
         }
 
         /* Fixed size for charts */
-        #pie,
-        #chart-pie-gubernur {
-            width: 450px !important;
-            height: 450px !important;
-            transform: translateY(-89px);
-            max-width: 100%;
-            max-height: 100%;
+        #bar,
+        #chart-bar-gubernur {
+            width: 100% !important;
+            height: 400px;
+            /* Menyesuaikan tinggi grafik */
         }
+
 
         /* Adjust card container for smaller screens */
         @media (max-width: 768px) {
@@ -144,6 +143,19 @@
             #pie,
             #chart-pie-gubernur {
                 transform: translateY(-30px);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .card-deck {
+                display: block;
+                padding: 5px;
+            }
+
+            .card {
+                width: 100%;
+                /* Membuat card full width di perangkat mobile */
+                margin-bottom: 10px;
             }
         }
     </style>
