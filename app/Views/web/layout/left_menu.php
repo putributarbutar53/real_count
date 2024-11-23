@@ -19,11 +19,11 @@
                         </a>
                     </li>
                 </ul>
+            <?php } ?>
+            <?php if ((session()->get('admin_role') !== 'superadmin')) { ?>
                 <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                 </div>
-            <?php } ?>
-            <?php if ((session()->get('admin_role') !== 'superadmin')) { ?>
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/suara')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/suara') ?>">
@@ -60,11 +60,11 @@
                     </li>
                 </ul>
             <?php } ?>
-
-            <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
-                <div class="navbar-vertical-divider">
+            <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                 </div>
+            <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
+                
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/dataProv')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/dataProv') ?>">
@@ -73,12 +73,13 @@
                         </a>
                     </li>
                 </ul>
-                <div class="navbar-vertical-divider">
+                
+            <?php } ?>
+            <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                 </div>
-            <?php } ?>
-
             <?php if (session()->has('admin_username')): ?>
+
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/login/logout')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/login/logout') ?>">
