@@ -20,10 +20,12 @@
                     </li>
                 </ul>
             <?php } ?>
+
             <?php if ((session()->get('admin_role') !== 'superadmin')) { ?>
                 <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                 </div>
+
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/suara')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/suara') ?>">
@@ -59,12 +61,13 @@
                         </a>
                     </li>
                 </ul>
-            <?php } ?>
-            <div class="navbar-vertical-divider">
+                <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                 </div>
+            <?php } ?>
+
             <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
-                
+
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/dataProv')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/dataProv') ?>">
@@ -73,13 +76,14 @@
                         </a>
                     </li>
                 </ul>
-                
+
             <?php } ?>
-            <div class="navbar-vertical-divider">
-                    <hr class="navbar-vertical-hr my-2" />
-                </div>
+
             <?php if (session()->has('admin_username')): ?>
 
+                <div class="navbar-vertical-divider">
+                    <hr class="navbar-vertical-hr my-2" />
+                </div>
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/login/logout')) { ?> active<?php } ?>">
                         <a class="nav-link" href="<?php echo site_url('suara24/login/logout') ?>">
