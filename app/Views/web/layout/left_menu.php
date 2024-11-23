@@ -10,17 +10,19 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
         <div class="navbar-vertical-content perfect-scrollbar scrollbar">
-            <ul class="navbar-nav flex-column">
-                <li class="nav-item<?php if (current_url() === site_url('chart')) { ?> active<?php } ?>">
-                    <a class="nav-link" href="<?php echo site_url('chart') ?>">
-                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text">Dashboard</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-            <div class="navbar-vertical-divider">
-                <hr class="navbar-vertical-hr my-2" />
-            </div>
+            <?php if ((session()->get('admin_role') == 'superadmin') || (session()->get('admin_role') == 'admin')) { ?>
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item<?php if (current_url() === site_url('chart')) { ?> active<?php } ?>">
+                        <a class="nav-link" href="<?php echo site_url('chart') ?>">
+                            <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text">Dashboard</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-vertical-divider">
+                    <hr class="navbar-vertical-hr my-2" />
+                </div>
+            <?php } ?>
             <ul class="navbar-nav flex-column">
                 <li class="nav-item<?php if (current_url() === site_url('suara24/suara')) { ?> active<?php } ?>">
                     <a class="nav-link" href="<?php echo site_url('suara24/suara') ?>">
