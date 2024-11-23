@@ -6,7 +6,7 @@
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
         <div class="card-body position-relative" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
             <h6>
-                Partisipasi Masyarakat
+                Partisipasi Pemilih
                 <span id="badge-prov" class="badge badge-secondary rounded-capsule ml-2">0%</span>
             </h6>
 
@@ -47,7 +47,7 @@
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
         <div class="card-body position-relative">
             <h6>
-                Partisipasi Masyarakat
+                Partisipasi Pemilih
                 <span id="badge-partisipasi" class="badge badge-secondary rounded-capsule ml-2">0%</span>
             </h6>
 
@@ -94,7 +94,7 @@
 <div class="row no-gutters" style="margin-top: 20px;">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
         <div class="card text-center h-100 card-center">
-            <h5>Persentase perolehan suara Gubernur</h5>
+            <h5>Persentase Perolehan Suara Gubernur Sumut</h5>
             <div class="chart-container">
                 <canvas id="chart-bar-gubernur"></canvas>
             </div>
@@ -103,7 +103,7 @@
 
     <div class=" col-sm-6 col-xxl-3 pl-sm-2 order-xxl-1 mb-3 mb-xxl-0">
         <div class="card text-center card-center">
-            <h5>Persentase perolehan suara Bupati</h5>
+            <h5>Persentase Perolehan Suara Bupati Toba</h5>
             <div class="chart-container">
                 <canvas id="bar"></canvas>
             </div>
