@@ -112,38 +112,8 @@
         #bar,
         #chart-bar-gubernur {
             width: 100% !important;
-            height: 400px;
+            height: 280px;
             /* Menyesuaikan tinggi grafik */
-        }
-
-
-        /* Adjust card container for smaller screens */
-        @media (max-width: 768px) {
-            .card-center {
-                flex-direction: column;
-                padding: 8px;
-                /* Reduce padding for smaller screens */
-                margin: 5px;
-                /* Optional: add margin for spacing */
-            }
-
-            #pie,
-            #chart-pie-gubernur {
-                transform: translateY(-50px);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .card-center {
-                padding: 5px;
-                /* Further reduce padding */
-                margin: 5px;
-            }
-
-            #pie,
-            #chart-pie-gubernur {
-                transform: translateY(-30px);
-            }
         }
 
         @media (max-width: 767px) {

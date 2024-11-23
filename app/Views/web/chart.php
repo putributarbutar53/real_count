@@ -165,7 +165,7 @@
             </div>
         </div>
     </div> -->
-    <div class="card bg-light mb-3">
+    <!-- <div class="card bg-light mb-3">
         <div class="card-body p-3">
             <p class="fs--1 mb-0">
                 <strong>Grafik perolehan suara per kecamatan</strong>
@@ -200,7 +200,7 @@
         </div>
     </div>
 
-    <div id="grafikContainer" class="row no-gutters"></div>
+    <div id="grafikContainer" class="row no-gutters"></div> -->
 <?php } ?>
 <?php $this->endSection() ?>
 
@@ -445,96 +445,87 @@
             method: 'GET',
             dataType: 'json',
             success: function(response) {
-                try {
-                    if (!response || !response.labels || !response.total_suara || !response.persentase_suara) {
-                        console.error("Response data tidak lengkap:", response);
-                        return;
+                // Tentukan urutan label yang pasti
+                var orderedLabels = ["Bobby - Surya", "Edy - Hasan", "Suara Tidak Sah"];
+                var orderedColors = ['#006BFF', '#E72929', '#808080'];
+                var orderedData = [];
+                var orderedPersentase = [];
+
+                // Tambahkan data "Suara Tidak Sah" ke response jika belum ada
+                if (!response.labels.includes("Suara Tidak Sah")) {
+                    response.labels.push("Suara Tidak Sah");
+                    response.total_suara.push(response.tidak_sah);
+                    response.persentase_suara.push(response.persentase_tidak_sah);
+                }
+
+                // Urutkan data berdasarkan orderedLabels
+                orderedLabels.forEach(function(label) {
+                    var index = response.labels.indexOf(label);
+                    if (index !== -1) {
+                        orderedData.push(response.total_suara[index]);
+                        orderedPersentase.push(response.persentase_suara[index]);
                     }
+                });
 
-                    console.log("Response dari server:", response);
+                $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
-                    var orderedLabels = ["Bobby - Surya", "Edy - Hasan", "Suara Tidak Sah"];
-                    var orderedColors = ['#006BFF', '#E72929', '#808080'];
-                    var orderedData = [];
-                    var orderedPersentase = [];
-
-                    if (!response.labels.includes("Suara Tidak Sah")) {
-                        response.labels.push("Suara Tidak Sah");
-                        response.total_suara.push(response.tidak_sah);
-                        response.persentase_suara.push(response.persentase_tidak_sah);
-                    }
-
-                    orderedLabels.forEach(function(label) {
-                        var index = response.labels.indexOf(label);
-                        if (index !== -1) {
-                            orderedData.push(response.total_suara[index]);
-                            orderedPersentase.push(response.persentase_suara[index]);
+                if (barChartGubernur) {
+                    // Update chart dengan data yang sudah diurutkan
+                    barChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
+                    barChartGubernur.data.datasets[0].data = orderedData;
+                    barChartGubernur.data.datasets[0].backgroundColor = orderedColors;
+                    barChartGubernur.update();
+                } else {
+                    // Buat chart baru dengan data yang sudah diurutkan
+                    barChartGubernur = new Chart(chartBarGubernur, {
+                        type: 'bar',
+                        data: {
+                            labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
+                            datasets: [{
+                                label: 'Total Suara',
+                                backgroundColor: orderedColors,
+                                borderColor: '#ffffff',
+                                data: orderedData,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        padding: 10
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false // Hide legend to avoid cluttering the chart
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    right: 10
+                                }
+                            },
+                            animation: {
+                                duration: 0 // Disable animation for static chart
+                            }
                         }
                     });
-
-                    $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
-
-                    if (barChartGubernur) {
-                        barChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
-                        barChartGubernur.data.datasets[0].data = orderedData;
-                        barChartGubernur.data.datasets[0].backgroundColor = orderedColors;
-                        barChartGubernur.update();
-                    } else {
-                        barChartGubernur = new Chart(chartBarGubernur, {
-                            type: 'bar',
-                            data: {
-                                labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
-                                datasets: [{
-                                    label: 'Total Suara',
-                                    backgroundColor: orderedColors,
-                                    borderColor: '#ffffff',
-                                    data: orderedData,
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false, // Allow resizing
-                                scales: {
-                                    x: {
-                                        beginAtZero: true
-                                    },
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                },
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                        align: 'center',
-                                        labels: {
-                                            usePointStyle: true,
-                                            padding: 10
-                                        }
-                                    }
-                                },
-                                layout: {
-                                    padding: {
-                                        right: 10
-                                    }
-                                },
-                                animation: {
-                                    animateScale: true,
-                                    animateRotate: true
-                                }
-                            }
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error saat memproses data:", error);
                 }
-            },
+            }
         });
     }
 
-    setTimeout(loadChartGubernur, 0);
-    setInterval(loadChartGubernur, 5000);
+    loadChartGubernur(); // First load
+    setInterval(loadChartGubernur, 5000); // Update every 5 seconds (can be removed if not needed)
 </script>
+
 <script>
     $('.kecamatan-checkbox').on('change', function() {
         let selectedKecamatan = [];
