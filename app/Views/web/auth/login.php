@@ -69,7 +69,7 @@
                                 <div class="alert alert-success"><?php echo $session->getFlashdata('success') ?></div>
                             <?php
                             }
-                            ?> 
+                            ?>
 
                             <div class="row text-left justify-content-between align-items-center mb-2">
                                 <div class="col-auto">
@@ -90,7 +90,7 @@
                                             <label class="custom-control-label" for="basic-checkbox">Remember me</label>
                                         </div>
                                     </div>
-                                    <div class="col-auto"><a class="fs--1" href="<?php echo site_url('admin2011/forgotpassword') ?>">Forgot Password?</a></div>
+                                    <!-- <div class="col-auto"><a class="fs--1" href="<?php echo site_url('admin2011/forgotpassword') ?>">Forgot Password?</a></div> -->
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Log in</button>
