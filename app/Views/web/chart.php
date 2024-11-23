@@ -263,9 +263,10 @@
                     const paslon = labelMap[label];
                     if (paslon) {
                         // Update persentase di badge menggunakan data dari loadChartAndCards
-                        $(#badge-${paslon.id}).text(${response.persentase_suara[index].toFixed(1)}%)
+                        $(`#badge-${paslon.id}`)
+                            .text(`${response.persentase_suara[index].toFixed(1)}%`)
                             .removeClass()
-                            .addClass(badge ${paslon.color} rounded-capsule ml-2);
+                            .addClass(`badge ${paslon.color} rounded-capsule ml-2`);
                     }
                 });
             }
@@ -292,8 +293,8 @@
                 const partisipasi = ((totalSuara + totalSuaraTidakSah) / totalDpt) * 100;
 
                 // Update total votes
-                $('#total-sah').text(${totalSuara.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')});
-                $('#total-tidak').text(${totalSuaraTidakSah.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')});
+                $('#total-sah').text(`${totalSuara.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')}`);
+                $('#total-tidak').text(`${totalSuaraTidakSah.toLocaleString('id-ID')} / ${totalDpt.toLocaleString('id-ID')}`);
 
                 // Update candidate votes
                 $('#suara-bobby').text(parseInt(data.suara_bobby).toLocaleString('id-ID'));
@@ -327,10 +328,10 @@
                 response.labels.forEach((label, index) => {
                     const paslon = labelMap[label];
                     if (paslon) {
-                        $(#badge-${paslon.id})
-                            .text(${response.persentase_suara[index].toFixed(1)}%)
+                        $(`#badge-${paslon.id}`)
+                            .text(`${response.persentase_suara[index].toFixed(1)}%`)
                             .removeClass()
-                            .addClass(badge ${paslon.color} rounded-capsule ml-2);
+                            .addClass(`badge ${paslon.color} rounded-capsule ml-2`);
                     }
                 });
             }
@@ -375,11 +376,11 @@
                     }
                 });
 
-                $('#totalDptContainer').text(Total DPT: ${response.total_dpt});
+                $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
                 if (barChartBupati) {
                     // Update chart dengan data yang sudah diurutkan
-                    barChartBupati.data.labels = orderedLabels.map((label, index) => ${label} (${orderedPersentase[index].toFixed(2)}%));
+                    barChartBupati.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
                     barChartBupati.data.datasets[0].data = orderedData;
                     barChartBupati.data.datasets[0].backgroundColor = orderedColors;
                     barChartBupati.update();
@@ -388,7 +389,7 @@
                     barChartBupati = new Chart(chartBarBupati, {
                         type: 'bar',
                         data: {
-                            labels: orderedLabels.map((label, index) => ${label} (${orderedPersentase[index].toFixed(2)}%)),
+                            labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                             datasets: [{
                                 label: 'Total Suara',
                                 backgroundColor: orderedColors,
@@ -471,10 +472,10 @@
                         }
                     });
 
-                    $('#totalDptContainer').text(Total DPT: ${response.total_dpt});
+                    $('#totalDptContainer').text(`Total DPT: ${response.total_dpt}`);
 
                     if (barChartGubernur) {
-                        barChartGubernur.data.labels = orderedLabels.map((label, index) => ${label} (${orderedPersentase[index].toFixed(2)}%));
+                        barChartGubernur.data.labels = orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`);
                         barChartGubernur.data.datasets[0].data = orderedData;
                         barChartGubernur.data.datasets[0].backgroundColor = orderedColors;
                         barChartGubernur.update();
@@ -482,7 +483,7 @@
                         barChartGubernur = new Chart(chartBarGubernur, {
                             type: 'bar',
                             data: {
-                                labels: orderedLabels.map((label, index) => ${label} (${orderedPersentase[index].toFixed(2)}%)),
+                                labels: orderedLabels.map((label, index) => `${label} (${orderedPersentase[index].toFixed(2)}%)`),
                                 datasets: [{
                                     label: 'Total Suara',
                                     backgroundColor: orderedColors,
@@ -578,7 +579,7 @@
 
                         // Mengambil label dan data untuk chart
                         let labels = grafikData.data.map(function(item) {
-                            return ${response.labels[item.id_paslon - 1]} (Suara: ${item.total_suara});
+                            return `${response.labels[item.id_paslon - 1]} (Suara: ${item.total_suara})`;
                         });
                         let data = grafikData.data.map(function(item) {
                             return item.total_suara;
@@ -597,7 +598,7 @@
                         new Chart(ctx, {
                             type: 'pie',
                             data: {
-                                labels: labels.map((label, index) => ${label} (${percentages[index]}%)),
+                                labels: labels.map((label, index) => `${label} (${percentages[index]}%)`),
                                 datasets: [{
                                     data: data,
                                     backgroundColor: labels.map(label => warna[label.split(' (')[0]]) // mengambil nama paslon dari label untuk warna
