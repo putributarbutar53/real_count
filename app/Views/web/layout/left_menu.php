@@ -73,10 +73,11 @@
                         </a>
                     </li>
                 </ul>
+                <div class="navbar-vertical-divider">
+                    <hr class="navbar-vertical-hr my-2" />
+                </div>
             <?php } ?>
-            <div class="navbar-vertical-divider">
-                <hr class="navbar-vertical-hr my-2" />
-            </div>
+
             <?php if (session()->has('admin_username')): ?>
                 <ul class="navbar-nav flex-column">
                     <li class="nav-item<?php if (current_url() === site_url('suara24/login/logout')) { ?> active<?php } ?>">
