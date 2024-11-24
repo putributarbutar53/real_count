@@ -90,7 +90,33 @@
         }
     </style>
     <style>
-        @media (max-width: 768px) {
+        /* Center the chart and reduce white space */
+        .card-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            /* Reduce padding inside the card */
+            padding-top: 10px;
+            height: auto;
+            width: 100%;
+            /* Atur lebar sesuai kebutuhan */
+            /* max-width: 350px; */
+            background-color: #ffffff;
+            /* Keeps the white background */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            /* Optional: subtle shadow for separation */
+        }
+
+        /* Fixed size for charts */
+        #bar,
+        #chart-bar-gubernur {
+            width: 100% !important;
+            height: 280px;
+            /* Menyesuaikan tinggi grafik */
+        }
+
+        @media (max-width: 767px) {
             .card-deck {
                 gap: 0.5rem;
                 /* Kurangi jarak antar kartu */
