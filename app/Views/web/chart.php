@@ -59,7 +59,7 @@
 
 </div>
 
-<div class="card-deck" style="margin-top: 5px;">
+<div class="card-deck" style="margin-top: 0px;">
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 110px;">
         <div class="card-body d-flex flex-column justify-content-between">
             <h6>
@@ -137,7 +137,7 @@
 
 </div>
 
-<div class="row no-gutters" style="margin-top: 5px;">
+<div class="row no-gutters" style="margin-top: 0px;">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
         <div class="card text-center h-100 card-center">
             <h5>Persentase Perolehan Suara Gubernur Sumut</h5>
