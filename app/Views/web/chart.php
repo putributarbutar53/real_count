@@ -2,96 +2,142 @@
 <?php $this->extend('web/layout/main') ?>
 
 <?php $this->section('content') ?>
-<div class="card-deck" style="height: 100px; display: flex;">
+<div class="card-deck">
+    <!-- Card Partisipasi -->
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
-        <div class="card-body position-relative" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+        <div class="card-body d-flex flex-column justify-content-between">
             <h6>
                 Partisipasi Pemilih
                 <span id="badge-prov" class="badge badge-secondary rounded-capsule ml-2">0%</span>
             </h6>
-
-            <!-- Menampilkan Total Suara Sah dengan keterangan -->
-            <div style="display: flex; align-items: center;">
-                <h6>Sah :</h6>
-                <div id="total-sah" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
-                    0 / 0
-                </div>
+            <div class="d-flex align-items-center">
+                <h6 class="mb-0">Sah:</h6>
+                <div id="total-sah" class="ml-2 ">0 / 0</div>
             </div>
-
-            <!-- Menampilkan Total Suara Tidak Sah dengan keterangan -->
-            <div style="display: flex; align-items: center;">
-                <h6>Tidak Sah :</h6>
-                <div id="total-tidak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
-                    0 / 0
-                </div>
+            <div class="d-flex align-items-center">
+                <h6 class="mb-0">Tidak Sah:</h6>
+                <div id="total-tidak" class="ml-2 ">0 / 0</div>
             </div>
         </div>
     </div>
 
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/1.png); width: 95px; height: 30px; background-position: bottom; margin-left: 260px;"></div>
-        <div class="card-body position-relative">
-            <h6>1. Bobby - Surya<span id="badge-bobby" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
-            <div id="suara-bobby" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
+    <!-- Card Bobby - Surya -->
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 95px;">
+        <!-- Konten Teks -->
+        <div class="card-body d-flex flex-column justify-content-center">
+            <h6>
+                1. Bobby - Surya
+                <span id="badge-bobby" class="badge badge-primary rounded-pill ml-2">0%</span>
+            </h6>
+            <div id="suara-bobby" class=" font-weight-bold">0</div>
+        </div>
+        <!-- Gambar -->
+        <div class="d-flex align-items-center justify-content-center ml-3" style="width: 120px; height: 80px; overflow: hidden;">
+            <img src="assets/img/illustrations/1.png" alt="Bobby - Surya" class="img-fluid rounded"
+                style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2.png); width: 95px; height: 90px; background-position: bottom; margin-left: 260px;"></div>
-        <div class="card-body position-relative">
-            <h6>2. Edy - Hasan<span id="badge-edy" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
-            <div id="suara-edy" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
+
+
+    <!-- Card Edy - Hasan -->
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 95px;">
+        <!-- Konten Teks -->
+        <div class="card-body d-flex flex-column justify-content-center">
+            <h6>
+                2. Edy - Hasan
+                <span id="badge-edy" class="badge badge-danger rounded-pill ml-2">0%</span>
+            </h6>
+            <div id="suara-edy" class=" font-weight-bold">0</div>
+        </div>
+        <!-- Gambar -->
+        <div class="d-flex align-items-center justify-content-center ml-3" style="width: 120px; height: 80px;">
+            <img src="assets/img/illustrations/2.png" alt="Edy - Hasan" class="img-fluid rounded"
+                style="object-fit: cover; width: 100%; height: 100%;">
         </div>
     </div>
+
+
 </div>
-<div class="card-deck" style="height: 100px; display: flex; flex-wrap: wrap; justify-content: space-between;">
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="card-body position-relative">
+
+<div class="card-deck" style="margin-top: 0px;">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 110px;">
+        <div class="card-body d-flex flex-column justify-content-between">
             <h6>
                 Partisipasi Pemilih
                 <span id="badge-partisipasi" class="badge badge-secondary rounded-capsule ml-2">0%</span>
             </h6>
-
-            <!-- Menampilkan Total Suara Sah dengan keterangan -->
-            <div style="display: flex; align-items: center;">
-                <h6>Sah :</h6>
-                <div id="total-suara-sah" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
-                    0 / 0
-                </div>
+            <div class="d-flex align-items-center">
+                <h6 class="mb-0">Sah:</h6>
+                <div id="total-suara-sah" class="ml-2 ">0 / 0</div>
             </div>
-
-            <!-- Menampilkan Total Suara Tidak Sah dengan keterangan -->
-            <div style="display: flex; align-items: center;">
-                <h6>Tidak Sah :</h6>
-                <div id="total-suara-tidak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif" style="font-size: 1rem; margin-left: 10px;">
-                    0 / 0
-                </div>
+            <div class="d-flex align-items-center">
+                <h6 class="mb-0">Tidak Sah:</h6>
+                <div id="total-suara-tidak" class="ml-2 ">0 / 0</div>
             </div>
         </div>
     </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/1fixx.png); width: 95px; height: 30px; background-position: bottom; margin-left: 160px;"></div>
-        <div class="card-body position-relative">
-            <h6>1. Poltak - Anugerah<span id="badge-poltak" class="badge badge-danger rounded-capsule ml-2">0%</span></h6>
-            <div id="suara-poltak" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
-        </div>
-    </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/2fix-removebg.png); width: 95px; height: 90px; background-position: bottom; margin-left: 160px;"></div>
-        <div class="card-body position-relative">
-            <h6>2. Robinson - Tonny<span id="badge-robinson" class="badge badge-info rounded-capsule ml-2">0%</span></h6>
-            <div id="suara-robinson" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
-        </div>
-    </div>
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem">
-        <div class="bg-holder bg-card" style="background-image:url(assets/img/illustrations/3fixx.png); width:135px; background-position: bottom; margin-left: 140px;"></div>
+    <!-- Card Poltak Anugrah -->
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+        <!-- Konten Teks -->
+        <div class="card-body d-flex flex-column justify-content-center">
+        <span id="badge-poltak" class="badge badge-primary rounded-pill ml-2">0%</span>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    1. Poltak Anugerah
+                </h6>
 
-        <div class="card-body position-relative">
-            <h6>3. Effendi - Audi<span id="badge-effendi" class="badge badge-primary rounded-capsule ml-2">0%</span></h6>
-            <div id="suara-effendi" class="display-4 fs-4 mb-2 font-weight-normal text-sans-serif">0</div>
+            </div>
+            <div id="suara-poltak" class=" font-weight-bold">0</div>
+        </div>
+        <!-- Gambar -->
+        <div class="d-flex align-items-center justify-content-center ml-3" style="width: 100px; height: 80px; overflow: hidden;">
+            <img src="assets/img/illustrations/1fixx.png" alt="Poltak - Anugerah" class="img-fluid rounded"
+                style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
+
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+        <!-- Konten Teks -->
+        <div class="card-body d-flex flex-column justify-content-center">
+            <span id="badge-robinson" class="badge badge-primary rounded-pill">0%</span>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    2. Robinson Tonny
+                </h6>
+            </div>
+            <div id="suara-robinson" class="font-weight-bold">0</div>
+        </div>
+        <!-- Gambar -->
+        <div class="d-flex align-items-center justify-content-center ml-3" style="width: 100px; height: 80px; overflow: hidden;">
+            <img src="assets/img/illustrations/2fix-removebg.png" alt="2. Robinson - Tonny" class="img-fluid rounded"
+                style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+        <!-- Konten Teks -->
+        <div class="card-body d-flex flex-column justify-content-center">
+        <span id="badge-effendi" class="badge badge-primary rounded-pill">0%</span>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    3. Effendi Audi
+                </h6>
+            </div>
+            <div id="suara-effendi" class=" font-weight-bold">0</div>
+        </div>
+        <!-- Gambar -->
+        <div class="d-flex align-items-center justify-content-center ml-3" style="width: 110px; height: 80px; overflow: hidden;">
+            <img src="assets/img/illustrations/3fixx.png" alt="3. Effendi - Audi" class="img-fluid rounded"
+                style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+
+
+
 </div>
-<div class="row no-gutters" style="margin-top: 20px;">
+
+<div class="row no-gutters" style="margin-top: 0px;">
     <div class="col-sm-6 col-xxl-3 pr-sm-2 mb-3 mb-xxl-0">
         <div class="card text-center h-100 card-center">
             <h5>Persentase Perolehan Suara Gubernur Sumut</h5>

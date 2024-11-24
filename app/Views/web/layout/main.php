@@ -118,17 +118,42 @@
 
         @media (max-width: 767px) {
             .card-deck {
-                display: block;
-                padding: 5px;
+                gap: 0.5rem;
+                /* Kurangi jarak antar kartu */
             }
 
             .card {
-                width: 100%;
-                /* Membuat card full width di perangkat mobile */
-                margin-bottom: 10px;
+                flex: 1 1 100%;
+                /* Kartu memanjang ke lebar penuh */
+                height: auto;
+                /* Tinggi menyesuaikan konten */
+            }
+
+            .card .card-body {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .card .card-body img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .card .card-body div {
+                margin-left: 0.5rem;
             }
         }
+
+        .card .d-flex img {
+            max-width: 100px;
+            /* Pastikan gambar tidak lebih besar dari kontainer */
+            max-height: 100px;
+            object-fit: cover;
+            /* Agar gambar tidak terdistorsi */
+        }
     </style>
+
 </head>
 
 <body>
