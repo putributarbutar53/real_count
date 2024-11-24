@@ -90,75 +90,44 @@
         }
     </style>
     <style>
-        /* Center the chart and reduce white space */
-        .card-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5px;
-            /* Reduce padding inside the card */
-            padding-top: 10px;
-            height: auto;
-            width: 100%;
-            /* Atur lebar sesuai kebutuhan */
-            /* max-width: 350px; */
-            background-color: #ffffff;
-            /* Keeps the white background */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            /* Optional: subtle shadow for separation */
-        }
-
-        /* Fixed size for charts */
-        #bar,
-        #chart-bar-gubernur {
-            width: 100% !important;
-            height: 400px;
-            /* Menyesuaikan tinggi grafik */
-        }
-
-
-        /* Adjust card container for smaller screens */
         @media (max-width: 768px) {
-            .card-center {
-                flex-direction: column;
-                padding: 8px;
-                /* Reduce padding for smaller screens */
-                margin: 5px;
-                /* Optional: add margin for spacing */
-            }
-
-            #pie,
-            #chart-pie-gubernur {
-                transform: translateY(-50px);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .card-center {
-                padding: 5px;
-                /* Further reduce padding */
-                margin: 5px;
-            }
-
-            #pie,
-            #chart-pie-gubernur {
-                transform: translateY(-30px);
-            }
-        }
-
-        @media (max-width: 767px) {
             .card-deck {
-                display: block;
-                padding: 5px;
+                gap: 0.5rem;
+                /* Kurangi jarak antar kartu */
             }
 
             .card {
-                width: 100%;
-                /* Membuat card full width di perangkat mobile */
-                margin-bottom: 10px;
+                flex: 1 1 100%;
+                /* Kartu memanjang ke lebar penuh */
+                height: auto;
+                /* Tinggi menyesuaikan konten */
+            }
+
+            .card .card-body {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .card .card-body img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .card .card-body div {
+                margin-left: 0.5rem;
             }
         }
+
+        .card .d-flex img {
+            max-width: 100px;
+            /* Pastikan gambar tidak lebih besar dari kontainer */
+            max-height: 100px;
+            object-fit: cover;
+            /* Agar gambar tidak terdistorsi */
+        }
     </style>
+
 </head>
 
 <body>

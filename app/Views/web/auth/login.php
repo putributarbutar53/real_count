@@ -10,7 +10,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>chat</title>
+    <title>Log In</title>
 
 
     <!-- ===============================================-->
@@ -69,7 +69,7 @@
                                 <div class="alert alert-success"><?php echo $session->getFlashdata('success') ?></div>
                             <?php
                             }
-                            ?> 
+                            ?>
 
                             <div class="row text-left justify-content-between align-items-center mb-2">
                                 <div class="col-auto">
