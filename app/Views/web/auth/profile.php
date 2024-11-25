@@ -59,6 +59,6 @@
             });
         });
 
-    });
+      });
 </script>
 <?php $this->endsection() ?>

@@ -10,7 +10,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title><?= lang('Errors.pageNotFound') ?></title>
+    <title>Warning</title>
 
 
     <!-- ===============================================-->
@@ -49,16 +49,16 @@
                 <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5"><a class="d-flex flex-center mb-4" href="./index.html"><img class="mr-2" src=".<?= base_url() ?>/assets/img/illustrations/falcon.png" alt="" width="58" /><span class="text-sans-serif font-weight-extra-bold fs-5 d-inline-block"></span></a>
                     <div class="card">
                         <div class="card-body p-4 p-sm-5">
-                            <div class="display-1 text-300 fs-error">404</div>
+                            <div class="display-1 text-300 text-danger" style="font-size: 50px;">PERHATIAN</div>
+
                             <p>
-                                <?php if (ENVIRONMENT !== 'production') : ?>
-                                   <p>Halaman Tidak Ditemukan</p>
-                                <?php else : ?>
-                                    <?= lang('Errors.sorryCannotFind') ?>
-                                <?php endif; ?>
+                                Layanan Desk Pilkada Belum dibuka
                             </p>
                             <hr />
-                            <p>Pastikan anda menulis alamat yang benar atau <a href="mailto:kevinphy92@gmail.com"> Hubungi kami</a>.</p><a class="btn btn-primary btn-sm mt-3" href="<?= base_url() ?>desk"><span class="fas fa-home mr-2"></span>Take me home</a>
+                            <p>Layanan dibuka pada Rabu, 27 November 2024 Pukul 13:00
+                                <a href="https://wa.me/6282321666469?text=Halo,%20saya%20ingin%20menanyakan%20tentang%20Desk%20Pilkada" target="_blank">Hubungi kami</a>.
+                            </p>
+
                         </div>
                     </div>
                 </div>
