@@ -589,7 +589,7 @@
             dataType: 'json',
             success: function(data) {
                 // Update jumlah TPS yang sudah diinput
-                $('#total-tps').text(data.tps_inputed + ' / ' + (data.tps_inputed + data.sisa_tps));
+                $('#total-tps').text(data.tps_inputed + ' / ' + (data.tps_total));
 
                 // Update persentase TPS yang sudah diinput
                 $('#persen-tps').text(data.persen + '%');

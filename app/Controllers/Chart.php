@@ -81,6 +81,7 @@ class Chart extends BaseController
         // Kirim data dalam format JSON
         return $this->response->setJSON([
             'tps_inputed' => $tpsInputed,
+            'tps_total' => $totalTps,
             'sisa_tps' => $sisaTps,
             'persen' => round($persen, 2)
         ]);
