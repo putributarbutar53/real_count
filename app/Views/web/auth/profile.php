@@ -2,31 +2,8 @@
 <?php $this->extend('web/layout/main') ?>
 
 <?php $this->section('content') ?>
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-3 btn-reveal-trigger">
-            <div class="card-header position-relative min-vh-25 mb-8">
-                <div class="cover-image">
-                    <div class="bg-holder bg-primary rounded-soft rounded-bottom-0">
-                    </div>
-                    <!--/.bg-holder-->
-                </div>
-                <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
-                    <div class="h-100 w-100 rounded-circle overflow-hidden position-relative"> <img src="<?php if (session()->get('admin_picture')) {
-                                                                                                                echo base_url() . getenv('dir.upload.profile') . session()->get('admin_picture') ?><?php } else {
-                                                                                                                                                                                                                                    echo base_url() ?>admin/assets/img/team/avatar.png<?php } ?>" width="200" alt="" data-dz-thumbnail id="profile-image-preview">
-                        <form id="update_profile">
-                            <input class="d-none" id="profile-image" name="picture" type="file">
-                            <label class="mb-0 overlay-icon d-flex flex-center" for="profile-image"><span class="bg-holder overlay overlay-0"></span><span class="z-index-1 text-white text-center fs--1"><span class="fas fa-camera"></span><span class="d-block">Update</span></span></label>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row no-gutters">
-   
+
     <div class="col-lg-4 pl-lg-2">
         <div class="sticky-top sticky-sidebar">
             <div class="card mb-3 overflow-hidden">
@@ -81,7 +58,7 @@
                 }
             });
         });
-      
+
     });
 </script>
 <?php $this->endsection() ?>

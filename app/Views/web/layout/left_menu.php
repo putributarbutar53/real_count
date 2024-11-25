@@ -41,7 +41,7 @@
             <ul class="navbar-nav flex-column">
                 <li class="nav-item<?php if (current_url() === site_url('suara24/profile')) { ?> active<?php } ?>">
                     <a class="nav-link" href="<?php echo site_url('suara24/profile') ?>">
-                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-user"></span></span><span class="nav-link-text">Profile</span>
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-key"></span></span><span class="nav-link-text">Ubah Password</span>
                         </div>
                     </a>
                 </li>
