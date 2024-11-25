@@ -72,7 +72,7 @@
 </div>
 
 <div class="card-deck" style="margin-top: 0px;">
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 100px;">
         <div class="card-body d-flex flex-column justify-content-between">
             <h6>
                 Partisipasi Pemilih
@@ -89,7 +89,7 @@
         </div>
     </div>
     <!-- Card Poltak Anugrah -->
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-poltak" class="badge badge-primary rounded-pill ml-2">0%</span>
@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-robinson" class="badge badge-primary rounded-pill">0%</span>
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-effendi" class="badge badge-primary rounded-pill">0%</span>
