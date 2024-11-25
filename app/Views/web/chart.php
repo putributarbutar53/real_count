@@ -25,9 +25,10 @@
     <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 95px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
+            <span id="badge-bobby" class="badge badge-primary rounded-pill ml-2">0%</span>
             <h6>
                 1. Bobby - Surya
-                <span id="badge-bobby" class="badge badge-primary rounded-pill ml-2">0%</span>
+
             </h6>
             <div id="suara-bobby" class=" font-weight-bold">0</div>
         </div>
@@ -43,9 +44,10 @@
     <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 95px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
+            <span id="badge-edy" class="badge badge-danger rounded-pill ml-2">0%</span>
             <h6>
                 2. Edy - Hasan
-                <span id="badge-edy" class="badge badge-danger rounded-pill ml-2">0%</span>
+
             </h6>
             <div id="suara-edy" class=" font-weight-bold">0</div>
         </div>
@@ -80,7 +82,7 @@
     <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
-        <span id="badge-poltak" class="badge badge-primary rounded-pill ml-2">0%</span>
+            <span id="badge-poltak" class="badge badge-primary rounded-pill ml-2">0%</span>
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">
                     1. Poltak Anugerah
@@ -117,7 +119,7 @@
     <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
-        <span id="badge-effendi" class="badge badge-primary rounded-pill">0%</span>
+            <span id="badge-effendi" class="badge badge-primary rounded-pill">0%</span>
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">
                     3. Effendi Audi
