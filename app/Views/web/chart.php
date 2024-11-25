@@ -39,7 +39,7 @@
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-bobby" class="badge badge-primary rounded-pill ml-2">0%</span>
             <h6>
-                1. Bobby - Surya
+                1. Bobby Surya
 
             </h6>
             <div id="suara-bobby" class=" font-weight-bold">0</div>
@@ -58,7 +58,7 @@
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-edy" class="badge badge-danger rounded-pill ml-2">0%</span>
             <h6>
-                2. Edy - Hasan
+                2. Edy Hasan
 
             </h6>
             <div id="suara-edy" class=" font-weight-bold">0</div>
