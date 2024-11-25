@@ -58,6 +58,51 @@ class Chart extends BaseController
         $data['kecamatan'] = $this->kec->findAll();
         return view('web/chart', $data);
     }
+    public function loadTps()
+    {
+        // Ambil data dari tabel tps
+        $tpsData = $this->dpt->findAll(); // Mengambil semua data TPS
+        $hasilData = $this->hasil->findAll(); // Mengambil data hasil yang sudah diinput
+
+        // Hitung jumlah TPS yang sudah diinput
+        $inputTps = [];
+        foreach ($hasilData as $h) {
+            $inputTps[] = [
+                'id_kec' => $h['id_kec'],
+                'id_desa' => $h['id_desa'],
+                'tps' => $h['tps'],
+            ];
+        }
+
+        // Hitung jumlah TPS di tabel dpt
+        $totalTps = count($tpsData);
+
+        // Hitung jumlah TPS yang sudah diinput
+        $uniqueTps = [];
+        foreach ($inputTps as $t) {
+            $uniqueTps[$t['id_kec']][$t['id_desa']][$t['tps']] = true;
+        }
+
+        $tpsInputed = 0;
+        foreach ($uniqueTps as $kec => $desa) {
+            foreach ($desa as $d => $tps) {
+                $tpsInputed++;
+            }
+        }
+
+        // Hitung sisa TPS yang belum diinput
+        $sisaTps = $totalTps - $tpsInputed;
+
+        // Hitung persentase TPS yang sudah diinput
+        $persen = ($tpsInputed / $totalTps) * 100;
+
+        // Kirim data dalam format JSON
+        return $this->response->setJSON([
+            'tps_inputed' => $tpsInputed,
+            'sisa_tps' => $sisaTps,
+            'persen' => round($persen, 2)
+        ]);
+    }
     public function getSuara()
     {
         $hasilModel = new HasilModel();

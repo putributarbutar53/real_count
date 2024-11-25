@@ -7,6 +7,18 @@
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
         <div class="card-body d-flex flex-column justify-content-between">
             <h6>
+                TPS yang Telah Input Data
+                <span id="persen-tps" class="badge badge-secondary rounded-capsule ml-2">0%</span>
+            </h6>
+            <div class="d-flex align-items-center">
+                <h6 class="mb-0">Jumlah:</h6>
+                <div id="total-tps" class="ml-2 ">0 / 0</div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
+        <div class="card-body d-flex flex-column justify-content-between">
+            <h6>
                 Partisipasi Pemilih
                 <span id="badge-prov" class="badge badge-secondary rounded-capsule ml-2">0%</span>
             </h6>
@@ -62,7 +74,7 @@
 </div>
 
 <div class="card-deck" style="margin-top: 0px;">
-    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 100px;">
         <div class="card-body d-flex flex-column justify-content-between">
             <h6>
                 Partisipasi Pemilih
@@ -79,7 +91,7 @@
         </div>
     </div>
     <!-- Card Poltak Anugrah -->
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-poltak" class="badge badge-primary rounded-pill ml-2">0%</span>
@@ -98,7 +110,7 @@
         </div>
     </div>
 
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-robinson" class="badge badge-primary rounded-pill">0%</span>
@@ -116,7 +128,7 @@
         </div>
     </div>
 
-    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 110px;">
+    <div class="card mb-3 overflow-hidden d-flex flex-row align-items-center" style="min-width: 12rem; height: 100px;">
         <!-- Konten Teks -->
         <div class="card-body d-flex flex-column justify-content-center">
             <span id="badge-effendi" class="badge badge-primary rounded-pill">0%</span>
@@ -133,9 +145,6 @@
                 style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
-
-
-
 
 </div>
 
@@ -573,7 +582,32 @@
     loadChartGubernur(); // First load
     setInterval(loadChartGubernur, 5000); // Update every 5 seconds (can be removed if not needed)
 </script>
+<script>
+    // Fungsi untuk memuat TPS yang sudah diinput
+    function loadTps() {
+        $.ajax({
+            url: '<?= site_url('chart/loadtps') ?>', // Panggil route load-tps
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Update jumlah TPS yang sudah diinput
+                $('#total-tps').text(data.tps_inputed + ' / ' + (data.tps_inputed + data.sisa_tps));
 
+                // Update persentase TPS yang sudah diinput
+                $('#persen-tps').text(data.persen + '%');
+            },
+            error: function() {
+                console.log('Terjadi kesalahan dalam memuat data TPS');
+            }
+        });
+    }
+
+    // Panggil loadTps pertama kali
+    loadTps();
+
+    // Panggil loadTps setiap 5 detik (5000ms)
+    setInterval(loadTps, 5000);
+</script>
 <script>
     $('.kecamatan-checkbox').on('change', function() {
         let selectedKecamatan = [];
