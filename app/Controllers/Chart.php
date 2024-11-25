@@ -60,41 +60,23 @@ class Chart extends BaseController
     }
     public function loadTps()
     {
-        // Ambil data dari tabel tps
-        $tpsData = $this->dpt->findAll(); // Mengambil semua data TPS
-        $hasilData = $this->hasil->findAll(); // Mengambil data hasil yang sudah diinput
+        // Ambil total jumlah TPS dari tabel dpt
+        $totalTps = $this->dpt->countAll(); // Jumlah total TPS
 
-        // Hitung jumlah TPS yang sudah diinput
-        $inputTps = [];
-        foreach ($hasilData as $h) {
-            $inputTps[] = [
-                'id_kec' => $h['id_kec'],
-                'id_desa' => $h['id_desa'],
-                'tps' => $h['tps'],
-            ];
-        }
+        // Ambil jumlah TPS unik dari tabel hasil berdasarkan kombinasi id_kec, id_desa, dan tps
+        $db = \Config\Database::connect();
+        $query = $db->query(
+            "SELECT COUNT(DISTINCT CONCAT(id_kec, '-', id_desa, '-', tps)) as total_inputed FROM hasil"
+        );
+        $result = $query->getRow();
 
-        // Hitung jumlah TPS di tabel dpt
-        $totalTps = count($tpsData);
-
-        // Hitung jumlah TPS yang sudah diinput
-        $uniqueTps = [];
-        foreach ($inputTps as $t) {
-            $uniqueTps[$t['id_kec']][$t['id_desa']][$t['tps']] = true;
-        }
-
-        $tpsInputed = 0;
-        foreach ($uniqueTps as $kec => $desa) {
-            foreach ($desa as $d => $tps) {
-                $tpsInputed++;
-            }
-        }
+        $tpsInputed = $result->total_inputed ?? 0; // Jumlah TPS yang sudah diinput
 
         // Hitung sisa TPS yang belum diinput
         $sisaTps = $totalTps - $tpsInputed;
 
         // Hitung persentase TPS yang sudah diinput
-        $persen = ($tpsInputed / $totalTps) * 100;
+        $persen = $totalTps > 0 ? ($tpsInputed / $totalTps) * 100 : 0;
 
         // Kirim data dalam format JSON
         return $this->response->setJSON([
