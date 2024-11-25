@@ -65,7 +65,7 @@
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="tps_number">TPS</label>
-                                        <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
+                                        <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required oninput="limitToThreeDigits(this)">
                                     </div>
                                 </div>
                             </div>
@@ -74,19 +74,19 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="bobby_surya">Bobby-Surya</label>
-                                        <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required>
+                                        <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required oninput="limitToThreeDigits(this)">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="edy_hasan">Edy-Hasan</label>
-                                        <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required>
+                                        <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required oninput="limitToThreeDigits(this)">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="tidak_sah_gub">Jumlah Suara Tidak Sah</label>
-                                        <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required>
+                                        <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required oninput="limitToThreeDigits(this)">
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                         <div class="form-group">
                                             <label for="paslon<?= $key + 1 ?>"><?= $p['nama_paslon'] ?></label>
                                             <input type="hidden" name="id_paslon[]" value="<?= $p['id'] ?>">
-                                            <input type="number" class="form-control" name="suara_sah[<?= $p['id'] ?>][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required>
+                                            <input type="number" class="form-control" name="suara_sah[<?= $p['id'] ?>][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required oninput="limitToThreeDigits(this)">
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -107,7 +107,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
-                                        <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
+                                        <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required oninput="limitToThreeDigits(this)">
                                     </div>
                                 </div>
                             </div>
@@ -181,6 +181,14 @@
     }
 </script>
 <script>
+    function limitToThreeDigits(input) {
+        if (input.value.length > 3) {
+            input.value = input.value.slice(0, 3); // Batasi panjang input ke 3 digit
+        }
+        if (parseInt(input.value, 10) > 999) {
+            input.value = 999; // Pastikan nilai maksimal 999
+        }
+    }
     let tpsCount = 1;
 
     document.getElementById('addTPSButton').addEventListener('click', function() {
@@ -198,7 +206,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="tps_number">TPS</label>
-                    <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required>
+                    <input type="number" class="form-control" name="tps_number[]" placeholder="No TPS" required oninput="limitToThreeDigits(this)">
                 </div>
             </div>
         </div>
@@ -208,19 +216,19 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="bobby_surya">Bobby-Surya</label>
-                    <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required>
+                    <input type="number" class="form-control" name="bobby_surya[]" placeholder="Suara Bobby-Surya" required oninput="limitToThreeDigits(this)">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="edy_hasan">Edy-Hasan</label>
-                    <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required>
+                    <input type="number" class="form-control" name="edy_hasan[]" placeholder="Suara Edy-Hasan" required oninput="limitToThreeDigits(this)">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="tidak_sah_gub">Jumlah Suara Tidak Sah</label>
-                    <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required>
+                    <input type="number" class="form-control" name="tidak_sah_gub[]" placeholder="Jumlah Suara Tidak Sah" required oninput="limitToThreeDigits(this)">
                 </div>
             </div>
         </div>
@@ -232,7 +240,7 @@
                     <div class="form-group">
                         <label for="paslon${<?= $key + 1 ?>}"><?= $p['nama_paslon'] ?></label>
                         <input type="hidden" name="id_paslon[]" value="<?= $p['id'] ?>">
-                        <input type="number" class="form-control" name="suara_sah[${<?= $p['id'] ?>}][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required>
+                        <input type="number" class="form-control" name="suara_sah[${<?= $p['id'] ?>}][]" placeholder="Suara Sah <?= $p['nama_paslon'] ?>" required oninput="limitToThreeDigits(this)">
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -240,7 +248,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="tidak_sah">Jumlah Suara Tidak Sah</label>
-                    <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required>
+                    <input type="number" class="form-control" name="tidak_sah[]" placeholder="Jumlah Suara Tidak Sah" required oninput="limitToThreeDigits(this)">
                 </div>
             </div>
         </div>
