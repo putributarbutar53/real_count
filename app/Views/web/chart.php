@@ -14,6 +14,8 @@
                 <h6 class="mb-0">Jumlah:</h6>
                 <div id="total-tps" class="ml-2 ">0 / 0</div>
             </div>
+            <small><a href="<?php echo site_url('tps') ?>">Lihat Detail <i class="fas fa-arrow-right"></i>
+                </a></small>
         </div>
     </div>
     <div class="card mb-3 overflow-hidden" style="min-width: 12rem; height: 95px;">
