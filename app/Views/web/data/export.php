@@ -144,7 +144,7 @@
     }
 
     function editdata(iddata) {
-        $.get("<?= site_url('admin2011/comment/edit') ?>/" + iddata, function(data, status) {
+        $.get("<?= site_url('suara24/data/edit') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
