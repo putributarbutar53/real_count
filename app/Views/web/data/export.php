@@ -1,24 +1,28 @@
+<!-- home.php -->
 <?php $this->extend('web/layout/main') ?>
 
 <?php $this->section('content') ?>
+<!-- Page content goes here -->
+
 <div class="card mb-3">
     <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?= base_url() ?>/assets/img/illustrations/corner-4.png);">
     </div>
+    <!--/.bg-holder-->
     <div class="card-body">
         <div class="row">
             <div class="col-lg-8">
-                <h4 class="mb-0">Data
-                </h4>
+                <h3 class="mb-0">Perolehan Suara</h3>
             </div>
         </div>
     </div>
 </div>
 
+
 <div class="card mb-3">
     <div class="card-header">
         <div class="row flex-between-center">
             <div class="col">
-                <button class="btn btn-success" id="export"><i class="fas fa-plus-square"></i> Export</button>
+                <button class="btn btn-primary" id="export"><i class="fas fa-plus-square"></i> Export</button>
             </div>
         </div>
     </div>
@@ -42,9 +46,9 @@
         </div>
     </div>
 </div>
-
-<?php $this->endSection() ?>
+<?php $this->endsection() ?>
 <?php $this->section('script') ?>
+
 <script>
     function dataindex() {
         $('#table_index').DataTable({
@@ -117,7 +121,7 @@
         $("#click_yes").off("click").on("click", function() {
             $.ajax({
                 type: 'DELETE',
-                url: "<?= site_url('suara24/suara/delete') ?>/" + iddata,
+                url: "<?= site_url('admin2011/comment/delete') ?>/" + iddata,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -137,23 +141,25 @@
     }
 
     function editdata(iddata) {
-        $.get("<?= site_url('suara24/data/edit') ?>/" + iddata, function(data, status) {
+        $.get("<?= site_url('admin2011/comment/edit') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
     }
 
     function adddata() {
-        $('#editor_add').load('<?= site_url('suara24/data/add') ?>', function() {
+        $('#editor_add').load('<?= site_url('admin2011/comment/add') ?>', function() {
             $('#add').modal({
                 show: true
             });
         });
     }
 
-    document.getElementById('export').addEventListener('click', function() {
-        window.location.href = '<?= base_url('suara24/data/exportExcel') ?>';
-    });
+    function detaildata(iddata) {
+        $.get("<?= site_url('admin2011/comment/detail') ?>/" + iddata, function(data, status) {
+            $("#detail_data").html(data);
+            $('#detail').modal('toggle');
+        });
+    }
 </script>
-
-<?php $this->endSection() ?>
+<?php $this->endsection() ?>

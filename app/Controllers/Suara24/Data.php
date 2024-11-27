@@ -24,7 +24,7 @@ class Data extends BaseController
     }
     public function index()
     {
-        return view('web/data/index');
+        return view('web/data/export');
     }
     function loaddata()
     {
