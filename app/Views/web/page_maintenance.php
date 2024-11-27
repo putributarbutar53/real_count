@@ -52,10 +52,10 @@
                             <div class="display-1 text-300 text-danger" style="font-size: 50px;">PERHATIAN</div>
 
                             <p>
-                                Layanan Desk Pilkada Belum dibuka
+                                Layanan Desk Pilkada Sudah Ditutup
                             </p>
                             <hr />
-                            <p>Layanan dibuka pada Rabu, 27 November 2024 Pukul 13:00
+                            <p>Terimakasih Atas Partisipasi Anda
                                 <a href="https://wa.me/6282321666469?text=Halo,%20saya%20ingin%20menanyakan%20tentang%20Desk%20Pilkada" target="_blank">Hubungi kami</a>.
                             </p>
 
