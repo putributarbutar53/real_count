@@ -28,6 +28,7 @@
                 <table id="table_index" width="100%" class="table mb-0 table-striped table-dashboard data-table border-bottom border-200">
                     <thead class="bg-200">
                         <tr>
+                            <th><b>No</b></th>
                             <th><b>nama paslon</b></th>
                             <th><b>kecamatan</b></th>
                             <th><b>desa</b></th>
@@ -65,6 +66,12 @@
                 }
             },
             'columns': [{
+                    data: null, // Kolom untuk nomor
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    orderable: false // Nomor tidak ikut diurutkan
+                }, {
                     data: 'nama_paslon',
                 },
                 {

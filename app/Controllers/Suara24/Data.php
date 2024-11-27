@@ -63,13 +63,22 @@ class Data extends BaseController
             ->countAllResults();
 
         // Tentukan urutan sorting default
-        $orderBy = empty($columnName) || $columnName == 'id'
-            ? 'hasil.id DESC'
-            : $columnName . ' ' . $columnSortOrder;
+        $validColumns = [
+            'id',
+            'nama_paslon',
+            'nama_kec',
+            'nama_desa',
+            'tps',
+            'suara_sah',
+            'username'
+        ];
+        $orderBy = in_array($columnName, $validColumns)
+            ? $columnName . ' ' . $columnSortOrder
+            : 'hasil.id DESC';
 
         // Ambil data dengan join ke tabel lain
         $data = $db->table('hasil')
-            ->select('hasil.*, paslon.nama_paslon, kecamatan.nama_kec, desa.nama_desa, cpadmin.username')
+            ->select('hasil.id, paslon.nama_paslon, kecamatan.nama_kec, desa.nama_desa, hasil.tps, hasil.suara_sah, cpadmin.username')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->join('cpadmin', 'cpadmin.id = hasil.id_user')
             ->join('kecamatan', 'kecamatan.id = hasil.id_kec')
@@ -98,6 +107,7 @@ class Data extends BaseController
 
         return $this->response->setJSON($response);
     }
+
 
     function edit($id)
     {

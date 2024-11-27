@@ -27,6 +27,8 @@
                 <table id="table_index" width="100%" class="table mb-0 table-striped table-dashboard data-table border-bottom border-200">
                     <thead class="bg-200">
                         <tr>
+
+                            <th><b>No</b></th>
                             <th><b>Nama paslon</b></th>
                             <th><b>kecamatan</b></th>
                             <th><b>desa</b></th>
@@ -63,7 +65,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             },
-            'columns': [{
+            'columns': [
+                {
+                    data:'id'
+                },
+                {
                     data: 'nama_paslon',
                 },
                 {

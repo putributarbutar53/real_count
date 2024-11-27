@@ -32,6 +32,7 @@
                 <table id="table_index" width="100%" class="table mb-0 table-striped table-dashboard data-table border-bottom border-200">
                     <thead class="bg-200">
                         <tr>
+                            <th><b>No</b></th>
                             <th><b>nama paslon</b></th>
                             <th><b>kecamatan</b></th>
                             <th><b>desa</b></th>
@@ -68,7 +69,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             },
-            'columns': [{
+            'columns': [
+                {
+                    data: 'id', // Kolom ID
+                    orderable: true // ID dapat diurutkan
+                },
+                {
                     data: 'nama_paslon',
                 },
                 {
@@ -92,16 +98,13 @@
                         if (row.username != 'superadmin')
                             return '<button onclick="editdata(' + row.id + ')" class="btn btn-sm btn-falcon-warning mb-1"><i class="fas fa-pen-square"></i></button>';
                         else return "";
-                    }
+                    },
+                    orderable: false // Tombol aksi tidak diurutkan
                 },
             ],
-            // 'dom':'Bfrtip',
-            // 'buttons':[
-            // 'copy','csv','excel','pdf','print'
-            // ],
             'order': [
-                [2, 'desc']
-            ],
+                [1, 'asc']
+            ], // Urutkan berdasarkan kolom ID secara default
             'language': {
                 'emptyTable': 'Belum ada data'
             },
