@@ -33,11 +33,10 @@ class DataProv extends BaseController
         $row = $request->getVar('start');
         $rowperpage = $request->getVar('length');
 
-        $columnIndex = $request->getVar('order')[0]['column'];
-        $columnName = $request->getVar('columns')[$columnIndex]['data'];
-
-        $columnSortOrder = $request->getVar('order')[0]['dir'];
-        $searchValue = $request->getVar('search')['value'];
+        $columnIndex = $request->getVar('order')[0]['column'] ?? 0;
+        $columnName = $request->getVar('columns')[$columnIndex]['data'] ?? '';
+        $columnSortOrder = $request->getVar('order')[0]['dir'] ?? 'desc';
+        $searchValue = $request->getVar('search')['value'] ?? '';
 
         $db = db_connect();
 
@@ -59,20 +58,22 @@ class DataProv extends BaseController
             ->groupEnd()
             ->countAllResults();
 
+        // Tentukan sorting default
+        $orderBy = empty($columnName) ? 'hasil_prov.id DESC' : $columnName . ' ' . $columnSortOrder;
+
         // Query data dengan join ke tabel lain
-        $orderBy = ($columnName == '') ? 'hasil_prov.id DESC' : $columnName . ' ' . $columnSortOrder;
         $data = $db->table('hasil_prov')
             ->select("
-                hasil_prov.*, 
-                kecamatan.nama_kec, 
-                desa.nama_desa, 
-                cpadmin.username,
-                CASE 
-                    WHEN hasil_prov.id_paslon = 1 THEN 'Bobby - Surya'
-                    WHEN hasil_prov.id_paslon = 2 THEN 'Edy - Hasan'
-                    ELSE 'Unknown Paslon'
-                END AS nama_paslon
-            ")
+            hasil_prov.*, 
+            kecamatan.nama_kec, 
+            desa.nama_desa, 
+            cpadmin.username,
+            CASE 
+                WHEN hasil_prov.id_paslon = 1 THEN 'Bobby - Surya'
+                WHEN hasil_prov.id_paslon = 2 THEN 'Edy - Hasan'
+                ELSE 'Unknown Paslon'
+            END AS nama_paslon
+        ")
             ->join('cpadmin', 'cpadmin.id = hasil_prov.id_user')
             ->join('kecamatan', 'kecamatan.id = hasil_prov.id_kec')
             ->join('desa', 'desa.id = hasil_prov.id_desa')
@@ -89,7 +90,6 @@ class DataProv extends BaseController
             ->get()
             ->getResult();
 
-
         // Response JSON untuk datatables
         $response = [
             'draw' => intval($draw),
@@ -100,6 +100,7 @@ class DataProv extends BaseController
 
         return $this->response->setJSON($response);
     }
+
     function edit($id)
     {
         $data['title'] = "Edit";
