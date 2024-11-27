@@ -45,6 +45,7 @@ class Data extends BaseController
         // Hitung total record tanpa filter
         $totalRecords = $db->table('hasil')->countAll();
 
+        // Hitung total record dengan filter
         $totalRecordsWithFilter = $db->table('hasil')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
             ->join('cpadmin', 'cpadmin.id = hasil.id_user')
@@ -52,18 +53,21 @@ class Data extends BaseController
             ->join('desa', 'desa.id = hasil.id_desa')
             ->where('hasil.id !=', '0')
             ->groupStart()
-
-            ->like('paslon.nama_paslon', $searchValue)  // Search by paslon name
-            ->like('cpadmin.username', $searchValue)
-            ->orLike('kecamatan.nama_kec', $searchValue)  // Search by kecamatan name
-            ->orLike('desa.nama_desa', $searchValue)  // Search by desa name
+            ->like('paslon.nama_paslon', $searchValue)
+            ->orLike('cpadmin.username', $searchValue)
+            ->orLike('kecamatan.nama_kec', $searchValue)
+            ->orLike('desa.nama_desa', $searchValue)
             ->orLike('hasil.tps', $searchValue)
             ->orLike('hasil.tidak_sah', $searchValue)
             ->groupEnd()
             ->countAllResults();
 
-        // Query data dengan join ke tabel lain
-        $orderBy = ($columnName == '') ? 'hasil.id DESC' : $columnName . ' ' . $columnSortOrder;
+        // Tentukan urutan sorting default
+        $orderBy = empty($columnName) || $columnName == 'id'
+            ? 'hasil.id DESC'
+            : $columnName . ' ' . $columnSortOrder;
+
+        // Ambil data dengan join ke tabel lain
         $data = $db->table('hasil')
             ->select('hasil.*, paslon.nama_paslon, kecamatan.nama_kec, desa.nama_desa, cpadmin.username')
             ->join('paslon', 'paslon.id = hasil.id_paslon')
@@ -72,10 +76,10 @@ class Data extends BaseController
             ->join('desa', 'desa.id = hasil.id_desa')
             ->where('hasil.id !=', '0')
             ->groupStart()
-            ->like('paslon.nama_paslon', $searchValue)  // Search by paslon name
-            ->like('cpadmin.username', $searchValue)
-            ->orLike('kecamatan.nama_kec', $searchValue)  // Search by kecamatan name
-            ->orLike('desa.nama_desa', $searchValue)  // Search by desa name
+            ->like('paslon.nama_paslon', $searchValue)
+            ->orLike('cpadmin.username', $searchValue)
+            ->orLike('kecamatan.nama_kec', $searchValue)
+            ->orLike('desa.nama_desa', $searchValue)
             ->orLike('hasil.suara_sah', $searchValue)
             ->orLike('hasil.tidak_sah', $searchValue)
             ->groupEnd()
@@ -94,6 +98,7 @@ class Data extends BaseController
 
         return $this->response->setJSON($response);
     }
+
     function edit($id)
     {
         $data['title'] = "Edit";
