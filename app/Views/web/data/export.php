@@ -69,8 +69,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             },
-            'columns': [
-                {
+            'columns': [{
                     data: 'id', // Kolom ID
                     orderable: true // ID dapat diurutkan
                 },
@@ -149,6 +148,9 @@
             $('#add').modal('toggle');
         });
     }
+    document.getElementById('export').addEventListener('click', function() {
+        window.location.href = '<?= base_url('suara24/data/exportExcel') ?>';
+    });
 
     function adddata() {
         $('#editor_add').load('<?= site_url('admin2011/comment/add') ?>', function() {
