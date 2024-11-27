@@ -64,4 +64,21 @@ class HasilModel extends Model
             ->join('desa', 'hasil.id_desa = desa.id')
             ->findAll();
     }
+    public function getTpsBelumInput()
+    {
+        // Subquery untuk mendapatkan gabungan id_kec, id_desa, tps yang sudah diinput di tabel `hasil`
+        $subquery = $this->db->table('hasil')
+            ->select("CONCAT(id_kec, '-', id_desa, '-', tps) as combined")
+            ->getCompiledSelect();
+
+        // Query utama untuk mendapatkan TPS yang belum diinput
+        $query = $this->db->table('tps')
+            ->select('tps.id_kec, tps.id_desa, tps.nomor_tps as tps, kecamatan.nama_kec, desa.nama_desa')
+            ->join('kecamatan', 'kecamatan.id = tps.id_kec', 'left')
+            ->join('desa', 'desa.id = tps.id_desa', 'left')
+            ->where("CONCAT(tps.id_kec, '-', tps.id_desa, '-', tps.nomor_tps) NOT IN ($subquery)")
+            ->get();
+
+        return $query->getResultArray();
+    }
 }
